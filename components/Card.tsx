@@ -13,7 +13,6 @@ function CarCard({ car }: CardProps) {
     const { setCompareList } = useCompareList();
     setCompareList((prev) => [...(prev || []), car]);
   }
-  console.log(car);
 
   return (
     <Card>
