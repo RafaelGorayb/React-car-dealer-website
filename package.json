@@ -9,6 +9,7 @@
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
 	},
 	"dependencies": {
+		"@hookform/resolvers": "^3.9.0",
 		"@nextui-org/react": "^2.4.2",
 		"@nextui-org/system": "2.2.1",
 		"@nextui-org/theme": "2.2.5",
@@ -18,11 +19,14 @@
 		"firebase": "^10.12.3",
 		"framer-motion": "~11.1.1",
 		"intl-messageformat": "^10.5.0",
+		"jotai": "^2.9.0",
 		"lucide-react": "^0.403.0",
 		"next": "14.2.4",
 		"next-themes": "^0.2.1",
 		"react": "18.3.1",
-		"react-dom": "18.3.1"
+		"react-dom": "18.3.1",
+		"react-hook-form": "^7.52.1",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@types/node": "20.5.7",
