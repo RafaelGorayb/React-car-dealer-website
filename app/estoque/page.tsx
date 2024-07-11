@@ -59,16 +59,16 @@ function Estoque() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
+    <div className="flex flex-col md:flex-row h-screen ">
       <div className="w-full md:w-1/4 p-4">
         <h2 className="text-2xl font-bold mb-4">Filtros</h2>
         <CarFilter submitForm={handleFilterSubmit} />
       </div>
 
-      <div className="w-full md:w-3/4 p-4 overflow-y-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="w-full md:w-3/4 overflow-y-auto">
+        <div className="grid justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 lg:gap-8 gap-4">
           {cars.length === 0 ? (
-            <Spinner />
+            <Spinner className="justify-items-center"/>
           ) : (
             cars.map((car, index) => <CarCard key={index} car={car} />)
           )}

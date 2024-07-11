@@ -102,7 +102,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
           color="danger"
           className="flex items-center space-x-2"
         >
-          <span>Filtrar</span>
+         <span>Filtrar</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
