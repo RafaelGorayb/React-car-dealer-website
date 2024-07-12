@@ -61,13 +61,13 @@ function Estoque() {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen ">
-      <div className="w-full md:w-1/4 mb-4">
+    <div className="flex flex-col lg:flex-row h-screen ">
+      <div className="w-80 mb-4">
         <h2 className="text-2xl font-bold mb-4">Filtros</h2>
         <CarFilter submitForm={handleFilterSubmit} />
       </div>
 
-      <div className="w-full md:w-3/4 overflow-y-auto">
+      <div className="w-full lg:w-3/4 overflow-y-auto">
         <div className="grid gap-4 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {cars.length === 0 && isLoading ? (
             Array.from({ length: 8 }).map((_, index) => (

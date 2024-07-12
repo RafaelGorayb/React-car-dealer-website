@@ -24,9 +24,7 @@ function CarCard({ car, isLoading }: CardProps) {
             <div className="w-full h-full bg-gray-200"></div>
           </Skeleton>
         </div>
-
-        <CardBody className="overflow-visible py-2">
-          
+        <CardBody className="overflow-visible py-2">            
             <div>
             <Skeleton className= "rounded-lg h-4 w-3/4" isLoaded={!isLoading}>
               <p className="text-xs font-semibold bg-gray-200 h-4 w-3/4"></p>
@@ -47,11 +45,8 @@ function CarCard({ car, isLoading }: CardProps) {
                   <p className="font-medium text-sm bg-gray-200 h-4 w-1/2"></p>
                 </div>
                 </Skeleton>
-              </div>
-            
-              
-            </div>
-         
+              </div> 
+            </div>         
         </CardBody>
         <CardFooter className="">
           <Skeleton className="rounded-lg h-4 w-3/4" isLoaded={!isLoading}>
@@ -61,12 +56,11 @@ function CarCard({ car, isLoading }: CardProps) {
       </Card>
     );
   }
-
   return (
     <Card className="md:w-lg md:h-lg w-sm shadow-2xl" radius="sm" isPressable={true} isHoverable={true}>
       <div className="relative w-full h-[170px]">
         <img
-          src="/carroTeste.png"
+          src={car.Imagens[0]}
           className="w-full h-full object-cover"
           alt="Carro"
         />

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Switch } from "@nextui-org/react";
+import { Button, Input, Switch, Accordion, AccordionItem } from "@nextui-org/react";
 import { filterSchema, FilterSchemaType } from "@/lib/formTypes";
 import { X } from "lucide-react";
 
@@ -30,58 +30,70 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
 
   const FilterForm = () => (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <Input
-        {...register("marca")}
-        label="Marca"
-        placeholder="Selecione a marca"
-      />
-      <div className="flex space-x-2">
-        <Input
-          {...register("precoMin", { valueAsNumber: true })}
-          type="number"
-          label="Preço mínimo"
-          placeholder="Min"
-        />
-        <Input
-          {...register("precoMax", { valueAsNumber: true })}
-          type="number"
-          label="Preço máximo"
-          placeholder="Max"
-        />
-      </div>
-      <div className="flex space-x-2">
-        <Input
-          {...register("anoMin", { valueAsNumber: true })}
-          type="number"
-          label="Ano mínimo"
-          placeholder="De"
-        />
-        <Input
-          {...register("anoMax", { valueAsNumber: true })}
-          type="number"
-          label="Ano máximo"
-          placeholder="Até"
-        />
-      </div>
-      <div className="flex space-x-2">
-        <Input
-          {...register("kmMin", { valueAsNumber: true })}
-          type="number"
-          label="Km mínimo"
-          placeholder="De"
-        />
-        <Input
-          {...register("kmMax", { valueAsNumber: true })}
-          type="number"
-          label="Km máximo"
-          placeholder="Até"
-        />
-      </div>
-      <Input
-        {...register("motorizacao")}
-        label="Motorização"
-        placeholder="Tipo de motor"
-      />
+      <Accordion>
+        <AccordionItem key="marca" title="Marca">
+          <Input
+            {...register("marca")}
+            label="Marca"
+            placeholder="Selecione a marca"
+          />
+        </AccordionItem>
+        <AccordionItem key="preco" title="Preço">
+          <div className="flex space-x-2">
+            <Input
+              {...register("precoMin", { valueAsNumber: true })}
+              type="number"
+              label="Preço mínimo"
+              placeholder="Min"
+            />
+            <Input
+              {...register("precoMax", { valueAsNumber: true })}
+              type="number"
+              label="Preço máximo"
+              placeholder="Max"
+            />
+          </div>
+        </AccordionItem>
+        <AccordionItem key="ano" title="Ano">
+          <div className="flex space-x-2">
+            <Input
+              {...register("anoMin", { valueAsNumber: true })}
+              type="number"
+              label="Ano mínimo"
+              placeholder="De"
+            />
+            <Input
+              {...register("anoMax", { valueAsNumber: true })}
+              type="number"
+              label="Ano máximo"
+              placeholder="Até"
+            />
+          </div>
+        </AccordionItem>
+        <AccordionItem key="km" title="Km">
+          <div className="flex space-x-2">
+            <Input
+              {...register("kmMin", { valueAsNumber: true })}
+              type="number"
+              label="Km mínimo"
+              placeholder="De"
+            />
+            <Input
+              {...register("kmMax", { valueAsNumber: true })}
+              type="number"
+              label="Km máximo"
+              placeholder="Até"
+            />
+          </div>
+        </AccordionItem>
+        <AccordionItem key="motorizacao" title="Motorização">
+          <Input
+            {...register("motorizacao")}
+            label="Motorização"
+            placeholder="Tipo de motor"
+          />
+        </AccordionItem>
+      </Accordion>
       <div className="flex items-center justify-between">
         <label htmlFor="blindado" className="text-sm">
           Blindado
@@ -96,13 +108,13 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
 
   return (
     <>
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <Button
           onClick={toggleMenu}
           color="danger"
           className="flex items-center space-x-2"
         >
-         <span>Filtrar</span>
+          <span>Filtrar</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -119,9 +131,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
       </div>
 
       <div
-        className={`bg-background md:hidden fixed inset-y-0 right-0 w-80 shadow-lg transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        } z-50`}
+        className={`bg-background lg:hidden fixed inset-y-0 right-0 w-80 shadow-lg transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"} z-50`}
       >
         <Button
           onClick={toggleMenu}
@@ -138,7 +148,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
         </div>
       </div>
 
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <FilterForm />
       </div>
     </>
