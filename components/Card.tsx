@@ -1,36 +1,65 @@
-import React from 'react';
-import { Car } from '../types';
-import Image from "next/image";
+"use client";
+import React from "react";
+import { Car } from "../types";
+import { Card, CardBody, CardFooter, Button } from "@nextui-org/react";
+import { useCompareList } from "@/lib/userState";
+import '../styles/globals.css';
+import { Fullscreen } from "lucide-react";
 
 interface CardProps {
   car: Car;
 }
 
-const Card: React.FC<CardProps> = ({ car }) => {
-    return (
-<div className="w-44 h-80 bg-white rounded-xl shadow flex-col justify-start items-center gap-2.5 inline-flex">
-  <img className="self-stretch h-44 rounded-tl-xl rounded-tr-xl" src="/carroTeste.png" />
-  <div className="self-stretch h-8 px-3 flex-col justify-center items-start flex">
-    <div className="text-black text-xs font-medium leading-none">{car.Marca} {car.Modelo}  </div>
-    <div className="justify-center items-center gap-2.5 inline-flex">
-      <div className="text-red-600 text-xs font-medium leading-none">{car.Versao}</div>
-    </div>
-  </div>
-  <div className="self-stretch px-3 bg-white/opacity-5 rounded-lg justify-start items-start inline-flex">
-    <div className="w-20 flex-col justify-start items-start gap-0.5 inline-flex">
-      <div className="self-stretch text-neutral-400 text-xs font-normal leading-none">Ano</div>
-      <div className="w-20 h-4 text-zinc-900 text-xs font-medium leading-none">{car.Especificacoes.ano_de_fabricacao}/{car.Especificacoes.ano_do_modelo}</div>
-    </div>
-    <div className="w-20 flex-col justify-start items-start gap-0.5 inline-flex">
-      <div className="self-stretch text-neutral-400 text-xs font-normal leading-none">Km</div>
-      <div className="self-stretch text-zinc-900 text-xs font-medium leading-none">{car.Especificacoes.km}</div>
-    </div>
-  </div>
-  <div className="self-stretch h-4 px-3 bg-white/opacity-5 rounded-lg flex-col justify-center items-start flex">
-    <div className="w-36 h-4 text-black text-sm font-semibold leading-none">R$ {car.Preco}</div>
-  </div>
-</div>
-    );
-};
+function CarCard({ car }: CardProps) {
+  function handleAddToCompare() {
+    const { setCompareList } = useCompareList();
+    setCompareList((prev) => [...(prev || []), car]);
+  }
 
-export default Card;
+  return (
+    <Card className="md:w-lg md:h-lg w-sm shadow-2xl" radius="sm" isPressable={true} isHoverable={true}>
+      <div className="relative w-full h-[170px]">
+        <img
+          src="/carroTeste.png"
+          className="w-full h-full object-cover"
+          alt="Carro"
+        />
+      </div>
+
+      <CardBody className="overflow-visible py-2">
+        <div>
+          <p className="text-xs font-semibold">
+            {car.Marca} {car.Modelo}
+          </p>
+          <h3 className="text-sm font-semibold text-red-500">{car.Versao}</h3>
+          <div className="flex text-sm flex-row gap-4 py-2">
+            <div className="flex flex-col">
+              <p className="text-neutral-400 text-xs">Ano</p>
+              <p className="font-medium text-stone-900 text-sm">
+                {car.Especificacoes.ano_de_fabricacao}/
+                {car.Especificacoes.ano_do_modelo}
+              </p>
+            </div>
+            <div className="flex flex-col">
+              <p className="text-neutral-400 text-xs">Km</p>
+              <p className="font-medium text-stone-900 text-sm">
+                {car.Especificacoes.km.toLocaleString("pt-BR")}
+              </p>
+            </div>
+          </div>
+          <p className="mt-2 text-md font-semibold">
+            R${car.Preco.toLocaleString("pt-BR")}
+          </p>
+        </div>
+      </CardBody>
+      {/* <CardFooter className="flex justify-between gap-4 px-4">
+        <Button onPress={handleAddToCompare} color="secondary">
+          Adicionar ao comparador
+        </Button>
+        <Button color="primary">Ver mais</Button>
+      </CardFooter> */}
+    </Card>
+  );
+}
+
+export default CarCard;

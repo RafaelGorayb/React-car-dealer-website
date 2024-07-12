@@ -1,4 +1,18 @@
+/* styles/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+/* styles.css */
+/* .custom-border-radius {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 1px;
+    border-bottom-right-radius: 1px;
+  } */

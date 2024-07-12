@@ -1,4 +1,5 @@
 import {nextui} from '@nextui-org/theme'
+import { color } from 'framer-motion'
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -10,10 +11,16 @@ module.exports = {
   theme: {
     extend: {
       width: {
-        '42': '169px', 
+        'sm': '169px', 
+        'lg': '225px',
       },
       height: {
-        '42': '169px', 
+        'sm': '336px', 
+        'lg': '336px',
+      },
+      colors: {
+        danger: '#f54242'
+
       },
     },
   },
