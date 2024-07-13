@@ -1,7 +1,6 @@
-// Estoque.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Car } from "../../types";
 import {
   getFirestore,
@@ -9,6 +8,10 @@ import {
   getDocs,
   query,
   limit,
+  startAfter,
+  orderBy,
+  DocumentSnapshot,
+  where,
 } from "firebase/firestore";
 import { db } from "../../config/firestore";
 import { useCompareList } from "@/lib/userState";
@@ -19,66 +22,153 @@ import { FilterSchemaType } from "@/lib/formTypes";
 function Estoque() {
   const [cars, setCars] = useState<Car[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [lastDoc, setLastDoc] = useState<DocumentSnapshot | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [currentFilters, setCurrentFilters] = useState<FilterSchemaType | null>(
+    null
+  );
 
   const { compareList, setCompareList } = useCompareList();
 
-  useEffect(() => {
-    const fetchCars = async () => {
-      const carsCollection = collection(db, "carros");
-      const carsQuery = query(carsCollection, limit(8));
-      const carsSnapshot = await getDocs(carsQuery);
-      const carsList = carsSnapshot.docs.map((doc) => doc.data() as Car);
-      setCars(carsList);
-      setIsLoading(false);
-    };
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastCarElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isLoading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          fetchMoreCars();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isLoading, hasMore]
+  );
 
-    fetchCars();
+  const fetchCars = async (isInitial = false, filters?: FilterSchemaType) => {
+    setIsLoading(true);
+    const carsCollection = collection(db, "carros");
+    let carsQuery = query(carsCollection, orderBy("Preco"), limit(12));
+
+    if (filters) {
+      if (filters.marca) {
+        carsQuery = query(carsQuery, where("Marca", "==", filters.marca));
+      }
+      if (filters.precoMin) {
+        carsQuery = query(carsQuery, where("Preco", ">=", filters.precoMin));
+      }
+      if (filters.precoMax) {
+        carsQuery = query(carsQuery, where("Preco", "<=", filters.precoMax));
+      }
+      if (filters.anoMin) {
+        carsQuery = query(
+          carsQuery,
+          where(
+            "Especificacoes.ano_de_fabricacao",
+            ">=",
+            filters.anoMin.getFullYear()
+          )
+        );
+      }
+      if (filters.anoMax) {
+        carsQuery = query(
+          carsQuery,
+          where(
+            "Especificacoes.ano_de_fabricacao",
+            "<=",
+            filters.anoMax.getFullYear()
+          )
+        );
+      }
+      if (filters.kmMin) {
+        carsQuery = query(
+          carsQuery,
+          where("Especificacoes.km", ">=", filters.kmMin)
+        );
+      }
+      if (filters.kmMax) {
+        carsQuery = query(
+          carsQuery,
+          where("Especificacoes.km", "<=", filters.kmMax)
+        );
+      }
+      if (filters.motorizacao) {
+        carsQuery = query(
+          carsQuery,
+          where("Especificacoes.motor", "==", filters.motorizacao)
+        );
+      }
+      if (filters.blindado !== undefined) {
+        carsQuery = query(
+          carsQuery,
+          where("Especificacoes.blindado", "==", filters.blindado)
+        );
+      }
+    }
+
+    if (!isInitial && lastDoc) {
+      carsQuery = query(carsQuery, startAfter(lastDoc));
+    }
+
+    const carsSnapshot = await getDocs(carsQuery);
+    const carsList = carsSnapshot.docs.map(
+      (doc) => ({ id: doc.id, ...doc.data() }) as Car
+    );
+
+    if (isInitial) {
+      setCars(carsList);
+    } else {
+      setCars((prevCars) => [...prevCars, ...carsList]);
+    }
+
+    setLastDoc(carsSnapshot.docs[carsSnapshot.docs.length - 1] || null);
+    setHasMore(carsSnapshot.docs.length === 12);
+    setIsLoading(false);
+  };
+
+  const fetchMoreCars = () => {
+    if (!isLoading && hasMore) {
+      fetchCars(false, currentFilters || undefined);
+    }
+  };
+
+  useEffect(() => {
+    fetchCars(true);
   }, []);
 
   function handleFilterSubmit(data: FilterSchemaType) {
-    const filteredCars = cars.filter((car) => {
-      if (data.marca && car.Marca !== data.marca) return false;
-      if (data.precoMin && car.Preco < data.precoMin) return false;
-      if (data.precoMax && car.Preco > data.precoMax) return false;
-      if (
-        data.anoMin &&
-        car.Especificacoes.ano_de_fabricacao < data.anoMin.getFullYear()
-      )
-        return false;
-      if (
-        data.anoMax &&
-        car.Especificacoes.ano_de_fabricacao > data.anoMax.getFullYear()
-      )
-        return false;
-      if (data.kmMin && car.Especificacoes.km < data.kmMin) return false;
-      if (data.kmMax && car.Especificacoes.km > data.kmMax) return false;
-      // if (data.motorizacao && car.Especificacoes.motorizacao !== data.motorizacao)
-      //   return false;
-      if (data.blindado && !car.Especificacoes.blindado) return false;
-      return true;
-    });
-    setCars(filteredCars);
+    setCurrentFilters(data);
+    setLastDoc(null);
+    setHasMore(true);
+    fetchCars(true, data);
   }
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen ">
-      <div className="w-80 mb-4">
-        <h2 className="text-2xl font-bold mb-4">Filtros</h2>
-        <CarFilter submitForm={handleFilterSubmit} />
-      </div>
+    <div className="relative">
+      <CarFilter submitForm={handleFilterSubmit} />
 
-      <div className="w-full lg:w-3/4 overflow-y-auto">
+      <div className="lg:ml-80 p-4">
         <div className="grid gap-4 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
-          {cars.length === 0 && isLoading ? (
-            Array.from({ length: 8 }).map((_, index) => (
-              <CarCard key={index} car={{} as Car} isLoading={true} />
-            ))
-          ) : (
-            cars.map((car, index) => (
-              <CarCard key={index} car={car} isLoading={false} />
-            ))
-          )}
+          {cars.map((car, index) => (
+            <div
+              key={car.id}
+              ref={index === cars.length - 1 ? lastCarElementRef : null}
+            >
+              <CarCard car={car} isLoading={false} />
+            </div>
+          ))}
+          {isLoading &&
+            Array.from({ length: 4 }).map((_, index) => (
+              <CarCard
+                key={`loading-${index}`}
+                car={{} as Car}
+                isLoading={true}
+              />
+            ))}
         </div>
+        {!hasMore && (
+          <p className="text-center mt-4">Não há mais carros para carregar.</p>
+        )}
       </div>
     </div>
   );
