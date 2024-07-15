@@ -5,6 +5,7 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export interface Car {
+  id: string;
   Especificacoes: Especificacoes;
   Imagens: string[];
   Link: string;
