@@ -5,6 +5,7 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
 };
 
 export interface Car {
+  id: string;
   Especificacoes: Especificacoes;
   Imagens: string[];
   Link: string;
@@ -38,4 +39,16 @@ export interface Especificacoes {
   conectividade_e_multimidia: string;
   final_da_placa: string;
   torque: number;
+}
+
+export interface FiltrosPesquisa {
+  marca: string;
+  precoMin: number;
+  precoMax: number;
+  anoMin: number;
+  anoMax: number;
+  kmMin: number;
+  kmMax: number;
+  cor: string;
+  blindado: boolean;
 }

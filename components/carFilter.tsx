@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Switch } from "@nextui-org/react";
-import { filterSchema, FilterSchemaType } from "@/lib/formTypes";
-import { X } from "lucide-react";
+import { FiltrosPesquisa } from "../types";
+import {
+  Button,
+  Input,
+  Switch,
+} from "@nextui-org/react";
+import { Filter, X } from "lucide-react";
 
 interface CarFilterProps {
-  submitForm: (data: FilterSchemaType) => void;
+  submitForm: (data: FiltrosPesquisa) => void;
 }
 
 const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
@@ -17,11 +20,9 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FilterSchemaType>({
-    resolver: zodResolver(filterSchema),
-  });
+  } = useForm<FiltrosPesquisa>();
 
-  const onSubmit = (data: FilterSchemaType) => {
+  const onSubmit = (data: FiltrosPesquisa) => {
     submitForm(data);
     if (window.innerWidth < 768) {
       toggleMenu();
@@ -34,7 +35,10 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
         {...register("marca")}
         label="Marca"
         placeholder="Selecione a marca"
+
       />
+      {errors.marca && <span className="text-red-500">{errors.marca.message}</span>}
+
       <div className="flex space-x-2">
         <Input
           {...register("precoMin", { valueAsNumber: true })}
@@ -49,6 +53,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
           placeholder="Max"
         />
       </div>
+
       <div className="flex space-x-2">
         <Input
           {...register("anoMin", { valueAsNumber: true })}
@@ -63,6 +68,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
           placeholder="Até"
         />
       </div>
+
       <div className="flex space-x-2">
         <Input
           {...register("kmMin", { valueAsNumber: true })}
@@ -77,11 +83,13 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
           placeholder="Até"
         />
       </div>
+
       <Input
-        {...register("motorizacao")}
-        label="Motorização"
-        placeholder="Tipo de motor"
+        {...register("cor")}
+        label="Cor"
+        placeholder="Cor do veículo"
       />
+
       <div className="flex items-center justify-between">
         <label htmlFor="blindado" className="text-sm">
           Blindado
@@ -96,49 +104,39 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
 
   return (
     <>
-      <div className="md:hidden">
+      <div className="fixed bottom-4 left-4 z-50 lg:hidden">
         <Button
           onClick={toggleMenu}
           color="danger"
-          className="flex items-center space-x-2"
+          isIconOnly
+          className="rounded-full shadow-lg"
         >
-         <span>Filtrar</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <Filter size={24} />
         </Button>
       </div>
 
       <div
-        className={`bg-background md:hidden fixed inset-y-0 right-0 w-80 shadow-lg transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        } z-50`}
+        className={`fixed inset-y-0 left-0 w-80 bg-background shadow-lg transform transition-transform duration-300 ease-in-out lg:hidden z-40 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <Button
           onClick={toggleMenu}
           isIconOnly
-          className="absolute top-4 left-4"
+          className="absolute top-4 right-4"
           variant="light"
         >
           <X size={24} />
         </Button>
 
-        <div className="p-6 mt-16">
+        <div className="p-6 mt-16 overflow-y-auto h-full">
           <h2 className="text-2xl font-bold mb-6">Filtros</h2>
           <FilterForm />
         </div>
       </div>
 
-      <div className="hidden md:block">
+      <div className="hidden lg:block fixed w-80 h-screen overflow-y-auto p-4 bg-background shadow-lg">
+        <h2 className="text-2xl font-bold mb-6">Filtros</h2>
         <FilterForm />
       </div>
     </>
@@ -146,3 +144,5 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
 };
 
 export default CarFilterSideMenu;
+
+
