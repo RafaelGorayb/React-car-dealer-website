@@ -1,18 +1,15 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { FiltrosPesquisa } from "../types";
 import {
   Button,
   Input,
   Switch,
-  Accordion,
-  AccordionItem,
 } from "@nextui-org/react";
-import { filterSchema, FilterSchemaType } from "@/lib/formTypes";
 import { Filter, X } from "lucide-react";
 
 interface CarFilterProps {
-  submitForm: (data: FilterSchemaType) => void;
+  submitForm: (data: FiltrosPesquisa) => void;
 }
 
 const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
@@ -23,11 +20,9 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FilterSchemaType>({
-    resolver: zodResolver(filterSchema),
-  });
+  } = useForm<FiltrosPesquisa>();
 
-  const onSubmit = (data: FilterSchemaType) => {
+  const onSubmit = (data: FiltrosPesquisa) => {
     submitForm(data);
     if (window.innerWidth < 768) {
       toggleMenu();
@@ -36,70 +31,65 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
 
   const FilterForm = () => (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <Accordion>
-        <AccordionItem key="marca" title="Marca">
-          <Input
-            {...register("marca")}
-            label="Marca"
-            placeholder="Selecione a marca"
-          />
-        </AccordionItem>
-        <AccordionItem key="preco" title="Preço">
-          <div className="flex space-x-2">
-            <Input
-              {...register("precoMin", { valueAsNumber: true })}
-              type="number"
-              label="Preço mínimo"
-              placeholder="Min"
-            />
-            <Input
-              {...register("precoMax", { valueAsNumber: true })}
-              type="number"
-              label="Preço máximo"
-              placeholder="Max"
-            />
-          </div>
-        </AccordionItem>
-        <AccordionItem key="ano" title="Ano">
-          <div className="flex space-x-2">
-            <Input
-              {...register("anoMin", { valueAsNumber: true })}
-              type="number"
-              label="Ano mínimo"
-              placeholder="De"
-            />
-            <Input
-              {...register("anoMax", { valueAsNumber: true })}
-              type="number"
-              label="Ano máximo"
-              placeholder="Até"
-            />
-          </div>
-        </AccordionItem>
-        <AccordionItem key="km" title="Km">
-          <div className="flex space-x-2">
-            <Input
-              {...register("kmMin", { valueAsNumber: true })}
-              type="number"
-              label="Km mínimo"
-              placeholder="De"
-            />
-            <Input
-              {...register("kmMax", { valueAsNumber: true })}
-              type="number"
-              label="Km máximo"
-              placeholder="Até"
-            />
-          </div>
-        </AccordionItem>
-        <AccordionItem key="motorizacao" title="Motorização">
-          <Input
-            {...register("motorizacao")}
-            label="Motorização"
-            placeholder="Tipo de motor"
-          />
-        </AccordionItem>
-      </Accordion>
+      <Input
+        {...register("marca")}
+        label="Marca"
+        placeholder="Selecione a marca"
+
+      />
+      {errors.marca && <span className="text-red-500">{errors.marca.message}</span>}
+
+      <div className="flex space-x-2">
+        <Input
+          {...register("precoMin", { valueAsNumber: true })}
+          type="number"
+          label="Preço mínimo"
+          placeholder="Min"
+        />
+        <Input
+          {...register("precoMax", { valueAsNumber: true })}
+          type="number"
+          label="Preço máximo"
+          placeholder="Max"
+        />
+      </div>
+
+      <div className="flex space-x-2">
+        <Input
+          {...register("anoMin", { valueAsNumber: true })}
+          type="number"
+          label="Ano mínimo"
+          placeholder="De"
+        />
+        <Input
+          {...register("anoMax", { valueAsNumber: true })}
+          type="number"
+          label="Ano máximo"
+          placeholder="Até"
+        />
+      </div>
+
+      <div className="flex space-x-2">
+        <Input
+          {...register("kmMin", { valueAsNumber: true })}
+          type="number"
+          label="Km mínimo"
+          placeholder="De"
+        />
+        <Input
+          {...register("kmMax", { valueAsNumber: true })}
+          type="number"
+          label="Km máximo"
+          placeholder="Até"
+        />
+      </div>
+
+      <Input
+        {...register("cor")}
+        label="Cor"
+        placeholder="Cor do veículo"
+      />
+
       <div className="flex items-center justify-between">
         <label htmlFor="blindado" className="text-sm">
           Blindado
@@ -154,3 +144,5 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
 };
 
 export default CarFilterSideMenu;
+
+

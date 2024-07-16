@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { Car } from "../../types";
+import { Car, FiltrosPesquisa } from "../../types";
 import {
   getFirestore,
   collection,
@@ -24,7 +24,7 @@ function Estoque() {
   const [isLoading, setIsLoading] = useState(true);
   const [lastDoc, setLastDoc] = useState<DocumentSnapshot | null>(null);
   const [hasMore, setHasMore] = useState(true);
-  const [currentFilters, setCurrentFilters] = useState<FilterSchemaType | null>(
+  const [currentFilters, setCurrentFilters] = useState<FiltrosPesquisa | null>(
     null
   );
 
@@ -45,59 +45,91 @@ function Estoque() {
     [isLoading, hasMore]
   );
 
-  const buildQuery = (filters?: FilterSchemaType) => {
+  const buildQuery = (filters?: FiltrosPesquisa) => {
     const carsCollection = collection(db, "carros");
+  
     let carsQuery = query(
       carsCollection,
-      where("Marca", "!=", ""),
-      where("Preco", "<", filters?.precoMax ?? 100000000),
-      where("Preco", ">", filters?.precoMin ?? 0),
-      where("Especificacoes.km", "<", filters?.kmMax ?? 10000000),
-      where("Especificacoes.km", ">", filters?.kmMin ?? 0),
-      where(
-        "Especificacoes.ano_de_fabricacao",
-        ">",
-        filters?.anoMin?.getFullYear() ?? 0
-      ),
-      where(
-        "Especificacoes.ano_de_fabricacao",
-        "<",
-        filters?.anoMax?.getFullYear() ?? 9999
-      ),
-      orderBy("Marca", "asc"),
-      limit(12)
+      where("Marca", "!=", "")
     );
+  
+    if (filters?.precoMax !== undefined && !isNaN(filters.precoMax)) {
+      carsQuery = query(carsQuery, where("Preco", "<", filters.precoMax));
+    } else {
+      carsQuery = query(carsQuery, where("Preco", "<", 100000000));
+    }
+  
+    if (filters?.precoMin !== undefined && !isNaN(filters.precoMin)) {
+      carsQuery = query(carsQuery, where("Preco", ">", filters.precoMin));
+    } else {
+      carsQuery = query(carsQuery, where("Preco", ">", 0));
+    }
+  
+    if (filters?.kmMax !== undefined && !isNaN(filters.kmMax)) {
+      carsQuery = query(carsQuery, where("Especificacoes.km", "<", filters.kmMax));
+    } else {
+      carsQuery = query(carsQuery, where("Especificacoes.km", "<", 10000000));
+    }
+  
+    if (filters?.kmMin !== undefined && !isNaN(filters.kmMin)) {
+      carsQuery = query(carsQuery, where("Especificacoes.km", ">", filters.kmMin));
+    } else {
+      carsQuery = query(carsQuery, where("Especificacoes.km", ">", 0));
+    }
+  
+    if (filters?.anoMin !== undefined && !isNaN(filters.anoMin)) {
+      carsQuery = query(carsQuery, where("Especificacoes.ano_de_fabricacao", ">", filters.anoMin));
+    } else {
+      carsQuery = query(carsQuery, where("Especificacoes.ano_de_fabricacao", ">", 0));
+    }
+  
+    if (filters?.anoMax !== undefined && !isNaN(filters.anoMax)) {
+      carsQuery = query(carsQuery, where("Especificacoes.ano_de_fabricacao", "<", filters.anoMax));
+    } else {
+      carsQuery = query(carsQuery, where("Especificacoes.ano_de_fabricacao", "<", 9999));
+    }
 
+    // if(filters?.blindado !== false) {
+    //   carsQuery = query(carsQuery, where("Especificacoes.blindado", "==", true));
+    // }
+  
+    carsQuery = query(carsQuery, orderBy("Marca", "asc"), limit(12));
+  
     if (filters?.marca) {
       carsQuery = query(carsQuery, where("Marca", "==", filters.marca));
     }
-
+  
+    console.log('Building query with filters:', filters);
     return carsQuery;
   };
+  
+  
+  
 
-  const fetchCars = async (isInitial = false, filters?: FilterSchemaType) => {
+  const fetchCars = async (isInitial = false, filters?: FiltrosPesquisa) => {
     setIsLoading(true);
     let carsQuery = buildQuery(filters);
-
+  
     if (!isInitial && lastDoc) {
       carsQuery = query(carsQuery, startAfter(lastDoc));
     }
-
+  
     const carsSnapshot = await getDocs(carsQuery);
     const carsList = carsSnapshot.docs.map(
       (doc) => ({ id: doc.id, ...doc.data() }) as Car
     );
-
+  
     if (isInitial) {
       setCars(carsList);
     } else {
       setCars((prevCars) => [...prevCars, ...carsList]);
     }
-
+  
     setLastDoc(carsSnapshot.docs[carsSnapshot.docs.length - 1] || null);
     setHasMore(carsSnapshot.docs.length === 12);
     setIsLoading(false);
   };
+  
 
   const fetchMoreCars = () => {
     if (!isLoading && hasMore) {
@@ -109,13 +141,14 @@ function Estoque() {
     fetchCars(true);
   }, []);
 
-  function handleFilterSubmit(data: FilterSchemaType) {
+  function handleFilterSubmit(data: FiltrosPesquisa) {
     console.log("Filtros aplicados:", data);
     setCurrentFilters(data);
     setLastDoc(null);
     setHasMore(true);
     fetchCars(true, data);
   }
+  
 
   return (
     <div className="relative">

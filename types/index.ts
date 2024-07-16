@@ -40,3 +40,15 @@ export interface Especificacoes {
   final_da_placa: string;
   torque: number;
 }
+
+export interface FiltrosPesquisa {
+  marca: string;
+  precoMin: number;
+  precoMax: number;
+  anoMin: number;
+  anoMax: number;
+  kmMin: number;
+  kmMax: number;
+  cor: string;
+  blindado: boolean;
+}
