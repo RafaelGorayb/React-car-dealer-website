@@ -45,66 +45,39 @@ function Estoque() {
     [isLoading, hasMore]
   );
 
+  const buildQuery = (filters?: FilterSchemaType) => {
+    const carsCollection = collection(db, "carros");
+    let carsQuery = query(
+      carsCollection,
+      where("Marca", "!=", ""),
+      where("Preco", "<", filters?.precoMax ?? 100000000),
+      where("Preco", ">", filters?.precoMin ?? 0),
+      where("Especificacoes.km", "<", filters?.kmMax ?? 10000000),
+      where("Especificacoes.km", ">", filters?.kmMin ?? 0),
+      where(
+        "Especificacoes.ano_de_fabricacao",
+        ">",
+        filters?.anoMin?.getFullYear() ?? 0
+      ),
+      where(
+        "Especificacoes.ano_de_fabricacao",
+        "<",
+        filters?.anoMax?.getFullYear() ?? 9999
+      ),
+      orderBy("Marca", "asc"),
+      limit(12)
+    );
+
+    if (filters?.marca) {
+      carsQuery = query(carsQuery, where("Marca", "==", filters.marca));
+    }
+
+    return carsQuery;
+  };
+
   const fetchCars = async (isInitial = false, filters?: FilterSchemaType) => {
     setIsLoading(true);
-    const carsCollection = collection(db, "carros");
-    let carsQuery = query(carsCollection, orderBy("Preco"), limit(12));
-
-    if (filters) {
-      if (filters.marca) {
-        carsQuery = query(carsQuery, where("Marca", "==", filters.marca));
-      }
-      if (filters.precoMin) {
-        carsQuery = query(carsQuery, where("Preco", ">=", filters.precoMin));
-      }
-      if (filters.precoMax) {
-        carsQuery = query(carsQuery, where("Preco", "<=", filters.precoMax));
-      }
-      if (filters.anoMin) {
-        carsQuery = query(
-          carsQuery,
-          where(
-            "Especificacoes.ano_de_fabricacao",
-            ">=",
-            filters.anoMin.getFullYear()
-          )
-        );
-      }
-      if (filters.anoMax) {
-        carsQuery = query(
-          carsQuery,
-          where(
-            "Especificacoes.ano_de_fabricacao",
-            "<=",
-            filters.anoMax.getFullYear()
-          )
-        );
-      }
-      if (filters.kmMin) {
-        carsQuery = query(
-          carsQuery,
-          where("Especificacoes.km", ">=", filters.kmMin)
-        );
-      }
-      if (filters.kmMax) {
-        carsQuery = query(
-          carsQuery,
-          where("Especificacoes.km", "<=", filters.kmMax)
-        );
-      }
-      if (filters.motorizacao) {
-        carsQuery = query(
-          carsQuery,
-          where("Especificacoes.motor", "==", filters.motorizacao)
-        );
-      }
-      if (filters.blindado !== undefined) {
-        carsQuery = query(
-          carsQuery,
-          where("Especificacoes.blindado", "==", filters.blindado)
-        );
-      }
-    }
+    let carsQuery = buildQuery(filters);
 
     if (!isInitial && lastDoc) {
       carsQuery = query(carsQuery, startAfter(lastDoc));
@@ -137,6 +110,7 @@ function Estoque() {
   }, []);
 
   function handleFilterSubmit(data: FilterSchemaType) {
+    console.log("Filtros aplicados:", data);
     setCurrentFilters(data);
     setLastDoc(null);
     setHasMore(true);
