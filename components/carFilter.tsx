@@ -1,18 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiltrosPesquisa } from "../types";
 import {
   Button,
   Input,
+  Select,
+  SelectItem,
   Switch,
 } from "@nextui-org/react";
 import { Filter, X } from "lucide-react";
 
 interface CarFilterProps {
   submitForm: (data: FiltrosPesquisa) => void;
+  marcasDisponiveis: string[];
 }
 
-const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
+const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm, marcasDisponiveis }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -20,7 +23,13 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<FiltrosPesquisa>();
+
+  useEffect(() => {
+    // Registering the marca field to use the setValue method
+    register("marca");
+  }, [register]);
 
   const onSubmit = (data: FiltrosPesquisa) => {
     submitForm(data);
@@ -31,12 +40,18 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
 
   const FilterForm = () => (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <Input
-        {...register("marca")}
+<Select
         label="Marca"
         placeholder="Selecione a marca"
-
-      />
+        onChange={(e) => setValue("marca", e.target.value)}
+        className="max-w-xs"
+      >
+        {marcasDisponiveis.map((marca) => (
+          <SelectItem key={marca} value={marca}>
+            {marca}
+          </SelectItem>
+        ))}
+      </Select>
       {errors.marca && <span className="text-red-500">{errors.marca.message}</span>}
 
       <div className="flex space-x-2">
@@ -144,5 +159,3 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
 };
 
 export default CarFilterSideMenu;
-
-

@@ -24,10 +24,9 @@ function Estoque() {
   const [isLoading, setIsLoading] = useState(true);
   const [lastDoc, setLastDoc] = useState<DocumentSnapshot | null>(null);
   const [hasMore, setHasMore] = useState(true);
-  const [currentFilters, setCurrentFilters] = useState<FiltrosPesquisa | null>(
-    null
-  );
-
+  const [currentFilters, setCurrentFilters] = useState<FiltrosPesquisa | null>(null);
+  const [marcasDisponiveis, setMarcasDisponiveis] = useState<string[]>([]);
+  
   const { compareList, setCompareList } = useCompareList();
 
   const observer = useRef<IntersectionObserver | null>(null);
@@ -103,9 +102,6 @@ function Estoque() {
     return carsQuery;
   };
   
-  
-  
-
   const fetchCars = async (isInitial = false, filters?: FiltrosPesquisa) => {
     setIsLoading(true);
     let carsQuery = buildQuery(filters);
@@ -129,7 +125,6 @@ function Estoque() {
     setHasMore(carsSnapshot.docs.length === 12);
     setIsLoading(false);
   };
-  
 
   const fetchMoreCars = () => {
     if (!isLoading && hasMore) {
@@ -139,7 +134,19 @@ function Estoque() {
 
   useEffect(() => {
     fetchCars(true);
+      fetchMarcas();
   }, []);
+
+  useEffect(() => {
+
+
+
+  }, []);
+
+  async function fetchMarcas() {
+    const marcas = await getMarcasDisponiveis();
+    setMarcasDisponiveis(marcas);
+  }
 
   function handleFilterSubmit(data: FiltrosPesquisa) {
     console.log("Filtros aplicados:", data);
@@ -148,11 +155,27 @@ function Estoque() {
     setHasMore(true);
     fetchCars(true, data);
   }
-  
+
+  // Função para pegar marcas disponíveis
+  async function getMarcasDisponiveis() {
+    const carsCollection = collection(db, "carros");
+    const carsQuery = query(carsCollection, where("Marca", "!=", ""));
+    const marcasDisponiveis: string[] = [];
+    const querySnapshot = await getDocs(carsQuery);
+    
+    querySnapshot.forEach((doc) => {
+      const marca = doc.data().Marca;
+      if (!marcasDisponiveis.includes(marca)) {
+        marcasDisponiveis.push(marca);
+      }
+    });
+
+    return marcasDisponiveis;
+  }
 
   return (
     <div className="relative">
-      <CarFilter submitForm={handleFilterSubmit} />
+      <CarFilter submitForm={handleFilterSubmit} marcasDisponiveis={marcasDisponiveis} />
 
       <div className="lg:ml-80 p-4">
         <div className="grid gap-4 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
