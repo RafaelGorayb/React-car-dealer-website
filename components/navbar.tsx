@@ -1,3 +1,4 @@
+"use client";
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -16,6 +17,7 @@ import clsx from "clsx";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { SearchIcon, Logo } from "@/components/icons";
+import { Image } from "@nextui-org/react";
 
 export const Navbar = () => {
   const searchInput = (
@@ -31,11 +33,11 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <img
+            <Image
               src="/logo-akkar.png"
-              alt="Akkar Motors Logo"
-              className="h-12"
-            />
+              alt="Logo"
+              className="h-6"
+              />
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-center ml-2">
