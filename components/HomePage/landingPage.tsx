@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
-import { Image, Input, Button } from '@nextui-org/react';
-import Link from 'next/link';
+import { Image, Input, Button, Link } from '@nextui-org/react';
+
 
 const LandingPage: React.FC = () => {
   return (
@@ -9,7 +9,7 @@ const LandingPage: React.FC = () => {
         <div className="container mx-auto flex justify-center items-center">
           <div className="flex flex-col lg:flex-row columns-2">
             <div className="flex justify-center items-center">
-              <Image src="/landingImage.png" isBlurred alt="hero" width={650} height={630}  />
+              <Image src="/landingImage.png" isBlurred alt="hero" width={650}  style={{objectFit: "contain"}} />
             </div>
             <div className="search flex flex-col justify-center items-start lg:items-start p-4">
               <p className="sm:text-3xl text-2xl font-bold">Excelência em Cada Detalhe</p>
@@ -33,9 +33,7 @@ const LandingPage: React.FC = () => {
                   <div className="w-1/2 "></div>
                 </div>
               </div>
-              <Link className='w-full mt-4' href='/estoque' passHref>
-                <Button as="a" color='danger' variant="shadow" className='w-full'>Explorar veículos</Button>
-              </Link>
+                <Button as={Link} href='/estoque' color='danger' variant="shadow" className='w-full'>Explorar veículos</Button>
             </div>
           </div>
         </div>
