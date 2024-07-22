@@ -6,6 +6,7 @@ import RecemChegados from '@/components/HomePage/recem-chegados';
 import SobreNos from '@/components/HomePage/sobre-nos';
 import OndeEstamos from '@/components/HomePage/onde-estamos'; // Certifique-se de que o caminho está correto
 import { Button } from '@nextui-org/react';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -22,9 +23,11 @@ export default function Home() {
           <RecemChegados />
         </div>
         <div className="flex justify-center pb-10">
-          <Button color="danger" variant="shadow" className="w-80 mt-4">
-            Explorar veículos
+          <Link className='w-full mt-4 px-4' href='/estoque' passHref>
+          <Button color="danger" variant="shadow" className="w-full mt-4">
+                 Ver estoque completo 
           </Button>
+          </Link>
         </div>
       </section>
 
