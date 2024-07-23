@@ -57,7 +57,7 @@ function Estoque() {
     } else {
       carsQuery = query(carsQuery, where("Preco", "<", 100000000));
     }
-  
+   
     if (filters?.precoMin !== undefined && !isNaN(filters.precoMin)) {
       carsQuery = query(carsQuery, where("Preco", ">", filters.precoMin));
     } else {
