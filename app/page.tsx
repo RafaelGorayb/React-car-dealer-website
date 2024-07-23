@@ -11,7 +11,7 @@ import { Button, Link } from '@nextui-org/react';
 export default function Home() {
   return (
     <>
-      <section className="flex items-center">
+      <section className="flex ">
         <LandingPage />
       </section>
 
@@ -23,13 +23,13 @@ export default function Home() {
           <RecemChegados />
         </div>
         <div className="flex justify-center pb-10">
-          <Button color="danger" variant="shadow" as={Link} href='/estoque' className="w-80 mt-4">
+          <Button color="danger" variant="shadow" as={Link} href='/estoque' className="w-80 mt-8">
                  Ver estoque completo 
           </Button>
         </div>
       </section>
 
-      <section className="pt-10 w-full bg-gray-200 dark:bg-stone-900">
+      <section className="pt-10 w-full bg-gray-100 dark:bg-stone-900 xl:rounded-lg">
         <div className="p-4">
           <SectionTitle title="Sobre Nós" />
         </div>
