@@ -35,12 +35,10 @@ export type Car = {
   fotos: string[];
 };
 
-
-
-
-
 export interface FiltrosPesquisa {
   marca: string;
+  modelo: string;
+  versao: string;
   precoMin: number;
   precoMax: number;
   anoMin: number;
@@ -48,5 +46,6 @@ export interface FiltrosPesquisa {
   kmMin: number;
   kmMax: number;
   cor: string;
+  carroceria: string;
   blindado: boolean;
 }

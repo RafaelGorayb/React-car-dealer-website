@@ -1,14 +1,20 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { Car } from "../../types";
+import { Car, FiltrosPesquisa } from "../../types";
 import { supabase } from "../../lib/initSupabase";
 import CarCard from "@/components/Card";
+import CarFilterSideMenu from "@/components/carFilter";
+import { Button } from "@nextui-org/react";
+import { FilterIcon } from "lucide-react";
+
 
 function Estoque() {
   const [cars, setCars] = useState<Car[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [lastCarId, setLastCarId] = useState<number | null>(null);
   const [hasMore, setHasMore] = useState(true);
+  const [filters, setFilters] = useState<FiltrosPesquisa | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -28,58 +34,48 @@ function Estoque() {
 
   const fetchCars = async (isInitial = false) => {
     setIsLoading(true);
-  
     let query = supabase
       .from('carro')
       .select(`
         id,
         especificacao_carro (
-          marca,
-          modelo,
-          versao,
-          preco,
-          ano_modelo,
-          ano_fabricacao,
-          km,
-          cor,
-          motorizacao,
-          potencia,
-          torque,
-          cambio,
-          tracao,
-          direcao,
-          freios,
-          rodas,
-          bancos,
-          airbag,
-          ar_condicionado,
-          farol,
-          multimidia,
-          final_placa,
-          carroceria,
-          blindado,
-          carro_id
+         *
         ),
         opcionais_carro (nome),
         fotos_urls (url)
       `)
       .order('id', { ascending: true })
+        .not('especificacao_carro', 'is', null)
       .limit(12);
-  
+
+    // Aplicar filtros se tiver algum
+    if (filters) {
+      if (filters.marca) query = query.eq('especificacao_carro.marca', filters.marca);
+      if (filters.modelo) query = query.eq('especificacao_carro.modelo', filters.modelo);
+      if (filters.versao) query = query.eq('especificacao_carro.versao', filters.versao);
+      if (filters.precoMin) query = query.gte('especificacao_carro.preco', filters.precoMin);
+      if (filters.precoMax) query = query.lte('especificacao_carro.preco', filters.precoMax);
+      if (filters.anoMin) query = query.gte('especificacao_carro.ano_modelo', filters.anoMin);
+      if (filters.anoMax) query = query.lte('especificacao_carro.ano_modelo', filters.anoMax);
+      if (filters.kmMin) query = query.gte('especificacao_carro.km', filters.kmMin);
+      if (filters.kmMax) query = query.lte('especificacao_carro.km', filters.kmMax);
+      if (filters.cor != "") query = query.eq('especificacao_carro.cor', filters.cor);
+      if (filters.carroceria != "") query = query.eq('especificacao_carro.carroceria', filters.carroceria);
+      if (filters.blindado) query = query.eq('especificacao_carro.blindado', filters.blindado);
+    }
+
     if (!isInitial && lastCarId) {
       query = query.gt('id', lastCarId);
     }
-  
+
     const { data, error } = await query;
-  
+
     if (error) {
       console.error("Erro ao buscar carros:", error);
       setIsLoading(false);
       return;
     }
-  
-    console.log("Dados brutos retornados pela consulta:", data);
-  
+
     const carsList: Car[] = data.map((carro: any) => {
       const especificacao = carro.especificacao_carro[0] || {};
       return {
@@ -101,7 +97,7 @@ function Estoque() {
         freios: especificacao.freios,
         rodas: especificacao.rodas,
         bancos: especificacao.bancos,
-        airbags: especificacao.airbags,
+        airbags: especificacao.airbag,
         ar_condicionado: especificacao.ar_condicionado,
         farol: especificacao.farol,
         multimidia: especificacao.multimidia,
@@ -113,21 +109,18 @@ function Estoque() {
         fotos: carro.fotos_urls ? carro.fotos_urls.map((foto: any) => foto.url) : [],
       };
     });
-  
-    console.log("Dados mapeados:", carsList);
-  
+
     if (isInitial) {
       setCars(carsList);
     } else {
       setCars((prevCars) => [...prevCars, ...carsList]);
     }
-  
+
     setLastCarId(data.length ? data[data.length - 1].id : null);
     setHasMore(data.length === 12);
     setIsLoading(false);
+    console.log("Fetched cars:", carsList);
   };
-  
-  
 
   const fetchMoreCars = () => {
     if (!isLoading && hasMore) {
@@ -137,11 +130,31 @@ function Estoque() {
 
   useEffect(() => {
     fetchCars(true);
-  }, []);
+  }, [filters]);
+
+  const handleFilterSubmit = (data: FiltrosPesquisa) => {
+    setFilters(data);
+  };
+
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <div className="relative">
-      <div className="lg:ml-80 p-4">
+    <div className="flex">
+      <div className="fixed left-0 top-10 z-10">
+        <CarFilterSideMenu submitForm={handleFilterSubmit} isOpen={isOpen} toggleMenu={toggleMenu} />
+      </div>
+      <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center ">
+        <div className="bg-gray-100 w-full flex rounded-xl p-2 mb-4">
+          {/* botao para abrir o filtro */}
+          <Button color="danger" variant="shadow"  endContent={<FilterIcon size={16}/>} className="w-4/12" onClick={toggleMenu}>
+            Filtrar
+          </Button> 
+           {/* seletor para ordenar os carros */}
+           
+        </div>
+
+       
+
         <div className="grid gap-4 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {cars.map((car, index) => (
             <div
@@ -161,7 +174,7 @@ function Estoque() {
             ))}
         </div>
         {!hasMore && (
-          <p className="text-center mt-4">Não há mais carros para carregar.</p>
+          <p className="text-center mt-4">Isso é tudo por aqui :D</p>
         )}
       </div>
     </div>

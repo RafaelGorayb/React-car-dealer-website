@@ -4,6 +4,6 @@ export default function PricingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex items-center justify-center ">{children}</section>
+    <section className=" ">{children}</section>
   );
 }
