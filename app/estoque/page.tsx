@@ -4,6 +4,9 @@ import { Car, FiltrosPesquisa } from "../../types";
 import { supabase } from "../../lib/initSupabase";
 import CarCard from "@/components/Card";
 import CarFilterSideMenu from "@/components/carFilter";
+import { Button } from "@nextui-org/react";
+import { FilterIcon } from "lucide-react";
+
 
 function Estoque() {
   const [cars, setCars] = useState<Car[]>([]);
@@ -11,6 +14,7 @@ function Estoque() {
   const [lastCarId, setLastCarId] = useState<number | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [filters, setFilters] = useState<FiltrosPesquisa | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -132,12 +136,25 @@ function Estoque() {
     setFilters(data);
   };
 
+  const toggleMenu = () => setIsOpen(!isOpen);
+
   return (
     <div className="flex">
       <div className="fixed left-0 top-10 z-10">
-        <CarFilterSideMenu submitForm={handleFilterSubmit} />
+        <CarFilterSideMenu submitForm={handleFilterSubmit} isOpen={isOpen} toggleMenu={toggleMenu} />
       </div>
-      <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center">
+      <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center ">
+        <div className="bg-gray-100 w-full flex rounded-xl p-2 mb-4">
+          {/* botao para abrir o filtro */}
+          <Button color="danger" variant="shadow"  endContent={<FilterIcon size={16}/>} className="w-4/12" onClick={toggleMenu}>
+            Filtrar
+          </Button> 
+           {/* seletor para ordenar os carros */}
+           
+        </div>
+
+       
+
         <div className="grid gap-4 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {cars.map((car, index) => (
             <div
@@ -162,9 +179,6 @@ function Estoque() {
       </div>
     </div>
   );
-  
-
-  
 }
 
 export default Estoque;

@@ -13,10 +13,11 @@ import { supabase } from "../lib/initSupabase";
 
 interface CarFilterProps {
   submitForm: (data: FiltrosPesquisa) => void;
+  isOpen: boolean;
+  toggleMenu: () => void;
 }
 
-const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm, isOpen, toggleMenu }) => {
   const [marcas, setMarcas] = useState<string[]>([]);
   const [modelos, setModelos] = useState<string[]>([]);
   const [versoes, setVersoes] = useState<string[]>([]);
@@ -24,8 +25,6 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
   const [carrocerias, setCarrocerias] = useState<string[]>([]);
   const [selectedMarca, setSelectedMarca] = useState<string>("");
   const [selectedModelo, setSelectedModelo] = useState<string>("");
-
-  const toggleMenu = () => setIsOpen(!isOpen);
 
   const {
     register,
@@ -259,7 +258,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
           onClick={toggleMenu}
           color="danger"
           isIconOnly
-          className="rounded-full shadow-lg"
+          className="rounded-lg shadow-lg"
         >
           <Filter size={24} />
         </Button>
