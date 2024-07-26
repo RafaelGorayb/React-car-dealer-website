@@ -16,7 +16,7 @@ module.exports = {
       },
       height: {
         'sm': '336px', 
-        'lg': '336px',
+        'lg': '356px',
       },
       colors: {
         danger: '#f54242'

@@ -35,10 +35,6 @@ export type Car = {
   fotos: string[];
 };
 
-
-
-
-
 export interface FiltrosPesquisa {
   marca: string;
   modelo: string;

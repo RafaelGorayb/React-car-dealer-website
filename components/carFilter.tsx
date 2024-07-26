@@ -112,10 +112,10 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
  const FilterForm = () => (
   <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
+      <label htmlFor="marca">Marca</label>
       <Select
         items={marcas.map(marca => ({ label: marca, value: marca }))}
         placeholder="Selecione a marca"
-        label="Marca"
         selectedKeys={new Set([selectedMarca])}
         onSelectionChange={(keys) => {
           const selected = Array.from(keys).join(", ");
@@ -128,10 +128,10 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
     </div>
 
     <div>
+      <label htmlFor="modelo">Modelo</label>
       <Select
         items={modelos.map(modelo => ({ label: modelo, value: modelo }))}
         placeholder="Selecione o modelo"
-        label="Modelo"
         selectedKeys={new Set([selectedModelo])}
         disabled={!selectedMarca}
         onSelectionChange={(keys) => {
@@ -145,10 +145,10 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
     </div>
 
     <div>
+      <label htmlFor="versao">Versão</label>
       <Select
         items={versoes.map(versao => ({ label: versao, value: versao }))}
         placeholder="Selecione a versão"
-        label="Versão"
         selectedKeys={new Set([watch("versao")])}
         disabled={!selectedModelo}
         onSelectionChange={(keys) => {
@@ -206,9 +206,10 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
     </div>
 
     <div>
+      <label htmlFor="cor">Cor</label>
       <Select
+        id="cor" {...register("cor")}
         items={cores.map(cor => ({ label: cor, value: cor }))}
-        label="Cor"
         placeholder="Selecione a cor"
         selectedKeys={new Set([watch("cor")])}
         onSelectionChange={(keys) => {
@@ -220,11 +221,15 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm }) => {
       </Select>
     </div>
 
+
+
+
     <div>
+      <label htmlFor="carroceria">Carroceria</label>
       <Select
+       id="carroceria" {...register("carroceria")}
         items={carrocerias.map(carroceria => ({ label: carroceria, value: carroceria }))}
         placeholder="Selecione o tipo de carroceria"
-        label="Carroceria"
         selectedKeys={new Set([watch("carroceria")])}
         onSelectionChange={(keys) => {
           const selected = Array.from(keys).join(", ");

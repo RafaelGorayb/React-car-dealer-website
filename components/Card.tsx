@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import { Car } from "../types";
-import { Card, CardBody, CardFooter, Skeleton } from "@nextui-org/react";
+import { Card, CardBody, CardFooter, Skeleton, Chip } from "@nextui-org/react";
 import '../styles/globals.css';
+import { Shield } from "lucide-react";
 
 interface CardProps {
   car: Car;
@@ -65,7 +66,19 @@ function CarCard({ car, isLoading }: CardProps) {
           <p className="text-xs font-semibold">
             {car.marca} {car.modelo}
           </p>
-          <h3 className="text-sm font-semibold text-red-500 min-h-10">{car.versao}</h3>
+          <h3 className="text-sm font-semibold text-red-500 min-h-10 line-clamp-2">{car.versao}</h3>
+          <div>
+            {car.blindado && (
+              <Chip
+                startContent={<Shield size={12} />}
+                variant="solid"
+                color="danger"
+                size="sm"
+              >
+                Blindado
+              </Chip>
+            )}
+          </div>
           <div className="flex text-sm flex-row gap-4 py-2">
             <div className="flex flex-col">
               <p className="text-neutral-400 text-xs">Ano</p>
@@ -76,7 +89,7 @@ function CarCard({ car, isLoading }: CardProps) {
             <div className="flex flex-col">
               <p className="text-neutral-400 text-xs">Km</p>
               <p className="font-medium text-sm">
-                {car.km}
+                {car.km.toLocaleString("pt-BR")} 
               </p>
             </div>
           </div>
@@ -84,12 +97,8 @@ function CarCard({ car, isLoading }: CardProps) {
       </CardBody>
       <CardFooter className="">
         <p className="text-md font-semibold">
-          R${car.preco}
+          R$ {car.preco.toLocaleString("pt-BR")}
         </p>
-        {/* <Button onPress={handleAddToCompare} color="secondary">
-          Adicionar ao comparador
-        </Button>
-        <Button color="primary">Ver mais</Button> */}
       </CardFooter>
     </Card>
   );
