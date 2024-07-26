@@ -48,3 +48,28 @@ export const siteConfig = {
     },
   ],
 };
+
+export const dashboardConfig = {
+  name: "Akkar Motors",
+  description: "A melhor loja de carros do Brasil",
+  navItems: [
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      label: "Estoque",
+      href: "/dashboard/estoque",
+    },
+  ],
+  navMenuItems: [
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      label: "Estoque",
+      href: "/dashboard/estoque",
+    },
+  ],
+};

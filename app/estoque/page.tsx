@@ -7,7 +7,6 @@ import CarFilterSideMenu from "@/components/carFilter";
 import { Button } from "@nextui-org/react";
 import { FilterIcon } from "lucide-react";
 
-
 function Estoque() {
   const [cars, setCars] = useState<Car[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,37 +34,51 @@ function Estoque() {
   const fetchCars = async (isInitial = false) => {
     setIsLoading(true);
     let query = supabase
-      .from('carro')
-      .select(`
+      .from("carro")
+      .select(
+        `
         id,
         especificacao_carro (
          *
         ),
         opcionais_carro (nome),
         fotos_urls (url)
-      `)
-      .order('id', { ascending: true })
-        .not('especificacao_carro', 'is', null)
+      `
+      )
+      .order("id", { ascending: true })
+      .not("especificacao_carro", "is", null)
       .limit(12);
 
     // Aplicar filtros se tiver algum
     if (filters) {
-      if (filters.marca) query = query.eq('especificacao_carro.marca', filters.marca);
-      if (filters.modelo) query = query.eq('especificacao_carro.modelo', filters.modelo);
-      if (filters.versao) query = query.eq('especificacao_carro.versao', filters.versao);
-      if (filters.precoMin) query = query.gte('especificacao_carro.preco', filters.precoMin);
-      if (filters.precoMax) query = query.lte('especificacao_carro.preco', filters.precoMax);
-      if (filters.anoMin) query = query.gte('especificacao_carro.ano_modelo', filters.anoMin);
-      if (filters.anoMax) query = query.lte('especificacao_carro.ano_modelo', filters.anoMax);
-      if (filters.kmMin) query = query.gte('especificacao_carro.km', filters.kmMin);
-      if (filters.kmMax) query = query.lte('especificacao_carro.km', filters.kmMax);
-      if (filters.cor != "") query = query.eq('especificacao_carro.cor', filters.cor);
-      if (filters.carroceria != "") query = query.eq('especificacao_carro.carroceria', filters.carroceria);
-      if (filters.blindado) query = query.eq('especificacao_carro.blindado', filters.blindado);
+      if (filters.marca)
+        query = query.eq("especificacao_carro.marca", filters.marca);
+      if (filters.modelo)
+        query = query.eq("especificacao_carro.modelo", filters.modelo);
+      if (filters.versao)
+        query = query.eq("especificacao_carro.versao", filters.versao);
+      if (filters.precoMin)
+        query = query.gte("especificacao_carro.preco", filters.precoMin);
+      if (filters.precoMax)
+        query = query.lte("especificacao_carro.preco", filters.precoMax);
+      if (filters.anoMin)
+        query = query.gte("especificacao_carro.ano_modelo", filters.anoMin);
+      if (filters.anoMax)
+        query = query.lte("especificacao_carro.ano_modelo", filters.anoMax);
+      if (filters.kmMin)
+        query = query.gte("especificacao_carro.km", filters.kmMin);
+      if (filters.kmMax)
+        query = query.lte("especificacao_carro.km", filters.kmMax);
+      if (filters.cor != "")
+        query = query.eq("especificacao_carro.cor", filters.cor);
+      if (filters.carroceria != "")
+        query = query.eq("especificacao_carro.carroceria", filters.carroceria);
+      if (filters.blindado)
+        query = query.eq("especificacao_carro.blindado", filters.blindado);
     }
 
     if (!isInitial && lastCarId) {
-      query = query.gt('id', lastCarId);
+      query = query.gt("id", lastCarId);
     }
 
     const { data, error } = await query;
@@ -105,8 +118,12 @@ function Estoque() {
         carroceria: especificacao.carroceria,
         blindado: especificacao.blindado,
         carro_id: especificacao.carro_id,
-        opcionais: carro.opcionais_carro ? carro.opcionais_carro.map((opcional: any) => opcional.nome) : [],
-        fotos: carro.fotos_urls ? carro.fotos_urls.map((foto: any) => foto.url) : [],
+        opcionais: carro.opcionais_carro
+          ? carro.opcionais_carro.map((opcional: any) => opcional.nome)
+          : [],
+        fotos: carro.fotos_urls
+          ? carro.fotos_urls.map((foto: any) => foto.url)
+          : [],
       };
     });
 
@@ -141,19 +158,26 @@ function Estoque() {
   return (
     <div className="flex">
       <div className="fixed left-0 top-10 z-10">
-        <CarFilterSideMenu submitForm={handleFilterSubmit} isOpen={isOpen} toggleMenu={toggleMenu} />
+        <CarFilterSideMenu
+          submitForm={handleFilterSubmit}
+          isOpen={isOpen}
+          toggleMenu={toggleMenu}
+        />
       </div>
       <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center ">
         <div className="bg-gray-100 w-full flex rounded-xl p-2 mb-4">
           {/* botao para abrir o filtro */}
-          <Button color="danger" variant="shadow"  endContent={<FilterIcon size={16}/>} className="w-4/12" onClick={toggleMenu}>
+          <Button
+            color="danger"
+            variant="shadow"
+            endContent={<FilterIcon size={16} />}
+            className="w-4/12"
+            onClick={toggleMenu}
+          >
             Filtrar
-          </Button> 
-           {/* seletor para ordenar os carros */}
-           
+          </Button>
+          {/* seletor para ordenar os carros */}
         </div>
-
-       
 
         <div className="grid gap-4 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {cars.map((car, index) => (
