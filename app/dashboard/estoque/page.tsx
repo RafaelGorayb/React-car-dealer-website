@@ -1,6 +1,6 @@
 import React from "react";
 
-const DashboardLayout = () => {
+const EstoquePage = () => {
   return (
     <div className="p-16">
       <p>Bem vindo ao Estoque</p>
@@ -8,4 +8,4 @@ const DashboardLayout = () => {
   );
 };
 
-export default DashboardLayout;
+export default EstoquePage;

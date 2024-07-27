@@ -3,6 +3,7 @@ import NextLink from "next/link";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
+import LogoutButton from "./logoutButton";
 
 const SidebarMenu = async () => {
   const supabase = createClient();
@@ -48,7 +49,7 @@ const SidebarMenu = async () => {
           </li>
         </ul>
       </nav>
-      <div className="p-4 border-t border-gray-200">
+      <div className="flex flex-row justify-between p-4 border-t border-gray-200">
         <a
           href="/dashboard/settings"
           className="flex items-center text-gray-600 hover:text-gray-800"
@@ -56,6 +57,7 @@ const SidebarMenu = async () => {
           <Settings className="mr-3" size={20} />
           <span>Settings</span>
         </a>
+        <LogoutButton />
       </div>
     </div>
   );

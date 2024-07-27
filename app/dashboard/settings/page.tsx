@@ -1,6 +1,6 @@
 import React from "react";
 
-const DashboardLayout = () => {
+const ConfigPage = () => {
   return (
     <div className="p-16">
       <p>Bem vindo as configs</p>
@@ -8,4 +8,4 @@ const DashboardLayout = () => {
   );
 };
 
-export default DashboardLayout;
+export default ConfigPage;
