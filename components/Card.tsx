@@ -2,7 +2,7 @@
 import React from "react";
 import { Car } from "../types";
 import { Card, CardBody, CardFooter, Skeleton, Chip } from "@nextui-org/react";
-import '../styles/globals.css';
+import "../styles/globals.css";
 import { Shield } from "lucide-react";
 
 interface CardProps {
@@ -13,9 +13,17 @@ interface CardProps {
 function CarCard({ car, isLoading }: CardProps) {
   if (isLoading) {
     return (
-      <Card className="md:w-lg md:h-lg w-sm shadow-2xl" radius="sm" isPressable={true} isHoverable={true}>
+      <Card
+        className="md:w-lg md:h-lg w-sm shadow-2xl"
+        radius="sm"
+        isPressable={true}
+        isHoverable={true}
+      >
         <div className="relative w-full h-[170px]">
-          <Skeleton isLoaded={!isLoading} className="w-full h-full object-cover">
+          <Skeleton
+            isLoaded={!isLoading}
+            className="w-full h-full object-cover"
+          >
             <div className="w-full h-full bg-gray-200"></div>
           </Skeleton>
         </div>
@@ -24,7 +32,10 @@ function CarCard({ car, isLoading }: CardProps) {
             <Skeleton className="rounded-lg h-4 w-3/4" isLoaded={!isLoading}>
               <p className="text-xs font-semibold bg-gray-200 h-4 w-3/4"></p>
             </Skeleton>
-            <Skeleton className="rounded-lg h-4 w-2/4 mt-1" isLoaded={!isLoading}>
+            <Skeleton
+              className="rounded-lg h-4 w-2/4 mt-1"
+              isLoaded={!isLoading}
+            >
               <h3 className="text-sm font-semibold text-red-500 bg-gray-200 h-4 w-1/2 mt-2"></h3>
             </Skeleton>
             <div className="flex text-sm flex-row gap-4 py-2">
@@ -52,7 +63,12 @@ function CarCard({ car, isLoading }: CardProps) {
     );
   }
   return (
-    <Card className="md:w-lg md:h-lg w-sm shadow-2xl" radius="sm" isPressable={true} isHoverable={true}>
+    <Card
+      className="md:w-lg md:h-lg w-sm shadow-2xl"
+      radius="sm"
+      isPressable={true}
+      isHoverable={true}
+    >
       <div className="relative w-full h-[170px]">
         <img
           src={car.fotos[0] || "/carroTeste.png"}
@@ -66,7 +82,9 @@ function CarCard({ car, isLoading }: CardProps) {
           <p className="text-xs font-semibold">
             {car.marca} {car.modelo}
           </p>
-          <h3 className="text-sm font-semibold text-red-500 min-h-10 line-clamp-2">{car.versao}</h3>
+          <h3 className="text-sm font-semibold text-red-500 min-h-10 line-clamp-2">
+            {car.versao}
+          </h3>
           <div>
             {car.blindado && (
               <Chip
@@ -89,7 +107,7 @@ function CarCard({ car, isLoading }: CardProps) {
             <div className="flex flex-col">
               <p className="text-neutral-400 text-xs">Km</p>
               <p className="font-medium text-sm">
-                {car.km.toLocaleString("pt-BR")} 
+                {car.km.toLocaleString("pt-BR")}
               </p>
             </div>
           </div>

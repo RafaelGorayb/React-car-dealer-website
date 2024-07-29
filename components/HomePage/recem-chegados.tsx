@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import CarCard from "@/components/Card";
 import { Car } from "../../types";
-import { supabase } from "../../lib/initSupabase";
+import { createClient } from "@/utils/supabase/client";
 
 const RecemChegados = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -12,17 +12,21 @@ const RecemChegados = () => {
     const fetchRecentCars = async () => {
       setIsLoading(true);
 
+      const supabase = createClient();
+
       const { data, error } = await supabase
-        .from('carro')
-        .select(`
+        .from("carro")
+        .select(
+          `
           id,
           especificacao_carro (
           *
           ),
           opcionais_carro (nome),
           fotos_urls (url)
-        `)
-        .order('id', { ascending: true })        
+        `
+        )
+        .order("id", { ascending: true })
         .limit(5);
 
       if (error) {
@@ -60,8 +64,12 @@ const RecemChegados = () => {
           carroceria: especificacao.carroceria,
           blindado: especificacao.blindado,
           carro_id: especificacao.carro_id,
-          opcionais: carro.opcionais_carro ? carro.opcionais_carro.map((opcional: any) => opcional.nome) : [],
-          fotos: carro.fotos_urls ? carro.fotos_urls.map((foto: any) => foto.url) : [],
+          opcionais: carro.opcionais_carro
+            ? carro.opcionais_carro.map((opcional: any) => opcional.nome)
+            : [],
+          fotos: carro.fotos_urls
+            ? carro.fotos_urls.map((foto: any) => foto.url)
+            : [],
         };
       });
 

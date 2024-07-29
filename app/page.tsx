@@ -4,7 +4,7 @@ import SectionTitle from "@/components/HomePage/sectionTitle";
 import LandingPage from "@/components/HomePage/landingPage";
 import RecemChegados from "@/components/HomePage/recem-chegados";
 import SobreNos from "@/components/HomePage/sobre-nos";
-import OndeEstamos from "@/components/HomePage/onde-estamos"; // Certifique-se de que o caminho está correto
+import OndeEstamos from "@/components/HomePage/onde-estamos";
 import { Button, Link } from "@nextui-org/react";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";

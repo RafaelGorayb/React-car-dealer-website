@@ -1,19 +1,20 @@
 "use client";
 import { createClient } from "@/utils/supabase/client";
-import { Button } from "@nextui-org/react";
-import { redirect } from "next/navigation";
+import { LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LogoutButton() {
   const supabase = createClient();
+  const router = useRouter();
   return (
-    <Button
+    <button
       color="danger"
-      onClick={() => {
-        supabase.auth.signOut();
-        redirect("/");
+      onClick={async () => {
+        await supabase.auth.signOut();
+        router.push("/login");
       }}
     >
-      Logout
-    </Button>
+      <LogOut size={15} />
+    </button>
   );
 }

@@ -7,7 +7,7 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuItem,
-  Button
+  Button,
 } from "@nextui-org/react";
 
 import { Link } from "@nextui-org/link";
@@ -34,11 +34,7 @@ export const Navbar = () => {
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Image
-              src="/logo-akkar.png"
-              alt="Logo"
-              className="h-6"
-              />
+            <Image src="/logo-akkar.png" alt="Logo" className="h-6" />
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-center ml-2">

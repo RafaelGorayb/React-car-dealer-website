@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Car, FiltrosPesquisa } from "../../types";
-import { supabase } from "../../lib/initSupabase";
 import CarCard from "@/components/Card";
 import CarFilterSideMenu from "@/components/carFilter";
 import { Button } from "@nextui-org/react";
 import { FilterIcon } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 function Estoque() {
   const [cars, setCars] = useState<Car[]>([]);
@@ -16,6 +16,8 @@ function Estoque() {
   const [isOpen, setIsOpen] = useState(false);
 
   const observer = useRef<IntersectionObserver | null>(null);
+
+  const supabase = createClient();
 
   const lastCarElementRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -166,7 +168,6 @@ function Estoque() {
       </div>
       <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center ">
         <div className="bg-gray-100 w-full flex rounded-xl p-2 mb-4">
-          {/* botao para abrir o filtro */}
           <Button
             color="danger"
             variant="shadow"
@@ -176,7 +177,6 @@ function Estoque() {
           >
             Filtrar
           </Button>
-          {/* seletor para ordenar os carros */}
         </div>
 
         <div className="grid gap-4 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
