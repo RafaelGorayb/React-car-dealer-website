@@ -1,9 +1,10 @@
+import NewCarForm from "@/components/Dashboard/estoque/newCar";
 import React from "react";
 
 const EstoquePage = () => {
   return (
-    <div className="p-16">
-      <p>Bem vindo ao Estoque</p>
+    <div className="overflow-auto">
+      <NewCarForm />
     </div>
   );
 };
