@@ -1,37 +1,118 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FiltrosPesquisa } from "../types";
-import {
-  Button,
-  Input,
-  Select,
-  SelectItem,
-  Switch,
-} from "@nextui-org/react";
+import { FiltrosPesquisa } from "../types/index";
+import { Button, Input, Switch, Select, SelectItem } from "@nextui-org/react";
 import { Filter, X } from "lucide-react";
+import { supabase } from "../lib/initSupabase";
 
 interface CarFilterProps {
   submitForm: (data: FiltrosPesquisa) => void;
-  marcasDisponiveis: string[];
+  isOpen: boolean;
+  toggleMenu: () => void;
 }
 
-const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm, marcasDisponiveis }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleMenu = () => setIsOpen(!isOpen);
+const CarFilterSideMenu: React.FC<CarFilterProps> = ({
+  submitForm,
+  isOpen,
+  toggleMenu,
+}) => {
+  const [marcas, setMarcas] = useState<string[]>([]);
+  const [modelos, setModelos] = useState<string[]>([]);
+  const [versoes, setVersoes] = useState<string[]>([]);
+  const [cores, setCores] = useState<string[]>([]);
+  const [carrocerias, setCarrocerias] = useState<string[]>([]);
+  const [selectedMarca, setSelectedMarca] = useState<string>("");
+  const [selectedModelo, setSelectedModelo] = useState<string>("");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm<FiltrosPesquisa>();
 
+  const fetchDistinctValues = async (
+    column: string,
+    filterColumn?: string,
+    filterValue?: string
+  ) => {
+    let query = supabase
+      .from("carro")
+      .select(column)
+      .neq(column, null)
+      .neq(column, "")
+      .order(column, { ascending: true });
+
+    if (filterColumn && filterValue) {
+      query = query.eq(filterColumn, filterValue);
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error(`Erro ao buscar ${column}:`, error);
+      return [];
+    }
+
+    const distinctValues = Array.from(
+      new Set(data.map((item: any) => item[column]))
+    );
+
+    return distinctValues;
+  };
+
   useEffect(() => {
-    // Registering the marca field to use the setValue method
-    register("marca");
-  }, [register]);
+    const fetchData = async () => {
+      const [marcas, cores, carrocerias] = await Promise.all([
+        fetchDistinctValues("marca"),
+        fetchDistinctValues("cor"),
+        fetchDistinctValues("carroceria"),
+      ]);
+      setMarcas(marcas);
+      setCores(cores);
+      setCarrocerias(carrocerias);
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (selectedMarca) {
+      const fetchModelos = async () => {
+        const modelos = await fetchDistinctValues(
+          "modelo",
+          "marca",
+          selectedMarca
+        );
+        setModelos(modelos);
+      };
+
+      fetchModelos();
+    } else {
+      setModelos([]);
+    }
+  }, [selectedMarca]);
+
+  useEffect(() => {
+    if (selectedModelo) {
+      const fetchVersoes = async () => {
+        const versoes = await fetchDistinctValues(
+          "versao",
+          "modelo",
+          selectedModelo
+        );
+        setVersoes(versoes);
+      };
+
+      fetchVersoes();
+    } else {
+      setVersoes([]);
+    }
+  }, [selectedModelo]);
 
   const onSubmit = (data: FiltrosPesquisa) => {
+    console.log(data); // Adicione esta linha para imprimir os dados do formulário
     submitForm(data);
     if (window.innerWidth < 768) {
       toggleMenu();
@@ -40,19 +121,58 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm, marcasDisponi
 
   const FilterForm = () => (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-<Select
-        label="Marca"
-        placeholder="Selecione a marca"
-        onChange={(e) => setValue("marca", e.target.value)}
-        className="max-w-xs"
-      >
-        {marcasDisponiveis.map((marca) => (
-          <SelectItem key={marca} value={marca}>
-            {marca}
-          </SelectItem>
-        ))}
-      </Select>
-      {errors.marca && <span className="text-red-500">{errors.marca.message}</span>}
+      <div>
+        <label htmlFor="marca">Marca</label>
+        <Select
+          items={marcas.map((marca) => ({ label: marca, value: marca }))}
+          placeholder="Selecione a marca"
+          selectedKeys={new Set([selectedMarca])}
+          onSelectionChange={(keys) => {
+            const selected = Array.from(keys).join(", ");
+            setSelectedMarca(selected);
+            setValue("marca", selected);
+          }}
+        >
+          {(marca) => <SelectItem key={marca.value}>{marca.label}</SelectItem>}
+        </Select>
+      </div>
+
+      <div>
+        <label htmlFor="modelo">Modelo</label>
+        <Select
+          items={modelos.map((modelo) => ({ label: modelo, value: modelo }))}
+          placeholder="Selecione o modelo"
+          selectedKeys={new Set([selectedModelo])}
+          disabled={!selectedMarca}
+          onSelectionChange={(keys) => {
+            const selected = Array.from(keys).join(", ");
+            setSelectedModelo(selected);
+            setValue("modelo", selected);
+          }}
+        >
+          {(modelo) => (
+            <SelectItem key={modelo.value}>{modelo.label}</SelectItem>
+          )}
+        </Select>
+      </div>
+
+      <div>
+        <label htmlFor="versao">Versão</label>
+        <Select
+          items={versoes.map((versao) => ({ label: versao, value: versao }))}
+          placeholder="Selecione a versão"
+          selectedKeys={new Set([watch("versao")])}
+          disabled={!selectedModelo}
+          onSelectionChange={(keys) => {
+            const selected = Array.from(keys).join(", ");
+            setValue("versao", selected);
+          }}
+        >
+          {(versao) => (
+            <SelectItem key={versao.value}>{versao.label}</SelectItem>
+          )}
+        </Select>
+      </div>
 
       <div className="flex space-x-2">
         <Input
@@ -99,17 +219,50 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm, marcasDisponi
         />
       </div>
 
-      <Input
-        {...register("cor")}
-        label="Cor"
-        placeholder="Cor do veículo"
-      />
+      <div>
+        <label htmlFor="cor">Cor</label>
+        <Select
+          id="cor"
+          {...register("cor")}
+          items={cores.map((cor) => ({ label: cor, value: cor }))}
+          placeholder="Selecione a cor"
+          selectedKeys={new Set([watch("cor")])}
+          onSelectionChange={(keys) => {
+            const selected = Array.from(keys).join(", ");
+            setValue("cor", selected);
+          }}
+        >
+          {(cor) => <SelectItem key={cor.value}>{cor.label}</SelectItem>}
+        </Select>
+      </div>
+
+      <div>
+        <label htmlFor="carroceria">Carroceria</label>
+        <Select
+          id="carroceria"
+          {...register("carroceria")}
+          items={carrocerias.map((carroceria) => ({
+            label: carroceria,
+            value: carroceria,
+          }))}
+          placeholder="Selecione o tipo de carroceria"
+          selectedKeys={new Set([watch("carroceria")])}
+          onSelectionChange={(keys) => {
+            const selected = Array.from(keys).join(", ");
+            setValue("carroceria", selected);
+          }}
+        >
+          {(carroceria) => (
+            <SelectItem key={carroceria.value}>{carroceria.label}</SelectItem>
+          )}
+        </Select>
+      </div>
 
       <div className="flex items-center justify-between">
         <label htmlFor="blindado" className="text-sm">
           Blindado
         </label>
-        <Switch {...register("blindado")} id="blindado" />
+        <input type="checkbox" {...register("blindado")} id="blindado" />
       </div>
       <Button type="submit" color="danger" className="w-full">
         Aplicar Filtros
@@ -124,7 +277,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm, marcasDisponi
           onClick={toggleMenu}
           color="danger"
           isIconOnly
-          className="rounded-full shadow-lg"
+          className="rounded-lg shadow-lg"
         >
           <Filter size={24} />
         </Button>
@@ -150,7 +303,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({ submitForm, marcasDisponi
         </div>
       </div>
 
-      <div className="hidden lg:block fixed w-80 h-screen overflow-y-auto p-4 bg-background shadow-lg">
+      <div className="hidden lg:block fixed bg-background w-80 h-screen overflow-y-auto p-4 shadow-lg">
         <h2 className="text-2xl font-bold mb-6">Filtros</h2>
         <FilterForm />
       </div>

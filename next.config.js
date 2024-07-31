@@ -1,7 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ['akkarmotors.com.br'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'akkarmotors.com.br',
+                port: "",
+            },
+            {
+                protocol: 'https',
+                hostname: 'hkuzikocskwbvvucobqa.supabase.co',
+                port: "",
+            }
+        ]
     }
 }
 

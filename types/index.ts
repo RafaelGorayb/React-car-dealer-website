@@ -4,29 +4,19 @@ export type IconSvgProps = SVGProps<SVGSVGElement> & {
   size?: number;
 };
 
-export interface Car {
-  id: string;
-  Especificacoes: Especificacoes;
-  Imagens: string[];
-  Link: string;
-  Marca: string;
-  Modelo: string;
-  Opcionais: string[];
-  Preco: number;
-  Titulo: string;
-  Versao: string;
-}
-
-export interface Especificacoes {
+export type Car = {
+  id: number;
   marca: string;
+  modelo: string;
+  versao: string;
+  preco: number;
+  ano_modelo: number;
+  ano_fabricacao: number;
   km: number;
-  ano_de_fabricacao: number;
-  ano_do_modelo: number;
-  blindado: boolean;
-  carroceria: string;
   cor: string;
-  motor: string;
-  potencia: number;
+  motorizacao: string;
+  potencia: string;
+  torque: string;
   cambio: string;
   tracao: string;
   direcao: string;
@@ -35,14 +25,19 @@ export interface Especificacoes {
   bancos: string;
   airbags: string;
   ar_condicionado: string;
-  farois: string;
-  conectividade_e_multimidia: string;
-  final_da_placa: string;
-  torque: number;
-}
+  farol: string;
+  multimidia: string;
+  final_placa: string;
+  carroceria: string;
+  blindado: boolean;
+  opcionais: string[];
+  fotos: string[];
+};
 
 export interface FiltrosPesquisa {
   marca: string;
+  modelo: string;
+  versao: string;
   precoMin: number;
   precoMax: number;
   anoMin: number;
@@ -50,5 +45,6 @@ export interface FiltrosPesquisa {
   kmMin: number;
   kmMax: number;
   cor: string;
+  carroceria: string;
   blindado: boolean;
 }

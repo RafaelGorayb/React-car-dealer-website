@@ -1,52 +1,136 @@
-"use client";
 import React from "react";
 import { Car } from "../types";
-import { Card, CardBody, CardFooter, Skeleton } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  Skeleton,
+  Chip,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@nextui-org/react";
+import "../styles/globals.css";
+import { Shield } from "lucide-react";
+import { toast } from "react-toastify";
 import { useCompareList } from "@/lib/userState";
-import '../styles/globals.css';
+import SectionTitle from "./HomePage/sectionTitle";
 
 interface CardProps {
   car: Car;
   isLoading: boolean;
 }
-//
+
 function CarCard({ car, isLoading }: CardProps) {
-  function handleAddToCompare() {
-    const { setCompareList } = useCompareList();
-    setCompareList((prev) => [...(prev || []), car]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { setCompareList } = useCompareList();
+
+  function addToComparador() {
+    setCompareList((prev) => (prev ? [...prev, car] : [car]));
+    toast.success("Carro adicionado ao comparador");
   }
+
+  const renderCardContent = () => (
+    <>
+    <div className="relative w-full h-[170px]">
+      <img
+        src={car.fotos[0] || "/carroTeste.png"}
+        className="w-full h-full object-cover"
+        alt={`${car.marca} ${car.modelo}`}
+      />
+    </div>
+
+    <CardBody className="overflow-visible py-2">
+      <div>
+        <p className="text-xs font-semibold">
+          {car.marca} {car.modelo}
+        </p>
+        <h3 className="text-sm font-semibold text-red-500 min-h-10 line-clamp-2">
+          {car.versao}
+        </h3>
+        <div>
+          {car.blindado && (
+            <Chip
+              startContent={<Shield size={12} />}
+              variant="solid"
+              color="danger"
+              size="sm"
+            >
+              Blindado
+            </Chip>
+          )}
+        </div>
+        <div className="flex text-sm flex-row gap-4 py-2">
+          <div className="flex flex-col">
+            <p className="text-neutral-400 text-xs">Ano</p>
+            <p className="font-medium text-sm">
+              {car.ano_fabricacao}/{car.ano_modelo}
+            </p>
+          </div>
+          <div className="flex flex-col">
+            <p className="text-neutral-400 text-xs">Km</p>
+            <p className="font-medium text-sm">
+              {car.km.toLocaleString("pt-BR")}
+            </p>
+          </div>
+        </div>
+      </div>
+    </CardBody>
+    <CardFooter className="">
+      <p className="text-md font-semibold">
+        R$ {car.preco.toLocaleString("pt-BR")}
+      </p>
+    </CardFooter>
+  </>
+  );
 
   if (isLoading) {
     return (
-      <Card className="md:w-lg md:h-lg w-sm shadow-2xl" radius="sm" isPressable={true} isHoverable={true}>
+      <Card
+        className="md:w-lg md:h-lg w-sm shadow-2xl"
+        radius="sm"
+        isPressable={true}
+        isHoverable={true}
+      >
         <div className="relative w-full h-[170px]">
-          <Skeleton isLoaded={!isLoading} className="w-full h-full object-cover">
+          <Skeleton
+            isLoaded={!isLoading}
+            className="w-full h-full object-cover"
+          >
             <div className="w-full h-full bg-gray-200"></div>
           </Skeleton>
         </div>
-        <CardBody className="overflow-visible py-2">            
-            <div>
-            <Skeleton className= "rounded-lg h-4 w-3/4" isLoaded={!isLoading}>
+        <CardBody className="overflow-visible py-2">
+          <div>
+            <Skeleton className="rounded-lg h-4 w-3/4" isLoaded={!isLoading}>
               <p className="text-xs font-semibold bg-gray-200 h-4 w-3/4"></p>
             </Skeleton>
-            <Skeleton className= "rounded-lg h-4 w-2/4 mt-1" isLoaded={!isLoading}>
+            <Skeleton
+              className="rounded-lg h-4 w-2/4 mt-1"
+              isLoaded={!isLoading}
+            >
               <h3 className="text-sm font-semibold text-red-500 bg-gray-200 h-4 w-1/2 mt-2"></h3>
-            </Skeleton>            
-              <div className="flex text-sm flex-row gap-4 py-2">
-              <Skeleton className= "rounded-lg w-2/4 mt-1" isLoaded={!isLoading}>
+            </Skeleton>
+            <div className="flex text-sm flex-row gap-4 py-2">
+              <Skeleton className="rounded-lg w-2/4 mt-1" isLoaded={!isLoading}>
                 <div className="flex flex-col">
                   <p className="text-neutral-400 text-xs">Ano</p>
-                  <p className="font-medium  text-sm bg-gray-200 h-4 w-1/2"></p>
+                  <p className="font-medium text-sm bg-gray-200 h-4 w-1/2"></p>
                 </div>
-                </Skeleton>
-                <Skeleton className= "rounded-lg w-2/4 mt-1" isLoaded={!isLoading}>
+              </Skeleton>
+              <Skeleton className="rounded-lg w-2/4 mt-1" isLoaded={!isLoading}>
                 <div className="flex flex-col">
                   <p className="text-neutral-400 text-xs">Km</p>
                   <p className="font-medium text-sm bg-gray-200 h-4 w-1/2"></p>
                 </div>
-                </Skeleton>
-              </div> 
-            </div>         
+              </Skeleton>
+            </div>
+          </div>
         </CardBody>
         <CardFooter className="">
           <Skeleton className="rounded-lg h-4 w-3/4" isLoaded={!isLoading}>
@@ -56,49 +140,165 @@ function CarCard({ car, isLoading }: CardProps) {
       </Card>
     );
   }
-  return (
-    <Card className="md:w-lg md:h-lg w-sm shadow-2xl" radius="sm" isPressable={true} isHoverable={true}>
-      <div className="relative w-full h-[170px]">
-        <img
-          src={car.Imagens[0]}
-          className="w-full h-full object-cover"
-          alt="Carro"
-        />
-      </div>
 
-      <CardBody className="overflow-visible py-2">
-        <div>
-          <p className="text-xs font-semibold">
-            {car.Marca} {car.Modelo}
-          </p>
-          <h3 className="text-sm font-semibold text-red-500 min-h-10">{car.Versao}</h3>
-          <div className="flex text-sm flex-row gap-4 py-2">
-            <div className="flex flex-col">
-              <p className="text-neutral-400 text-xs">Ano</p>
-              <p className="font-medium  text-sm">
-                {car.Especificacoes?.ano_de_fabricacao}/
-                {car.Especificacoes?.ano_do_modelo}
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <p className="text-neutral-400 text-xs">Km</p>
-              <p className="font-medium text-sm">
-                {car.Especificacoes?.km?.toLocaleString("pt-BR")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </CardBody>
-      <CardFooter className="">
-        <p className="text-md font-semibold">
-          R${car.Preco?.toLocaleString("pt-BR")}
-        </p>
-        {/* <Button onPress={handleAddToCompare} color="secondary">
-          Adicionar ao comparador
-        </Button>
-        <Button color="primary">Ver mais</Button> */}
-      </CardFooter>
-    </Card>
+  return (
+    <>
+      <Card
+        className="md:w-lg md:h-lg w-sm shadow-2xl"
+        radius="sm"
+        isPressable={true}
+        isHoverable={true}
+        onClick={onOpen}
+      >
+        {renderCardContent()}
+      </Card>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size="4xl"
+        scrollBehavior="inside"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+            <ModalHeader className="p-0">
+              <img
+                src={car.fotos[0] || "/carroTeste.png"}
+                className="w-full h-64 object-cover rounded-lg"
+                alt={`${car.marca} ${car.modelo}`}
+              />
+            </ModalHeader>
+
+              <ModalBody className="p-4">
+                  <div>
+                    <p className="text-md font-semibold">
+                      {car.marca} {car.modelo}
+                    </p>
+                    <h3 className="text-md font-semibold text-red-500 min-h-10 line-clamp-2">
+                      {car.versao}
+                    </h3>
+                    <div>
+                      {car.blindado && (
+                        <Chip
+                          startContent={<Shield size={12} />}
+                          variant="solid"
+                          color="danger"
+                          size="sm"
+                        >
+                          Blindado
+                        </Chip>
+                      )}
+                    </div>
+                    <div className="flex flex-row gap-4 py-2">
+                      <div className="flex flex-col">
+                        <p className="text-neutral-400 text-md">Ano</p>
+                        <p className="font-medium text-lg">
+                          {car.ano_fabricacao}/{car.ano_modelo}
+                        </p>
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="text-neutral-400 text-md">Km</p>
+                        <p className="font-medium text-lg">
+                          {car.km.toLocaleString("pt-BR")}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-lg font-semibold">
+                      R$ {car.preco.toLocaleString("pt-BR")}
+                    </p>
+                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+               <div className="bg-gray-200 rounded-lg p-4">
+                  <SectionTitle title="Especificações" fontsize="lg" />
+                  <div className="grid grid-cols-2 gap-2 text-xs font-light mt-6">
+                      <p>
+                        Ano: <strong>{car.ano_fabricacao}/{car.ano_modelo}</strong>
+                      </p>
+                      <p>
+                        Quilometragem: <strong>{car.km.toLocaleString("pt-BR")} km</strong>
+                      </p>
+                      <p>
+                        Cor: <strong>{car.cor}</strong>
+                      </p>
+                      <p>
+                        Motorização: <strong>{car.motorizacao}</strong>
+                      </p>
+                      <p>
+                        Potência: <strong>{car.potencia}</strong>
+                      </p>
+                      <p>
+                        Torque: <strong>{car.torque}</strong>
+                      </p>
+                      <p>
+                        Câmbio: <strong>{car.cambio}</strong>
+                      </p>
+                      <p>
+                        Tração: <strong>{car.tracao}</strong>
+                      </p>
+                      <p>
+                        Direção: <strong>{car.direcao}</strong>
+                      </p>
+                      <p>
+                        Freios: <strong>{car.freios}</strong>
+                      </p>
+                      <p>
+                        Rodas: <strong>{car.rodas}</strong>
+                      </p>
+                      <p>
+                        Bancos: <strong>{car.bancos}</strong>
+                      </p>
+                      <p>
+                        Airbags: <strong>{car.airbags}</strong>
+                      </p>
+                      <p>
+                        Ar Condicionado: <strong>{car.ar_condicionado}</strong>
+                      </p>
+                      <p>
+                        Faróis: <strong>{car.farol}</strong>
+                      </p>
+                      <p>
+                        Multimídia: <strong>{car.multimidia}</strong>
+                      </p>
+                      <p>
+                        Final da Placa: <strong>{car.final_placa}</strong>
+                      </p>
+                      <p>
+                        Carroceria: <strong>{car.carroceria}</strong>
+                      </p>
+                      <p>
+                        Blindado: <strong>{car.blindado ? "Sim" : "Não"}</strong>
+                      </p>
+                    </div>
+
+                  </div>
+                </div>
+                <div className="bg-gray-200 rounded-lg p-4 mt-6">
+                <SectionTitle title="Opcionais" fontsize="lg" />
+                  <ul className="list-disc pl-5 columns-2 md:columns-3 text-xs font-light mt-6">
+                    {car.opcionais.map((opcional, index) => (
+                      <li key={index}>{opcional}</li>
+                    ))}
+                  </ul>
+                </div>
+              </ModalBody>
+              <ModalFooter className="flex justify-between">
+                <Button
+                  color="secondary"
+                  variant="faded"
+                  onClick={addToComparador}
+                >
+                  Adicionar ao comparador
+                </Button>
+                <Button color="danger" variant="light" onPress={onClose}>
+                  Fechar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 }
 

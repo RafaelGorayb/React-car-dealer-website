@@ -2,14 +2,7 @@
 import React, { useEffect, useState } from "react";
 import CarCard from "@/components/Card";
 import { Car } from "../../types";
-import { db } from "../../config/firestore";
-import {
-  collection,
-  getDocs,
-  query,
-  orderBy,
-  limit,
-} from "firebase/firestore";
+import { createClient } from "@/utils/supabase/client";
 
 const RecemChegados = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -17,12 +10,66 @@ const RecemChegados = () => {
 
   useEffect(() => {
     const fetchRecentCars = async () => {
-      const carsCollection = collection(db, "carros");
-      const carsQuery = query(carsCollection, limit(5));
-      const carsSnapshot = await getDocs(carsQuery);
-      const carsList = carsSnapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() }) as Car
-      );
+      setIsLoading(true);
+
+      const supabase = createClient();
+
+      const { data, error } = await supabase
+        .from("carro")
+        .select(
+          `
+          *,
+          opcionais_carro (nome),
+          fotos_urls (url)
+        `
+        )
+        .order("id", { ascending: true })
+        .limit(5);
+
+      if (error) {
+        console.error("Erro ao buscar carros:", error);
+        setIsLoading(false);
+        return;
+      }
+
+      const carsList: Car[] = data.map((carro: any) => {
+        
+        return {
+          id: carro.id,
+          marca: carro.marca,
+          modelo: carro.modelo,
+          versao: carro.versao,
+          preco: carro.preco,
+          ano_modelo: carro.ano_modelo,
+          ano_fabricacao: carro.ano_fabricacao,
+          km: carro.km,
+          cor: carro.cor,
+          motorizacao: carro.motorizacao,
+          potencia: carro.potencia,
+          torque: carro.torque,
+          cambio: carro.cambio,
+          tracao: carro.tracao,
+          direcao: carro.direcao,
+          freios: carro.freios,
+          rodas: carro.rodas,
+          bancos: carro.bancos,
+          airbags: carro.airbag,
+          ar_condicionado: carro.ar_condicionado,
+          farol: carro.farol,
+          multimidia: carro.multimidia,
+          final_placa: carro.final_placa,
+          carroceria: carro.carroceria,
+          blindado: carro.blindado,
+          carro_id: carro.carro_id,
+          opcionais: carro.opcionais_carro
+            ? carro.opcionais_carro.map((opcional: any) => opcional.nome)
+            : [],
+          fotos: carro.fotos_urls
+            ? carro.fotos_urls.map((foto: any) => foto.url)
+            : [],
+        };
+      });
+
       setCars(carsList);
       setIsLoading(false);
     };
@@ -41,13 +88,11 @@ const RecemChegados = () => {
   }
 
   return (
-    <> 
     <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {cars.map((car) => (
         <CarCard key={car.id} car={car} isLoading={false} />
       ))}
     </div>
-    </>
   );
 };
 

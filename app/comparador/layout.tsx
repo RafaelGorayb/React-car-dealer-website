@@ -1,16 +1,16 @@
 import Footer from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 
-export default function PricingLayout({
+export default function ComparadorLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <section>
       <Navbar />
-      <section className=" ">{children}</section>
+      <div>{children}</div>
       <Footer />
-    </div>
+    </section>
   );
 }

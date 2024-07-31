@@ -7,6 +7,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { Provider } from "jotai";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -31,7 +32,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="light"
+            theme="dark"
           />
         </Provider>
       </NextThemesProvider>
