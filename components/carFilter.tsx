@@ -38,7 +38,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
     filterValue?: string
   ) => {
     let query = supabase
-      .from("especificacao_carro")
+      .from("carro")
       .select(column)
       .neq(column, null)
       .neq(column, "")

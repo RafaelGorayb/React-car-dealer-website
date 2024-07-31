@@ -39,44 +39,40 @@ function Estoque() {
       .from("carro")
       .select(
         `
-        id,
-        especificacao_carro (
-         *
-        ),
+        *,
         opcionais_carro (nome),
         fotos_urls (url)
       `
       )
       .order("id", { ascending: true })
-      .not("especificacao_carro", "is", null)
       .limit(12);
 
     // Aplicar filtros se tiver algum
     if (filters) {
       if (filters.marca)
-        query = query.eq("especificacao_carro.marca", filters.marca);
+        query = query.eq("marca", filters.marca);
       if (filters.modelo)
-        query = query.eq("especificacao_carro.modelo", filters.modelo);
+        query = query.eq("modelo", filters.modelo);
       if (filters.versao)
-        query = query.eq("especificacao_carro.versao", filters.versao);
+        query = query.eq("versao", filters.versao);
       if (filters.precoMin)
-        query = query.gte("especificacao_carro.preco", filters.precoMin);
+        query = query.gte("preco", filters.precoMin);
       if (filters.precoMax)
-        query = query.lte("especificacao_carro.preco", filters.precoMax);
+        query = query.lte("preco", filters.precoMax);
       if (filters.anoMin)
-        query = query.gte("especificacao_carro.ano_modelo", filters.anoMin);
+        query = query.gte("ano_modelo", filters.anoMin);
       if (filters.anoMax)
-        query = query.lte("especificacao_carro.ano_modelo", filters.anoMax);
+        query = query.lte("ano_modelo", filters.anoMax);
       if (filters.kmMin)
-        query = query.gte("especificacao_carro.km", filters.kmMin);
+        query = query.gte("km", filters.kmMin);
       if (filters.kmMax)
-        query = query.lte("especificacao_carro.km", filters.kmMax);
+        query = query.lte("km", filters.kmMax);
       if (filters.cor != "")
-        query = query.eq("especificacao_carro.cor", filters.cor);
+        query = query.eq("cor", filters.cor);
       if (filters.carroceria != "")
-        query = query.eq("especificacao_carro.carroceria", filters.carroceria);
+        query = query.eq("carroceria", filters.carroceria);
       if (filters.blindado)
-        query = query.eq("especificacao_carro.blindado", filters.blindado);
+        query = query.eq("blindado", filters.blindado);
     }
 
     if (!isInitial && lastCarId) {
@@ -92,34 +88,33 @@ function Estoque() {
     }
 
     const carsList: Car[] = data.map((carro: any) => {
-      const especificacao = carro.especificacao_carro[0] || {};
+      
       return {
         id: carro.id,
-        marca: especificacao.marca,
-        modelo: especificacao.modelo,
-        versao: especificacao.versao,
-        preco: especificacao.preco,
-        ano_modelo: especificacao.ano_modelo,
-        ano_fabricacao: especificacao.ano_fabricacao,
-        km: especificacao.km,
-        cor: especificacao.cor,
-        motorizacao: especificacao.motorizacao,
-        potencia: especificacao.potencia,
-        torque: especificacao.torque,
-        cambio: especificacao.cambio,
-        tracao: especificacao.tracao,
-        direcao: especificacao.direcao,
-        freios: especificacao.freios,
-        rodas: especificacao.rodas,
-        bancos: especificacao.bancos,
-        airbags: especificacao.airbag,
-        ar_condicionado: especificacao.ar_condicionado,
-        farol: especificacao.farol,
-        multimidia: especificacao.multimidia,
-        final_placa: especificacao.final_placa,
-        carroceria: especificacao.carroceria,
-        blindado: especificacao.blindado,
-        carro_id: especificacao.carro_id,
+        marca: carro.marca,
+        modelo: carro.modelo,
+        versao: carro.versao,
+        preco: carro.preco,
+        ano_modelo: carro.ano_modelo,
+        ano_fabricacao: carro.ano_fabricacao,
+        km: carro.km,
+        cor: carro.cor,
+        motorizacao: carro.motorizacao,
+        potencia: carro.potencia,
+        torque: carro.torque,
+        cambio: carro.cambio,
+        tracao: carro.tracao,
+        direcao: carro.direcao,
+        freios: carro.freios,
+        rodas: carro.rodas,
+        bancos: carro.bancos,
+        airbags: carro.airbag,
+        ar_condicionado: carro.ar_condicionado,
+        farol: carro.farol,
+        multimidia: carro.multimidia,
+        final_placa: carro.final_placa,
+        carroceria: carro.carroceria,
+        blindado: carro.blindado,
         opcionais: carro.opcionais_carro
           ? carro.opcionais_carro.map((opcional: any) => opcional.nome)
           : [],
