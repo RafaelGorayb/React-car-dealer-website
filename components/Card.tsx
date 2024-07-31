@@ -18,6 +18,7 @@ import "../styles/globals.css";
 import { Shield } from "lucide-react";
 import { toast } from "react-toastify";
 import { useCompareList } from "@/lib/userState";
+import SectionTitle from "./HomePage/sectionTitle";
 
 interface CardProps {
   car: Car;
@@ -161,91 +162,120 @@ function CarCard({ car, isLoading }: CardProps) {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                {car.marca} {car.modelo} {car.versao}
-              </ModalHeader>
-              <ModalBody>
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-                  <img
-                    src={car.fotos[0] || "/carroTeste.png"}
-                    className="w-full h-64 object-cover rounded-lg"
-                    alt={`${car.marca} ${car.modelo}`}
-                  />
+            <ModalHeader className="p-0">
+              <img
+                src={car.fotos[0] || "/carroTeste.png"}
+                className="w-full h-64 object-cover rounded-lg"
+                alt={`${car.marca} ${car.modelo}`}
+              />
+            </ModalHeader>
+
+              <ModalBody className="p-4">
                   <div>
-                    <h3 className="text-xl font-bold mb-2">
-                      Detalhes do Veículo
+                    <p className="text-md font-semibold">
+                      {car.marca} {car.modelo}
+                    </p>
+                    <h3 className="text-md font-semibold text-red-500 min-h-10 line-clamp-2">
+                      {car.versao}
                     </h3>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      {car.blindado && (
+                        <Chip
+                          startContent={<Shield size={12} />}
+                          variant="solid"
+                          color="danger"
+                          size="sm"
+                        >
+                          Blindado
+                        </Chip>
+                      )}
+                    </div>
+                    <div className="flex flex-row gap-4 py-2">
+                      <div className="flex flex-col">
+                        <p className="text-neutral-400 text-md">Ano</p>
+                        <p className="font-medium text-lg">
+                          {car.ano_fabricacao}/{car.ano_modelo}
+                        </p>
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="text-neutral-400 text-md">Km</p>
+                        <p className="font-medium text-lg">
+                          {car.km.toLocaleString("pt-BR")}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-lg font-semibold">
+                      R$ {car.preco.toLocaleString("pt-BR")}
+                    </p>
+                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+               <div className="bg-gray-200 rounded-lg p-4">
+                  <SectionTitle title="Especificações" fontsize="lg" />
+                  <div className="grid grid-cols-2 gap-2 text-xs font-light mt-6">
                       <p>
-                        <strong>Preço:</strong> R${" "}
-                        {car.preco.toLocaleString("pt-BR")}
+                        Ano: <strong>{car.ano_fabricacao}/{car.ano_modelo}</strong>
                       </p>
                       <p>
-                        <strong>Ano:</strong> {car.ano_fabricacao}/
-                        {car.ano_modelo}
+                        Quilometragem: <strong>{car.km.toLocaleString("pt-BR")} km</strong>
                       </p>
                       <p>
-                        <strong>Quilometragem:</strong>{" "}
-                        {car.km.toLocaleString("pt-BR")} km
+                        Cor: <strong>{car.cor}</strong>
                       </p>
                       <p>
-                        <strong>Cor:</strong> {car.cor}
+                        Motorização: <strong>{car.motorizacao}</strong>
                       </p>
                       <p>
-                        <strong>Motorização:</strong> {car.motorizacao}
+                        Potência: <strong>{car.potencia}</strong>
                       </p>
                       <p>
-                        <strong>Potência:</strong> {car.potencia}
+                        Torque: <strong>{car.torque}</strong>
                       </p>
                       <p>
-                        <strong>Torque:</strong> {car.torque}
+                        Câmbio: <strong>{car.cambio}</strong>
                       </p>
                       <p>
-                        <strong>Câmbio:</strong> {car.cambio}
+                        Tração: <strong>{car.tracao}</strong>
                       </p>
                       <p>
-                        <strong>Tração:</strong> {car.tracao}
+                        Direção: <strong>{car.direcao}</strong>
                       </p>
                       <p>
-                        <strong>Direção:</strong> {car.direcao}
+                        Freios: <strong>{car.freios}</strong>
                       </p>
                       <p>
-                        <strong>Freios:</strong> {car.freios}
+                        Rodas: <strong>{car.rodas}</strong>
                       </p>
                       <p>
-                        <strong>Rodas:</strong> {car.rodas}
+                        Bancos: <strong>{car.bancos}</strong>
                       </p>
                       <p>
-                        <strong>Bancos:</strong> {car.bancos}
+                        Airbags: <strong>{car.airbags}</strong>
                       </p>
                       <p>
-                        <strong>Airbags:</strong> {car.airbags}
+                        Ar Condicionado: <strong>{car.ar_condicionado}</strong>
                       </p>
                       <p>
-                        <strong>Ar Condicionado:</strong> {car.ar_condicionado}
+                        Faróis: <strong>{car.farol}</strong>
                       </p>
                       <p>
-                        <strong>Faróis:</strong> {car.farol}
+                        Multimídia: <strong>{car.multimidia}</strong>
                       </p>
                       <p>
-                        <strong>Multimídia:</strong> {car.multimidia}
+                        Final da Placa: <strong>{car.final_placa}</strong>
                       </p>
                       <p>
-                        <strong>Final da Placa:</strong> {car.final_placa}
+                        Carroceria: <strong>{car.carroceria}</strong>
                       </p>
                       <p>
-                        <strong>Carroceria:</strong> {car.carroceria}
-                      </p>
-                      <p>
-                        <strong>Blindado:</strong>{" "}
-                        {car.blindado ? "Sim" : "Não"}
+                        Blindado: <strong>{car.blindado ? "Sim" : "Não"}</strong>
                       </p>
                     </div>
+
                   </div>
                 </div>
-                <div className="mt-4">
-                  <h3 className="text-xl font-bold mb-2">Opcionais</h3>
-                  <ul className="list-disc pl-5 columns-2 md:columns-3">
+                <div className="bg-gray-200 rounded-lg p-4 mt-6">
+                <SectionTitle title="Opcionais" fontsize="lg" />
+                  <ul className="list-disc pl-5 columns-2 md:columns-3 text-xs font-light mt-6">
                     {car.opcionais.map((opcional, index) => (
                       <li key={index}>{opcional}</li>
                     ))}
