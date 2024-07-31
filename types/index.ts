@@ -30,7 +30,6 @@ export type Car = {
   final_placa: string;
   carroceria: string;
   blindado: boolean;
-  carro_id: number;
   opcionais: string[];
   fotos: string[];
 };

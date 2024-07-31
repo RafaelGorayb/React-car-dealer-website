@@ -18,10 +18,7 @@ const RecemChegados = () => {
         .from("carro")
         .select(
           `
-          id,
-          especificacao_carro (
-          *
-          ),
+          *,
           opcionais_carro (nome),
           fotos_urls (url)
         `
@@ -36,34 +33,34 @@ const RecemChegados = () => {
       }
 
       const carsList: Car[] = data.map((carro: any) => {
-        const especificacao = carro.especificacao_carro[0] || {};
+        
         return {
           id: carro.id,
-          marca: especificacao.marca,
-          modelo: especificacao.modelo,
-          versao: especificacao.versao,
-          preco: especificacao.preco,
-          ano_modelo: especificacao.ano_modelo,
-          ano_fabricacao: especificacao.ano_fabricacao,
-          km: especificacao.km,
-          cor: especificacao.cor,
-          motorizacao: especificacao.motorizacao,
-          potencia: especificacao.potencia,
-          torque: especificacao.torque,
-          cambio: especificacao.cambio,
-          tracao: especificacao.tracao,
-          direcao: especificacao.direcao,
-          freios: especificacao.freios,
-          rodas: especificacao.rodas,
-          bancos: especificacao.bancos,
-          airbags: especificacao.airbag,
-          ar_condicionado: especificacao.ar_condicionado,
-          farol: especificacao.farol,
-          multimidia: especificacao.multimidia,
-          final_placa: especificacao.final_placa,
-          carroceria: especificacao.carroceria,
-          blindado: especificacao.blindado,
-          carro_id: especificacao.carro_id,
+          marca: carro.marca,
+          modelo: carro.modelo,
+          versao: carro.versao,
+          preco: carro.preco,
+          ano_modelo: carro.ano_modelo,
+          ano_fabricacao: carro.ano_fabricacao,
+          km: carro.km,
+          cor: carro.cor,
+          motorizacao: carro.motorizacao,
+          potencia: carro.potencia,
+          torque: carro.torque,
+          cambio: carro.cambio,
+          tracao: carro.tracao,
+          direcao: carro.direcao,
+          freios: carro.freios,
+          rodas: carro.rodas,
+          bancos: carro.bancos,
+          airbags: carro.airbag,
+          ar_condicionado: carro.ar_condicionado,
+          farol: carro.farol,
+          multimidia: carro.multimidia,
+          final_placa: carro.final_placa,
+          carroceria: carro.carroceria,
+          blindado: carro.blindado,
+          carro_id: carro.carro_id,
           opcionais: carro.opcionais_carro
             ? carro.opcionais_carro.map((opcional: any) => opcional.nome)
             : [],
