@@ -9,6 +9,10 @@ export const siteConfig = {
       href: "/",
     },
     {
+      label: "Comparador",
+      href: "/comparador",
+    },
+    {
       label: "Estoque",
       href: "/estoque",
     },
@@ -29,6 +33,10 @@ export const siteConfig = {
     {
       label: "Home",
       href: "/",
+    },
+    {
+      label: "Comparador",
+      href: "/comparador",
     },
     {
       label: "Estoque",
