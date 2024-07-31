@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -58,7 +58,7 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 type OtpFormData = z.infer<typeof otpSchema>;
 type OtpVerificationFormData = z.infer<typeof otpVerificationSchema>;
 
-export default function LoginPage() {
+function LoginPage() {
   const [formType, setFormType] = useState<
     "login" | "forgotPassword" | "resetPassword" | "otp" | "otpVerification"
   >("login");
@@ -429,5 +429,14 @@ export default function LoginPage() {
         </CardBody>
       </Card>
     </div>
+  );
+}
+
+// Envolvendo o componente LoginPage com Suspense
+export default function LoginPageWrapper() {
+  return (
+    <Suspense fallback={<div>Carregando...</div>}>
+      <LoginPage />
+    </Suspense>
   );
 }
