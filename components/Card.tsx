@@ -45,27 +45,15 @@ function CarCard({ car, isLoading }: CardProps) {
       />
     </div>
 
-    <CardBody className="overflow-visible py-2">
+    <CardBody className="overflow-visible pt-2">
       <div>
         <p className="text-xs font-semibold">
           {car.marca} {car.modelo}
         </p>
-        <h3 className="text-sm font-semibold text-red-500 min-h-10 line-clamp-2">
+        <h3 className="text-sm font-semibold text-red-500 min-h-6 line-clamp-1">
           {car.versao}
         </h3>
-        <div>
-          {car.blindado && (
-            <Chip
-              startContent={<Shield size={12} />}
-              variant="solid"
-              color="danger"
-              size="sm"
-            >
-              Blindado
-            </Chip>
-          )}
-        </div>
-        <div className="flex text-sm flex-row gap-4 py-2">
+        <div className="flex text-sm flex-row gap-4 pb-2">
           <div className="flex flex-col">
             <p className="text-neutral-400 text-xs">Ano</p>
             <p className="font-medium text-sm">
@@ -78,6 +66,18 @@ function CarCard({ car, isLoading }: CardProps) {
               {car.km.toLocaleString("pt-BR")}
             </p>
           </div>
+        </div>
+        <div className="min-h-6">
+          {car.blindado && (
+            <Chip
+              startContent={<Shield size={12} />}
+              variant="solid"
+              color="danger"
+              size="sm"
+            >
+              Blindado
+            </Chip>
+          )}
         </div>
       </div>
     </CardBody>
@@ -161,7 +161,7 @@ function CarCard({ car, isLoading }: CardProps) {
         scrollBehavior="inside"
         backdrop="blur"
       >
-        <ModalContent>
+        <ModalContent >
           {(onClose) => (
             <>
 
