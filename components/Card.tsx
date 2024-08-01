@@ -207,9 +207,10 @@ function CarCard({ car, isLoading }: CardProps) {
                       R$ {car.preco.toLocaleString("pt-BR")}
                     </p>
                       <br />
-                    <SectionTitle title="Especificações" fontsize="lg" />
-                    <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-4">                     
-                      <div className="grid grid-cols-2 gap-x-4 text-xs font-light mt-0 text-wrap">
+                   
+                    <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-4">
+                    <SectionTitle title="Especificações" fontsize="lg" />                     
+                      <div className="grid grid-flow-row grid-cols-2 gap-4 text-xs mt-6 text-wrap">
                       <p>
                         Ano: <strong>{car.ano_fabricacao}/{car.ano_modelo}</strong>
                       </p>

@@ -15,6 +15,7 @@ import {
   CardFooter,
   Image,
   Tooltip,
+  Link
 } from "@nextui-org/react";
 import { XCircle, AlertCircle, Check, X } from "lucide-react";
 import {
@@ -40,6 +41,15 @@ export default function Comparador() {
         <p className="text-gray-600">
           Adicione carros ao comparador para começar.
         </p>
+        <Button
+          as={Link}
+          href="/estoque"
+          color="danger"
+          variant="shadow"
+          className="w-10/12 mt-4"
+        >
+          Explorar veículos
+        </Button>
       </div>
     );
   }
@@ -134,7 +144,7 @@ export default function Comparador() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Comparador de Carros</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {compareList.map((car, index) => (
           <Card key={index} className="w-full">
             <CardBody className="p-4">
@@ -166,37 +176,12 @@ export default function Comparador() {
         ))}
       </div>
 
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Comparação Gráfica</h2>
-        <div className="flex gap-2 mb-4">
-          {features.map((feature) => (
-            <Button
-              key={feature.key}
-              color={selectedFeature === feature.key ? "primary" : "default"}
-              onClick={() => setSelectedFeature(feature.key)}
-            >
-              {feature.label}
-            </Button>
-          ))}
-        </div>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={getChartData()}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <RechartsTooltip />
-            <Legend />
-            <Bar dataKey="value" fill="#8884d8" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
       <div>
         <h2 className="text-2xl font-bold mb-4">Comparação Detalhada</h2>
         <Table aria-label="Tabela de comparação de carros">
           <TableHeader columns={columns}>
             {(column) => (
-              <TableColumn key={column.key} className="bg-gray-100 font-bold">
+              <TableColumn key={column.key} className="w-12 bg-gray-100 dark:bg-zinc-800 font-bold">
                 {column.label}
               </TableColumn>
             )}
@@ -205,7 +190,7 @@ export default function Comparador() {
             {(item) => (
               <TableRow key={item.propriedade}>
                 {(columnKey) => (
-                  <TableCell className="py-2">
+                  <TableCell className="">
                     {columnKey === "propriedade" ? (
                       <span className="font-semibold">{item[columnKey]}</span>
                     ) : (
