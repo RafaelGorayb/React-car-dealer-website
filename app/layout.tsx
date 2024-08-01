@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
-    
   },
   description: siteConfig.description,
   icons: {
@@ -32,11 +31,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning className="overflow-x-hidden bg-background" lang="pt">
-      <head />
+    <html suppressHydrationWarning className="overflow-x-hidden bg-red" lang="pt">
+        <head>
+          {/* Meta tags para customizar a cor das barras de navegação */}
+          <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+          <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
+        </head>
       <body
         className={clsx(
-          "min-h-screen font-sans antialiased",
+          "min-h-screen font-sans antialiased bg-red",
           fontSans.variable
         )}
       >
