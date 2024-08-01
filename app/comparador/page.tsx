@@ -15,6 +15,7 @@ import {
   CardFooter,
   Image,
   Tooltip,
+  Link
 } from "@nextui-org/react";
 import { XCircle, AlertCircle, Check, X } from "lucide-react";
 import {
@@ -40,6 +41,15 @@ export default function Comparador() {
         <p className="text-gray-600">
           Adicione carros ao comparador para começar.
         </p>
+        <Button
+          as={Link}
+          href="/estoque"
+          color="danger"
+          variant="shadow"
+          className="w-10/12 mt-4"
+        >
+          Explorar veículos
+        </Button>
       </div>
     );
   }
@@ -62,31 +72,79 @@ export default function Comparador() {
     }));
   };
 
-  const formatValue = (value: any) => {
-    if (typeof value === "number") {
-      return value.toLocaleString("pt-BR");
+  const formatValue = (key: string, value: any) => {
+    if (key === "preco") {
+      return `R$ ${value.toLocaleString("pt-BR")}`;
     }
-    return value;
+    if (key === "km") {
+      return `${value.toLocaleString("pt-BR")} km`;
+    }
+    if (key === "potencia") {
+      return `${value} cv`;
+    }
+    if (key === "torque") {
+      return `${value} kgfm`;
+    }
+    if (typeof value === "boolean") {
+      return value ? "Sim" : "Não";
+    }
+    if (Array.isArray(value)) {
+      return value.join(", ");
+    }
+    return value || "-";
   };
 
-  const rows = compareList.map((car) => {
-    const row: any = { carro: `${car.marca} ${car.modelo}` };
-    Object.keys(car).forEach((key) => {
-      row[key] = car[key as keyof Car];
+  const columns = [
+    { key: "propriedade", label: "Propriedade" },
+    ...compareList.map((car, index) => ({
+      key: `car-${index}`,
+      label: `${car.marca} ${car.modelo}`,
+    })),
+  ];
+
+  const propertiesToShow = [
+    "marca",
+    "modelo",
+    "versao",
+    "preco",
+    "ano_modelo",
+    "ano_fabricacao",
+    "km",
+    "cor",
+    "motorizacao",
+    "potencia",
+    "torque",
+    "cambio",
+    "tracao",
+    "direcao",
+    "freios",
+    "rodas",
+    "bancos",
+    "airbags",
+    "ar_condicionado",
+    "farol",
+    "multimidia",
+    "final_placa",
+    "carroceria",
+    "blindado",
+    "opcionais",
+  ];
+
+  const rows = propertiesToShow.map((key) => {
+    const row: any = {
+      propriedade: key.charAt(0).toUpperCase() + key.slice(1).replace("_", " "),
+    };
+    compareList.forEach((car, index) => {
+      row[`car-${index}`] = formatValue(key, car[key as keyof Car]);
     });
     return row;
   });
-
-  const columns = compareList.map((car, index) => ({
-    key: index,
-    label: `${car.marca} ${car.modelo}`,
-  }));
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Comparador de Carros</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {compareList.map((car, index) => (
           <Card key={index} className="w-full">
             <CardBody className="p-4">
@@ -118,57 +176,28 @@ export default function Comparador() {
         ))}
       </div>
 
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Comparação Gráfica</h2>
-        <div className="flex gap-2 mb-4">
-          {features.map((feature) => (
-            <Button
-              key={feature.key}
-              color={selectedFeature === feature.key ? "primary" : "default"}
-              onClick={() => setSelectedFeature(feature.key)}
-            >
-              {feature.label}
-            </Button>
-          ))}
-        </div>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={getChartData()}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <RechartsTooltip />
-            <Legend />
-            <Bar dataKey="value" fill="#8884d8" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-
       <div>
         <h2 className="text-2xl font-bold mb-4">Comparação Detalhada</h2>
         <Table aria-label="Tabela de comparação de carros">
           <TableHeader columns={columns}>
             {(column) => (
-              <TableColumn key={column.key}>{column.label}</TableColumn>
+              <TableColumn key={column.key} className="w-12 bg-gray-100 dark:bg-zinc-800 font-bold">
+                {column.label}
+              </TableColumn>
             )}
           </TableHeader>
           <TableBody items={rows}>
             {(item) => (
-              <TableRow key={item.carro}>
-                {columns.map((column) => (
-                  <TableCell key={column.key}>
-                    {String(column.key) === "blindado" ? (
-                      item[column.key] ? (
-                        <Check className="text-green-500" />
-                      ) : (
-                        <X className="text-red-500" />
-                      )
+              <TableRow key={item.propriedade}>
+                {(columnKey) => (
+                  <TableCell className="">
+                    {columnKey === "propriedade" ? (
+                      <span className="font-semibold">{item[columnKey]}</span>
                     ) : (
-                      <Tooltip content={String(item[column.key])}>
-                        <span>{formatValue(item[column.key])}</span>
-                      </Tooltip>
+                      item[columnKey as keyof typeof item]
                     )}
                   </TableCell>
-                ))}
+                )}
               </TableRow>
             )}
           </TableBody>

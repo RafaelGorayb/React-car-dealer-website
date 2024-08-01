@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiltrosPesquisa } from "../types/index";
-import { Button, Input, Switch, Select, SelectItem } from "@nextui-org/react";
+import { Button, Input, Switch, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter,} from "@nextui-org/react";
 import { Filter, X } from "lucide-react";
 import { supabase } from "../lib/initSupabase";
 
@@ -120,6 +120,8 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
   };
 
   const FilterForm = () => (
+
+    
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <label htmlFor="marca">Marca</label>
@@ -272,36 +274,23 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
 
   return (
     <>
-      <div className="fixed bottom-4 left-4 z-50 lg:hidden">
-        <Button
-          onClick={toggleMenu}
-          color="danger"
-          isIconOnly
-          className="rounded-lg shadow-lg"
-        >
-          <Filter size={24} />
-        </Button>
-      </div>
-
-      <div
-        className={`fixed inset-y-0 left-0 w-80 bg-background shadow-lg transform transition-transform duration-300 ease-in-out lg:hidden z-40 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <Button
-          onClick={toggleMenu}
-          isIconOnly
-          className="absolute top-4 right-4"
-          variant="light"
-        >
-          <X size={24} />
-        </Button>
-
-        <div className="p-6 mt-16 overflow-y-auto h-full">
-          <h2 className="text-2xl font-bold mb-6">Filtros</h2>
-          <FilterForm />
+    <Modal isOpen={isOpen} onClose={toggleMenu} size="lg" scrollBehavior="inside">
+      <ModalContent>
+        <ModalHeader>
+        <div className="flex justify-between">
+            <h2 className="text-2xl font-bold mb-6">Filtros</h2>
+            <Button color="default" onClick={toggleMenu}>Fechar</Button>
         </div>
-      </div>
+        </ModalHeader>
+        <ModalBody className="p-6 mt-4 overflow-y-auto">
+          <FilterForm />
+        </ModalBody>
+        <ModalFooter>
+          
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+
 
       <div className="hidden lg:block fixed bg-background w-80 h-screen overflow-y-auto p-4 shadow-lg">
         <h2 className="text-2xl font-bold mb-6">Filtros</h2>

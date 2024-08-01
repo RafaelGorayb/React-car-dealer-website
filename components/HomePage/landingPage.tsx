@@ -1,6 +1,9 @@
 "use client";
 import React from "react";
 import { Image, Input, Button, Link } from "@nextui-org/react";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+
+
 
 const LandingPage: React.FC = () => {
   return (
@@ -30,7 +33,7 @@ const LandingPage: React.FC = () => {
               labelPlacement="outside"
               startContent={
                 <div className="pointer-events-none flex items-center">
-                  <span className="text-default-400 text-small">/o</span>
+                  <FaMagnifyingGlass />
                 </div>
               }
             />
