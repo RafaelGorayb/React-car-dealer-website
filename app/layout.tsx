@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning className="overflow-x-hidden" lang="pt">
+    <html suppressHydrationWarning className="overflow-x-hidden bg-background" lang="pt">
       <head />
       <body
         className={clsx(
