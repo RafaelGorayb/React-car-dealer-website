@@ -276,12 +276,12 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
     <>
 
       <div
-        className={`fixed inset-y-0 left-0 w-full bg-background shadow-lg transform transition-transform duration-300 ease-in-out lg:hidden z-40 ${
+        className={`fixed mt-12 inset-y-0 w-full h-full bg-background overflow-y-auto transform transition-transform duration-200 ease-in-out lg:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
 
-        <div className="p-6 mt-16 overflow-y-auto h-full">
+        <div className="p-6 ">
         <div className="flex justify-between">
         <h2 className="text-2xl font-bold mb-6">Filtros</h2>
         {/* botao para fechar o menu */}

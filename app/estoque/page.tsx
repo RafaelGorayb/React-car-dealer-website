@@ -143,7 +143,7 @@ function Estoque() {
       <div className="fixed left-0 top-10 z-10">
         <CarFilterSideMenu submitForm={handleFilterSubmit} isOpen={isOpen} toggleMenu={toggleMenu} />
       </div>
-      <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center ">
+      <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center">
         <p className="text-gray-500 mb-4">{totalCarsCount} carros encontrados</p>
 
         <div className="bg-gray-100 dark:bg-zinc-950 w-full flex rounded-xl p-2 mb-4 lg:hidden block">
