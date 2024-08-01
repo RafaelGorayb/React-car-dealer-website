@@ -32,16 +32,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning className="overflow-x-hidden" lang="en">
+    <html suppressHydrationWarning className="overflow-x-hidden" lang="pt">
       <head />
-      <meta name="theme-color" content="var(--bg)"></meta>
       <body
         className={clsx(
-          "min-h-screen overflow-x-hidden relative bg-background font-sans antialiased",
+          "min-h-screen font-sans antialiased",
           fontSans.variable
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen">
             <main className="mx-auto w-full">{children}</main>
           </div>

@@ -274,12 +274,11 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
 
   return (
     <>
-    <Modal isOpen={isOpen} onClose={toggleMenu} size="lg" scrollBehavior="inside">
+    <Modal isOpen={isOpen} onClose={toggleMenu} size="full" scrollBehavior="inside">
       <ModalContent>
         <ModalHeader>
         <div className="flex justify-between">
             <h2 className="text-2xl font-bold mb-6">Filtros</h2>
-            <Button color="default" onClick={toggleMenu}>Fechar</Button>
         </div>
         </ModalHeader>
         <ModalBody className="p-6 mt-4 overflow-y-auto">

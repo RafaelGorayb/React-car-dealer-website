@@ -157,7 +157,7 @@ function CarCard({ car, isLoading }: CardProps) {
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        size="4xl"
+        size="full"
         scrollBehavior="inside"
       >
         <ModalContent>
