@@ -144,9 +144,10 @@ function CarCard({ car, isLoading }: CardProps) {
   return (
     <>
       <Card
-        className="md:w-lg md:h-lg w-sm shadow-2xl"
-        radius="sm"
+        className="md:w-lg md:h-lg w-sm shadow-xl"
+        radius="sm"        
         isPressable={true}
+        allowTextSelectionOnPress={true}
         isHoverable={true}
         onClick={onOpen}
       >
@@ -162,20 +163,18 @@ function CarCard({ car, isLoading }: CardProps) {
         <ModalContent>
           {(onClose) => (
             <>
-            <ModalHeader className="p-0">
+
+              <ModalBody className="p-0 overflow-x-clip">
               <img
                 src={car.fotos[0] || "/carroTeste.png"}
                 className="w-full h-64 object-cover rounded-lg"
                 alt={`${car.marca} ${car.modelo}`}
               />
-            </ModalHeader>
-
-              <ModalBody className="p-4">
-                  <div>
-                    <p className="text-md font-semibold">
+                  <div className="px-4">
+                    <p className="text-lg font-semibold">
                       {car.marca} {car.modelo}
                     </p>
-                    <h3 className="text-md font-semibold text-red-500 min-h-10 line-clamp-2">
+                    <h3 className="text-lg font-semibold text-red-500 min-h-10 line-clamp-2">
                       {car.versao}
                     </h3>
                     <div>
@@ -193,13 +192,13 @@ function CarCard({ car, isLoading }: CardProps) {
                     <div className="flex flex-row gap-4 py-2">
                       <div className="flex flex-col">
                         <p className="text-neutral-400 text-md">Ano</p>
-                        <p className="font-medium text-lg">
+                        <p className="font-medium text-md">
                           {car.ano_fabricacao}/{car.ano_modelo}
                         </p>
                       </div>
                       <div className="flex flex-col">
                         <p className="text-neutral-400 text-md">Km</p>
-                        <p className="font-medium text-lg">
+                        <p className="font-medium text-md">
                           {car.km.toLocaleString("pt-BR")}
                         </p>
                       </div>
@@ -207,11 +206,10 @@ function CarCard({ car, isLoading }: CardProps) {
                     <p className="text-lg font-semibold">
                       R$ {car.preco.toLocaleString("pt-BR")}
                     </p>
-                  </div>
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-               <div className="bg-gray-200 rounded-lg p-4">
-                  <SectionTitle title="Especificações" fontsize="lg" />
-                  <div className="grid grid-cols-2 gap-2 text-xs font-light mt-6">
+                      <br />
+                    <SectionTitle title="Especificações" fontsize="lg" />
+                    <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-4">                     
+                      <div className="grid grid-cols-2 gap-x-4 text-xs font-light mt-0 text-wrap">
                       <p>
                         Ano: <strong>{car.ano_fabricacao}/{car.ano_modelo}</strong>
                       </p>
@@ -257,7 +255,7 @@ function CarCard({ car, isLoading }: CardProps) {
                       <p>
                         Faróis: <strong>{car.farol}</strong>
                       </p>
-                      <p>
+                      <p className="text-wrap ">
                         Multimídia: <strong>{car.multimidia}</strong>
                       </p>
                       <p>
@@ -270,16 +268,15 @@ function CarCard({ car, isLoading }: CardProps) {
                         Blindado: <strong>{car.blindado ? "Sim" : "Não"}</strong>
                       </p>
                     </div>
-
-                  </div>
                 </div>
-                <div className="bg-gray-200 rounded-lg p-4 mt-6">
+                <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-6">
                 <SectionTitle title="Opcionais" fontsize="lg" />
                   <ul className="list-disc pl-5 columns-2 md:columns-3 text-xs font-light mt-6">
                     {car.opcionais.map((opcional, index) => (
                       <li key={index}>{opcional}</li>
                     ))}
                   </ul>
+                </div>
                 </div>
               </ModalBody>
               <ModalFooter className="flex justify-between">

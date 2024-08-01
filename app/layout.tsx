@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
+    
   },
   description: siteConfig.description,
   icons: {
@@ -33,6 +34,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning className="overflow-x-hidden" lang="en">
       <head />
+      <meta name="theme-color" content="var(--bg)"></meta>
       <body
         className={clsx(
           "min-h-screen overflow-x-hidden relative bg-background font-sans antialiased",
