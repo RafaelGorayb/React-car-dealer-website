@@ -59,7 +59,7 @@ export const siteConfig = {
 
 export const dashboardConfig = {
   name: "Akkar Motors",
-  description: "A melhor loja de carros do Brasil",
+  description: "Admin page",
   navItems: [
     {
       label: "Dashboard",
