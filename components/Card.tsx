@@ -159,6 +159,7 @@ function CarCard({ car, isLoading }: CardProps) {
         onClose={onClose}
         size="full"
         scrollBehavior="inside"
+        backdrop="blur"
       >
         <ModalContent>
           {(onClose) => (

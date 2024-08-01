@@ -51,7 +51,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
     const { data, error } = await query;
 
     if (error) {
-      console.error(`Erro ao buscar ${column}:`, error);
+      console.error("Erro ao buscar ${column}:", error);
       return [];
     }
 
@@ -274,22 +274,24 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
 
   return (
     <>
-    <Modal isOpen={isOpen} onClose={toggleMenu} size="full" scrollBehavior="inside">
-      <ModalContent>
-        <ModalHeader>
-        <div className="flex justify-between">
-            <h2 className="text-2xl font-bold mb-6">Filtros</h2>
-        </div>
-        </ModalHeader>
-        <ModalBody className="p-6 mt-4 overflow-y-auto">
-          <FilterForm />
-        </ModalBody>
-        <ModalFooter>
-          
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
 
+      <div
+        className={`fixed inset-y-0 left-0 w-full bg-background shadow-lg transform transition-transform duration-300 ease-in-out lg:hidden z-40 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+
+        <div className="p-6 mt-16 overflow-y-auto h-full">
+        <div className="flex justify-between">
+        <h2 className="text-2xl font-bold mb-6">Filtros</h2>
+        {/* botao para fechar o menu */}
+        <Button color="default" onClick={toggleMenu}>
+            Fechar
+          </Button>
+        </div>
+          <FilterForm />
+        </div>
+      </div>
 
       <div className="hidden lg:block fixed bg-background w-80 h-screen overflow-y-auto p-4 shadow-lg">
         <h2 className="text-2xl font-bold mb-6">Filtros</h2>
