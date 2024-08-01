@@ -140,7 +140,7 @@ function Estoque() {
 
   return (
     <div className="flex">
-      <div className="fixed left-0 top-10 z-10">
+      <div className="fixed left-0  z-10 ">
         <CarFilterSideMenu submitForm={handleFilterSubmit} isOpen={isOpen} toggleMenu={toggleMenu} />
       </div>
       <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center">

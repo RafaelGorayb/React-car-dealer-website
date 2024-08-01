@@ -266,36 +266,43 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
         </label>
         <input type="checkbox" {...register("blindado")} id="blindado" />
       </div>
-      <Button type="submit" color="danger" className="w-full">
-        Aplicar Filtros
-      </Button>
     </form>
   );
 
   return (
     <>
-
       <div
-        className={`fixed mt-12 inset-y-0 w-full h-full bg-background overflow-y-auto transform transition-transform duration-200 ease-in-out lg:hidden ${
+        className={`fixed pt-12 inset-y-0 w-full h-full bg-background transform transition-transform duration-200 ease-in-out lg:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-
-        <div className="p-6 ">
-        <div className="flex justify-between">
-        <h2 className="text-2xl font-bold mb-6">Filtros</h2>
-        {/* botao para fechar o menu */}
-        <Button color="default" onClick={toggleMenu}>
-            Fechar
-          </Button>
-        </div>
+        <div className="p-6 pb-24 overflow-y-auto h-full"> {/* Adiciona padding-bottom */}
+          <div className="flex justify-between">
+            <h2 className="text-2xl font-bold mb-6">Filtros</h2>
+            <Button color="default" onClick={toggleMenu}>
+              Fechar
+            </Button>
+          </div>
           <FilterForm />
         </div>
+        <div className="fixed bottom-0 left-0 w-full p-4 bg-background">
+          <Button
+            type="submit"
+            color="danger"
+            className="w-full"
+            onClick={handleSubmit(onSubmit)}
+          >
+            Aplicar Filtros
+          </Button>
+        </div>
       </div>
-
+  
       <div className="hidden lg:block fixed bg-background w-80 h-screen overflow-y-auto p-4 shadow-lg">
         <h2 className="text-2xl font-bold mb-6">Filtros</h2>
         <FilterForm />
+        <Button type="submit" color="danger" className="w-full mt-4">
+          Aplicar Filtros
+        </Button>
       </div>
     </>
   );
