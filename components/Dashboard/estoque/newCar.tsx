@@ -16,8 +16,14 @@ import {
   Select,
   SelectItem,
   Chip,
+  CardFooter,
+  Image
 } from "@nextui-org/react";
 import { createClient } from "@/utils/supabase/client";
+import { BiImageAdd, BiTrash } from "react-icons/bi";
+
+
+
 
 const carSchema = z.object({
   marca: z.string().min(1, "Marca é obrigatória"),
@@ -90,18 +96,13 @@ export default function NewCarForm() {
       // Insert car data
       const { data: carData, error: carError } = await supabase
         .from("carro")
-        .insert({ created_at: new Date().toISOString(), id: 3000 })
+        .insert({ ...data, created_at: new Date().toISOString() })
         .select()
         .single();
 
       if (carError) throw carError;
 
-      // Insert car specifications
-      const { error: specError } = await supabase
-        .from("especificacao_carro")
-        .insert({ ...data, carro_id: carData.id });
-
-      if (specError) throw specError;
+ 
 
       // Insert optional items
       if (opcionais.length > 0) {
@@ -257,26 +258,41 @@ export default function NewCarForm() {
             </Card>
           </Tab>
           <Tab key="fotos" title="Fotos">
-            <Card>
+            <Card className="min-w-72 md:min-w-96 min-h-60">
               <CardBody>
-                <div {...getRootProps({ className: "dropzone" })}>
+              <div {...getRootProps({ className: "dropzone flex flex-col items-center justify-center text-center rounded-lg border-2 border-dashed border-gray-600 p-6 h-full" })}>
                   <input {...getInputProps()} />
                   <p>
                     Arraste e solte algumas imagens aqui, ou clique para
                     selecionar arquivos
                   </p>
-                </div>
-                <div className="mt-4 grid grid-cols-3 gap-4">
-                  {files.map((file) => (
-                    <img
-                      key={file.name}
-                      src={file.preview}
-                      alt={file.name}
-                      className="w-full h-32 object-cover rounded"
-                    />
-                  ))}
+                  {/* //adicionar icone camera do react */}
+                  <BiImageAdd size={40} opacity={0.5}/>
                 </div>
               </CardBody>
+              <CardFooter>
+              <div className="grid grid-cols-6 gap-4 ">
+                  {files.map((file, index) => (
+                    <div key={file.name} className="relative ">
+                      <img
+                        src={file.preview}
+                        alt={file.name}
+                        className="w-[160] h-[90] object-cover rounded hover:opacity-50"
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-2 right-2 p-1 bg-gray-700 rounded-full hover:bg-red-500"
+                        onClick={() => {
+                          setFiles(files.filter((_, i) => i !== index));
+                          URL.revokeObjectURL(file.preview);
+                        }}
+                      >
+                        <BiTrash size={20} color="white" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </CardFooter>
             </Card>
           </Tab>
         </Tabs>
