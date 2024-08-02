@@ -19,14 +19,27 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { SearchIcon, Logo } from "@/components/icons";
 import { Image } from "@nextui-org/react";
+import { useState } from "react";
+import { SearchBar } from "./HomePage/searchBar";
 
 export const Navbar = () => {
-  const searchInput = (
-    <NextLink href="/estoque">
-      <Button isIconOnly variant="faded" aria-label="pesquisar">
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      </Button>
-    </NextLink>
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+
+  const toggleSearch = () => {
+    setIsSearchExpanded(!isSearchExpanded);
+  };
+
+  const searchInput = isSearchExpanded ? (
+    <SearchBar isExpanded={isSearchExpanded} onToggle={toggleSearch} />
+  ) : (
+    <Button
+      isIconOnly
+      variant="faded"
+      aria-label="pesquisar"
+      onClick={toggleSearch}
+    >
+      <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+    </Button>
   );
 
   return (
@@ -84,7 +97,6 @@ export const Navbar = () => {
                       : "foreground"
                 }
                 href={item.href}
-                
               >
                 {item.label}
               </Link>

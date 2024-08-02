@@ -1,9 +1,7 @@
 "use client";
 import React from "react";
-import { Image, Input, Button, Link } from "@nextui-org/react";
-import { FaMagnifyingGlass } from "react-icons/fa6";
-
-
+import { Image, Button, Link } from "@nextui-org/react";
+import { SearchBar } from "./searchBar";
 
 const LandingPage: React.FC = () => {
   return (
@@ -27,16 +25,7 @@ const LandingPage: React.FC = () => {
             seguras.
           </p>
           <div className="w-full flex flex-col gap-2 mt-4">
-            <Input
-              type="url"
-              placeholder="Pesquisar veículo"
-              labelPlacement="outside"
-              startContent={
-                <div className="pointer-events-none flex items-center">
-                  <FaMagnifyingGlass />
-                </div>
-              }
-            />
+            <SearchBar isExpanded={true} />
             <p className="text-default-500 text-xs">Ex: Porsche Macan</p>
             <div className="flex justify-center items-center">
               <div className="w-1/2 "></div>
