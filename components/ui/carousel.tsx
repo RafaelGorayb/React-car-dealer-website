@@ -266,8 +266,8 @@ const SliderMainItem = forwardRef<
       {...props}
       ref={ref}
       className={cn(
-        `min-w-0 shrink-0 grow-0 basis-full bg-background p-1 ${
-          orientation === "vertical" ? "pb-1" : "pr-1"
+        `min-w-0 shrink-0 grow-0 basis-full bg-background p-0 ${
+          orientation === "vertical" ? "pb-1" : "pr-0"
         }`,
         className
       )}
@@ -293,13 +293,13 @@ const SliderThumbItem = forwardRef<
       ref={ref}
       onClick={() => onThumbClick(index)}
       className={cn(
-        "flex min-w-0 shrink-0 grow-0 basis-1/3 bg-background p-1",
+        "flex min-w-0 shrink-0 grow-0 basis-1/5 bg-background p-0", // Aqui está o valor ajustado para 'basis'
         `${orientation === "vertical" ? "pb-1" : "pr-1"}`,
         className
       )}
     >
       <div
-        className={`relative aspect-square h-20 w-full opacity-40 rounded-md transition-opacity ${
+        className={`relative aspect-square h-12 w-full opacity-40 rounded-md transition-opacity ${
           isSlideActive ? "!opacity-100" : ""
         }`}
       >
@@ -308,6 +308,7 @@ const SliderThumbItem = forwardRef<
     </div>
   );
 });
+
 
 SliderThumbItem.displayName = "SliderThumbItem";
 
