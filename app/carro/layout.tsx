@@ -1,7 +1,7 @@
 import Footer from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 
-export default function PricingLayout({
+export default function CarroLayout({
   children,
 }: {
   children: React.ReactNode;

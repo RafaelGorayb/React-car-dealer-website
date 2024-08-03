@@ -48,3 +48,41 @@ export interface FiltrosPesquisa {
   carroceria: string;
   blindado: boolean;
 }
+
+export interface CarObjectComplete {
+  id: number;
+  marca: string;
+  modelo: string;
+  versao: string;
+  preco: number;
+  ano_modelo: number;
+  ano_fabricacao: number;
+  km: number;
+  cor: string;
+  motorizacao: string;
+  potencia: string;
+  torque: string;
+  cambio: string;
+  tracao: string;
+  direcao: string;
+  freios: string;
+  rodas: string;
+  bancos: string;
+  airbags: string;
+  ar_condicionado: string;
+  farol: string;
+  multimidia: string;
+  final_placa: string;
+  carroceria: string;
+  blindado: boolean;
+  opcionais_carro: [
+    {
+      nome: string;
+    },
+  ];
+  fotos_urls: [
+    {
+      url: string;
+    },
+  ];
+}
