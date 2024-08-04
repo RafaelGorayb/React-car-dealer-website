@@ -85,120 +85,158 @@ export default function PaginaCarro() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
-        <div>
-          <Carousel>
-            <CarouselNext className="top-1/3 -translate-y-1/3" />
-            <CarouselPrevious className="top-1/3 -translate-y-1/3" />
-            <CarouselMainContainer>
-              {car.fotos.map((foto, index) => (
-                <SliderMainItem key={index} className="bg-transparent">
-                  <img
-                    key={index}
-                    src={foto}
-                    alt={`${car.marca} ${car.modelo} - Foto ${index + 2}`}
-                    className="rounded-lg"
-                  />
-                </SliderMainItem>
-              ))}
-            </CarouselMainContainer>
-            <CarouselThumbsContainer>
-              {car.fotos.map((foto, index) => (
-                <SliderThumbItem
-                  key={index}
-                  index={index}
-                  className="bg-transparent"
-                >
-                  <img
-                    key={index}
-                    src={foto}
-                    className="w-full h-20 object-cover rounded-lg shadow"
-                    alt={`${car.marca} ${car.modelo} - Foto ${index + 2}`}
-                  />
-                </SliderThumbItem>
-              ))}
-            </CarouselThumbsContainer>
-          </Carousel>
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold mb-2">
-            {car.marca} {car.modelo}
-          </h1>
-          <h2 className="text-2xl font-semibold text-red-500 mb-4">
-            {car.versao}
-          </h2>
-          {car.blindado && (
-            <Chip
-              startContent={<Shield size={16} />}
-              variant="solid"
-              color="danger"
-              size="lg"
-              className="mb-4"
-            >
-              Blindado
-            </Chip>
-          )}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div>
-              <p className="text-gray-600">Ano</p>
-              <p className="font-semibold text-xl">
-                {car.ano_fabricacao}/{car.ano_modelo}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-600">Quilometragem</p>
-              <p className="font-semibold text-xl">
-                {car.km.toLocaleString("pt-BR")} km
-              </p>
-            </div>
-          </div>
-          <p className="text-3xl font-bold text-red-600 mb-6">
-            R$ {car.preco.toLocaleString("pt-BR")}
-          </p>
-          <Button
-            color="primary"
-            size="lg"
-            onClick={addToComparador}
-            className="w-full mb-4"
-          >
-            Adicionar ao comparador
-          </Button>
-        </div>
-      </div>
 
-      <div className="mt-12">
-        <SectionTitle title="Especificações" fontsize="2xl" />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6 bg-gray-100 dark:bg-zinc-900 rounded-lg p-6">
-          <SpecItem label="Cor" value={car.cor} />
-          <SpecItem label="Motorização" value={car.motorizacao} />
-          <SpecItem label="Potência" value={car.potencia} />
-          <SpecItem label="Torque" value={car.torque} />
-          <SpecItem label="Câmbio" value={car.cambio} />
-          <SpecItem label="Tração" value={car.tracao} />
-          <SpecItem label="Direção" value={car.direcao} />
-          <SpecItem label="Freios" value={car.freios} />
-          <SpecItem label="Rodas" value={car.rodas} />
-          <SpecItem label="Bancos" value={car.bancos} />
-          <SpecItem label="Airbags" value={car.airbags} />
-          <SpecItem label="Ar Condicionado" value={car.ar_condicionado} />
-          <SpecItem label="Faróis" value={car.farol} />
-          <SpecItem label="Multimídia" value={car.multimidia} />
-          <SpecItem label="Final da Placa" value={car.final_placa} />
-          <SpecItem label="Carroceria" value={car.carroceria} />
-        </div>
-      </div>
+      <Carousel>
+                  <CarouselNext className="top-1/3 -translate-y-1/3" />
+                  <CarouselPrevious className="top-1/3 -translate-y-1/3" />
+                  <CarouselMainContainer>
+                    {car.fotos.map((foto, index) => (
+                      <SliderMainItem key={index} className="bg-transparent">
+                        <img
+                          src={foto}
+                          className="w-full h-64 object-cover"
+                          alt={`${car.marca} ${car.modelo}`}
+                        />
+                      </SliderMainItem>
+                    ))}
+                  </CarouselMainContainer>
+                  <CarouselThumbsContainer>
+                    {car.fotos.map((foto, index) => (
+                      <SliderThumbItem
+                        key={index}
+                        index={index}
+                        className="bg-transparent"
+                      >
+                        <img
+                          key={index}
+                          src={foto}
+                          className="w-full h-12 object-cover rounded-lg shadow"
+                          alt={`${car.marca} ${car.modelo} - Foto ${index + 2}`}
+                        />
+                      </SliderThumbItem>
+                    ))}
+                  </CarouselThumbsContainer>
 
-      <div className="mt-12">
-        <SectionTitle title="Opcionais" fontsize="2xl" />
-        <ul className="list-disc pl-5 columns-2 md:columns-3 mt-6 bg-gray-100 dark:bg-zinc-900 rounded-lg p-6">
-          {car.opcionais.map((opcional, index) => (
-            <li key={index} className="mb-2">
-              {opcional}
-            </li>
-          ))}
-        </ul>
-      </div>
+                </Carousel>
+                <div className="px-4">
+                  <p className="text-lg font-semibold">
+                    {car.marca} {car.modelo}
+                  </p>
+                  <h3 className="text-lg font-semibold text-red-500 min-h-10 line-clamp-2">
+                    {car.versao}
+                  </h3>
+                  <div>
+                    {car.blindado && (
+                      <Chip
+                        startContent={<Shield size={12} />}
+                        variant="solid"
+                        color="danger"
+                        size="sm"
+                      >
+                        Blindado
+                      </Chip>
+                    )}
+                  </div>
+                  <div className="flex flex-row gap-4 py-2">
+                    <div className="flex flex-col">
+                      <p className="text-neutral-400 text-md">Ano</p>
+                      <p className="font-medium text-md">
+                        {car.ano_fabricacao}/{car.ano_modelo}
+                      </p>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-neutral-400 text-md">Km</p>
+                      <p className="font-medium text-md">
+                        {car.km.toLocaleString("pt-BR")}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-lg font-semibold">
+                    R$ {car.preco.toLocaleString("pt-BR")}
+                  </p>
+                  <br />
+
+                  <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-6">
+                    <SectionTitle title="Especificações" fontsize="lg" />
+                      <div className="grid grid-cols-3 gap-y-2 gap-x-2 text-xs mt-6">
+                        <div>
+                          <p className="text-xs font-light">Marca</p>
+                          <p className="text-xs font-bold">{car.marca}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Ano</p>
+                          <p className="text-xs font-bold">{car.ano_modelo}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Modelo</p>
+                          <p className="text-xs font-bold">{car.ano_fabricacao}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Km</p>
+                          <p className="text-xs font-bold">{car.km.toLocaleString("pt-BR")}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Motor</p>
+                          <p className="text-xs font-bold">{car.motorizacao}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Potência</p>
+                          <p className="text-xs font-bold">{car.potencia} cv</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Rodas</p>
+                          <p className="text-xs font-bold">{car.rodas}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Torque</p>
+                          <p className="text-xs font-bold">{car.torque} kgmf</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Blindado</p>
+                          <p className="text-xs font-bold">{car.blindado ? "Sim" : "Não"}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Câmbio</p>
+                          <p className="text-xs font-bold">{car.cambio}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Carroceria</p>
+                          <p className="text-xs font-bold">{car.carroceria}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Tração</p>
+                          <p className="text-xs font-bold">{car.tracao}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Final da Placa</p>
+                          <p className="text-xs font-bold">{car.final_placa}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Cor</p>
+                          <p className="text-xs font-bold">{car.cor}</p>
+                        </div>
+                        <div>
+                          <p className="text-xs font-light">Direção</p>
+                          <p className="text-xs font-bold">{car.direcao}</p>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                   </div>
+                    <div className="p-4">
+                    <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-6">
+                    <SectionTitle title="Opcionais" fontsize="lg" />
+                    <ul className="list-disc pl-5 columns-2 md:columns-3 text-xs font-light mt-6">
+                      {car.opcionais.map((opcional, index) => (
+                        <li key={index}>{opcional}</li>
+                      ))}
+                    </ul>
+                  </div>
+                    </div>
+
+
     </div>
   );
 }

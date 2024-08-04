@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Car, FiltrosPesquisa } from "../../types";
 import CarCard from "@/components/Card";
 import CarFilterSideMenu from "@/components/carFilter";
+import SortSelector from "@/components/ui/SeletorEstoque";
 import { Button } from "@nextui-org/react";
 import { FilterIcon } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
@@ -10,11 +11,13 @@ import { createClient } from "@/utils/supabase/client";
 function Estoque() {
   const [cars, setCars] = useState<Car[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [lastCarId, setLastCarId] = useState<number | null>(null);
+  const [lastCarAttribute, setLastCarAttribute] = useState<any | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [filters, setFilters] = useState<FiltrosPesquisa | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [totalCarsCount, setTotalCarsCount] = useState(0); // Novo estado para contagem total
+  const [totalCarsCount, setTotalCarsCount] = useState(0);
+  const [orderBy, setOrderBy] = useState<string>("id");
+  const [isAscending, setIsAscending] = useState<boolean>(true);
 
   const observer = useRef<IntersectionObserver | null>(null);
 
@@ -46,10 +49,9 @@ function Estoque() {
       `,
         { count: "exact" }
       )
-      .order("id", { ascending: true })
+      .order(orderBy, { ascending: isAscending })
       .limit(12);
 
-    // Aplicar filtros se tiver algum
     if (filters) {
       if (filters.marca) query = query.eq("marca", filters.marca);
       if (filters.modelo) query = query.eq("modelo", filters.modelo);
@@ -65,11 +67,13 @@ function Estoque() {
       if (filters.blindado) query = query.eq("blindado", filters.blindado);
     }
 
-    if (!isInitial && lastCarId) {
-      query = query.gt("id", lastCarId);
+    if (!isInitial && lastCarAttribute) {
+      query = isAscending
+        ? query.gt(orderBy, lastCarAttribute)
+        : query.lt(orderBy, lastCarAttribute);
     }
 
-    const { data, error, count } = await query; // Obtém a contagem total
+    const { data, error, count } = await query;
 
     if (error) {
       console.error("Erro ao buscar carros:", error);
@@ -77,37 +81,35 @@ function Estoque() {
       return;
     }
 
-    const carsList: Car[] = data.map((carro: any) => {
-      return {
-        id: carro.id,
-        marca: carro.marca,
-        modelo: carro.modelo,
-        versao: carro.versao,
-        preco: carro.preco,
-        ano_modelo: carro.ano_modelo,
-        ano_fabricacao: carro.ano_fabricacao,
-        km: carro.km,
-        cor: carro.cor,
-        motorizacao: carro.motorizacao,
-        potencia: carro.potencia,
-        torque: carro.torque,
-        cambio: carro.cambio,
-        tracao: carro.tracao,
-        direcao: carro.direcao,
-        freios: carro.freios,
-        rodas: carro.rodas,
-        bancos: carro.bancos,
-        airbags: carro.airbag,
-        ar_condicionado: carro.ar_condicionado,
-        farol: carro.farol,
-        multimidia: carro.multimidia,
-        final_placa: carro.final_placa,
-        carroceria: carro.carroceria,
-        blindado: carro.blindado,
-        opcionais: carro.opcionais_carro ? carro.opcionais_carro.map((opcional: any) => opcional.nome) : [],
-        fotos: carro.fotos_urls ? carro.fotos_urls.map((foto: any) => foto.url) : [],
-      };
-    });
+    const carsList: Car[] = data.map((carro: any) => ({
+      id: carro.id,
+      marca: carro.marca,
+      modelo: carro.modelo,
+      versao: carro.versao,
+      preco: carro.preco,
+      ano_modelo: carro.ano_modelo,
+      ano_fabricacao: carro.ano_fabricacao,
+      km: carro.km,
+      cor: carro.cor,
+      motorizacao: carro.motorizacao,
+      potencia: carro.potencia,
+      torque: carro.torque,
+      cambio: carro.cambio,
+      tracao: carro.tracao,
+      direcao: carro.direcao,
+      freios: carro.freios,
+      rodas: carro.rodas,
+      bancos: carro.bancos,
+      airbags: carro.airbag,
+      ar_condicionado: carro.ar_condicionado,
+      farol: carro.farol,
+      multimidia: carro.multimidia,
+      final_placa: carro.final_placa,
+      carroceria: carro.carroceria,
+      blindado: carro.blindado,
+      opcionais: carro.opcionais_carro ? carro.opcionais_carro.map((opcional: any) => opcional.nome) : [],
+      fotos: carro.fotos_urls ? carro.fotos_urls.map((foto: any) => foto.url) : [],
+    }));
 
     if (isInitial) {
       setCars(carsList);
@@ -115,9 +117,9 @@ function Estoque() {
       setCars((prevCars) => [...prevCars, ...carsList]);
     }
 
-    setLastCarId(data.length ? data[data.length - 1].id : null);
+    setLastCarAttribute(data.length ? data[data.length - 1][orderBy] : null);
     setHasMore(data.length === 12);
-    setTotalCarsCount(count || 0); // Define a contagem total de carros
+    setTotalCarsCount(count || 0);
     setIsLoading(false);
     console.log("Fetched cars:", carsList);
   };
@@ -130,36 +132,42 @@ function Estoque() {
 
   useEffect(() => {
     fetchCars(true);
-  }, [filters]);
+  }, [filters, orderBy, isAscending]);
 
   const handleFilterSubmit = (data: FiltrosPesquisa) => {
     setFilters(data);
+  };
+
+  const handleSortChange = (orderBy: string, isAscending: boolean) => {
+    setOrderBy(orderBy);
+    setIsAscending(isAscending);
+    setLastCarAttribute(null); // Reset cursor for new sorting
   };
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
     <div className="flex">
-      <div className="fixed left-0  z-10 ">
+      <div className="fixed left-0 z-10">
         <CarFilterSideMenu submitForm={handleFilterSubmit} isOpen={isOpen} toggleMenu={toggleMenu} />
       </div>
-      <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center">
+      <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center">        
         <p className="text-gray-500 mb-4">{totalCarsCount} carros encontrados</p>
 
-        <div className="bg-gray-100 dark:bg-zinc-950 w-full flex rounded-xl p-2 mb-4 lg:hidden block">
-          <div className="w-4/12 ">
-            <Button
-              color="danger"
-              variant="shadow"
-              endContent={<FilterIcon size={16} />}
-              className=" lg:hidden relative"
-              onClick={toggleMenu}
-            >
-              Filtrar
-            </Button>
+        <div className="bg-gray-100 dark:bg-zinc-950 w-full flex rounded-xl p-2 mb-4 justify-between">
+            <div className="w-4/12 lg:hidden block">
+              <Button
+                color="danger"
+                variant="shadow"
+                endContent={<FilterIcon size={16} />}
+                className="lg:hidden relative"
+                onClick={toggleMenu}
+              >
+                Filtrar
+              </Button>
+            </div>
+            <SortSelector onChange={handleSortChange} />
           </div>
-        </div>
-
         <div className="grid gap-4 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {cars.map((car, index) => (
             <div key={car.id} ref={index === cars.length - 1 ? lastCarElementRef : null}>
