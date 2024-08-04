@@ -1,11 +1,21 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Input, Spinner, Button } from "@nextui-org/react";
+import {
+  Input,
+  Spinner,
+  Button,
+  Card,
+  CardBody,
+  Avatar,
+  Image,
+} from "@nextui-org/react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Car } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { formatCars } from "@/utils/functions";
+import { toast } from "react-toastify";
 
 interface SearchBarProps {
   isExpanded?: boolean;
@@ -27,14 +37,20 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
         setIsLoading(true);
         const { data, error } = await supabase
           .from("carro")
-          .select("*")
+          .select(
+            `
+            *,
+            opcionais_carro (nome),
+            fotos_urls (url)
+          `
+          )
           .ilike("modelo", `%${searchTerm}%`)
           .limit(5);
 
         if (error) {
-          console.error("Erro ao buscar carros:", error);
+          toast.error("Erro ao buscar carros:", error as any);
         } else {
-          setCars(data as Car[]);
+          setCars(formatCars(data) as Car[]);
           setShowDropdown(true);
         }
         setIsLoading(false);
@@ -72,7 +88,7 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative z-50" ref={dropdownRef}>
       <AnimatePresence initial={false}>
         {isExpanded ? (
           <motion.div
@@ -81,7 +97,7 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
             animate={{ width: "100%", opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="w-full max-w-md"
+            className="w-full max-w-md min-w-[300px]"
           >
             <Input
               type="text"
@@ -90,25 +106,37 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
               onChange={(e) => setSearchTerm(e.target.value)}
               labelPlacement="outside"
               startContent={
-                <div className="pointer-events-none flex items-center">
-                  <FaMagnifyingGlass />
-                </div>
+                <FaMagnifyingGlass className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
               }
               endContent={isLoading && <Spinner size="sm" />}
+              className="w-full"
             />
             {showDropdown && cars.length > 0 && (
-              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
-                {cars.map((car) => (
-                  <div
-                    key={car.id}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleSelect(car)}
-                  >
-                    <div className="font-semibold">{`${car.marca} ${car.modelo}`}</div>
-                    <div className="text-sm text-gray-500">{`${car.versao} - ${car.ano_modelo}`}</div>
-                  </div>
-                ))}
-              </div>
+              <Card className="w-full mt-1 absolute">
+                <CardBody className="p-0">
+                  {cars.map((car) => (
+                    <div
+                      key={car.id}
+                      className="p-2 hover:bg-gray-100 cursor-pointer transition-colors"
+                      onClick={() => handleSelect(car)}
+                    >
+                      <div className="flex p-1 justify-between items-center">
+                        <div>
+                          <div className="font-semibold">{`${car.marca} ${car.modelo}`}</div>
+                          <div className="text-sm text-gray-500">{`${car.versao} - ${car.ano_modelo}`}</div>
+                          <div className="text-sm font-medium text-primary-500">{`R$ ${car.preco.toLocaleString("pt-BR")}`}</div>
+                        </div>
+                        <Image
+                          src={car.fotos[0]}
+                          alt={car.modelo}
+                          height={60}
+                          className="rounded-md"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </CardBody>
+              </Card>
             )}
           </motion.div>
         ) : (
@@ -121,11 +149,11 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
           >
             <Button
               isIconOnly
-              variant="faded"
+              variant="light"
               aria-label="pesquisar"
               onClick={onToggle}
             >
-              <FaMagnifyingGlass className="text-base text-default-400 pointer-events-none flex-shrink-0" />
+              <FaMagnifyingGlass className="text-xl" />
             </Button>
           </motion.div>
         )}

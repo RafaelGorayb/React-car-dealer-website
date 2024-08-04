@@ -17,13 +17,11 @@ import {
   SelectItem,
   Chip,
   CardFooter,
-  Image
+  Image,
 } from "@nextui-org/react";
 import { createClient } from "@/utils/supabase/client";
 import { BiImageAdd, BiTrash } from "react-icons/bi";
-
-
-
+import { toast } from "react-toastify";
 
 const carSchema = z.object({
   marca: z.string().min(1, "Marca é obrigatória"),
@@ -93,7 +91,6 @@ export default function NewCarForm() {
 
   const onSubmit = async (data: CarFormData) => {
     try {
-      // Insert car data
       const { data: carData, error: carError } = await supabase
         .from("carro")
         .insert({ ...data, created_at: new Date().toISOString() })
@@ -102,9 +99,6 @@ export default function NewCarForm() {
 
       if (carError) throw carError;
 
- 
-
-      // Insert optional items
       if (opcionais.length > 0) {
         const { error: optionalsError } = await supabase
           .from("opcionais_carro")
@@ -118,7 +112,6 @@ export default function NewCarForm() {
         if (optionalsError) throw optionalsError;
       }
 
-      // Upload photos
       for (const file of files) {
         const { error: uploadError } = await supabase.storage
           .from("carros")
@@ -139,10 +132,10 @@ export default function NewCarForm() {
         }
       }
 
-      alert("Carro adicionado com sucesso!");
+      toast.success("Carro adicionado com sucesso!");
     } catch (error) {
       console.error("Erro ao adicionar carro:", error);
-      alert("Erro ao adicionar carro. Por favor, tente novamente.");
+      toast.error("Erro ao adicionar carro. Por favor, tente novamente.");
     }
   };
 
@@ -232,7 +225,7 @@ export default function NewCarForm() {
                 <Input
                   label="Novo item opcional"
                   placeholder="Digite um item opcional"
-                  onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                     if (e.key === "Enter") {
                       const target = e.target as HTMLInputElement;
                       if (target.value.trim()) {
@@ -260,18 +253,22 @@ export default function NewCarForm() {
           <Tab key="fotos" title="Fotos">
             <Card className="min-w-72 md:min-w-96 min-h-60">
               <CardBody>
-              <div {...getRootProps({ className: "dropzone flex flex-col items-center justify-center text-center rounded-lg border-2 border-dashed border-gray-600 p-6 h-full" })}>
+                <div
+                  {...getRootProps({
+                    className:
+                      "dropzone flex flex-col items-center justify-center text-center rounded-lg border-2 border-dashed border-gray-600 p-6 h-full",
+                  })}
+                >
                   <input {...getInputProps()} />
                   <p>
                     Arraste e solte algumas imagens aqui, ou clique para
                     selecionar arquivos
                   </p>
-                  {/* //adicionar icone camera do react */}
-                  <BiImageAdd size={40} opacity={0.5}/>
+                  <BiImageAdd size={40} opacity={0.5} />
                 </div>
               </CardBody>
               <CardFooter>
-              <div className="grid grid-cols-6 gap-4 ">
+                <div className="grid grid-cols-6 gap-4 ">
                   {files.map((file, index) => (
                     <div key={file.name} className="relative ">
                       <img

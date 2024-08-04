@@ -6,7 +6,7 @@ import { SearchBar } from "./searchBar";
 const LandingPage: React.FC = () => {
   return (
     <>
-      <div className="flex flex-col sm:items-center md:flex-row columns-2 lg:space-x-8 ">
+      <div className="flex flex-col sm:items-center md:flex-row columns-2 lg:space-x-8">
         <div className="">
           <Image
             src="/landingImage.png"
@@ -16,7 +16,7 @@ const LandingPage: React.FC = () => {
             style={{ objectFit: "contain" }}
           />
         </div>
-        <div className="p-4 place-content-center">
+        <div className="p-4 place-content-center relative">
           <p className="sm:text-3xl text-2xl font-bold">
             Excelência em Cada Detalhe
           </p>
@@ -38,7 +38,7 @@ const LandingPage: React.FC = () => {
             href="/estoque"
             color="danger"
             variant="shadow"
-            className="w-full"
+            className="w-full z-10"
           >
             Explorar veículos
           </Button>
