@@ -33,8 +33,10 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
 
   useEffect(() => {
     const fetchCars = async () => {
-      if (searchTerm.length > 2) {
+      if (searchTerm.length > 0) {
         setIsLoading(true);
+  
+        // Utilize ilike para buscar por termos parciais
         const { data, error } = await supabase
           .from("carro")
           .select(
@@ -44,11 +46,11 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
             fotos_urls (url)
           `
           )
-          .ilike("modelo", `%${searchTerm}%`)
+          .or(`versao.ilike.%${searchTerm}%,modelo.ilike.%${searchTerm}%,marca.ilike.%${searchTerm}%`)
           .limit(5);
-
+  
         if (error) {
-          toast.error("Erro ao buscar carros:", error as any);
+          toast.error("Erro ao buscar carros: " + error.message);
         } else {
           setCars(formatCars(data) as Car[]);
           setShowDropdown(true);
@@ -59,13 +61,14 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
         setShowDropdown(false);
       }
     };
-
+  
     const debounce = setTimeout(() => {
       fetchCars();
     }, 300);
-
+  
     return () => clearTimeout(debounce);
   }, [searchTerm]);
+  
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -88,7 +91,7 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
   };
 
   return (
-    <div className="relative z-50" ref={dropdownRef}>
+    <div className="relative z-10" ref={dropdownRef}>
       <AnimatePresence initial={false}>
         {isExpanded ? (
           <motion.div
@@ -112,7 +115,7 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
               className="w-full"
             />
             {showDropdown && cars.length > 0 && (
-              <Card className="w-full mt-1 absolute">
+              <Card className="w-full mt-1 ">
                 <CardBody className="p-0">
                   {cars.map((car) => (
                     <div
@@ -122,14 +125,14 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
                     >
                       <div className="flex p-1 justify-between items-center">
                         <div>
-                          <div className="font-semibold">{`${car.marca} ${car.modelo}`}</div>
-                          <div className="text-sm text-gray-500">{`${car.versao} - ${car.ano_modelo}`}</div>
-                          <div className="text-sm font-medium text-primary-500">{`R$ ${car.preco.toLocaleString("pt-BR")}`}</div>
+                          <div className="font-medium">{`${car.marca} ${car.modelo}`}</div>
+                          <div className="text-xs font-light">{`${car.versao} - ${car.ano_modelo}`}</div>
+                          <div className="text-xs mt-1">{`R$ ${car.preco.toLocaleString("pt-BR")}`}</div>
                         </div>
                         <Image
                           src={car.fotos[0]}
                           alt={car.modelo}
-                          height={60}
+                          width={60}
                           className="rounded-md"
                         />
                       </div>
