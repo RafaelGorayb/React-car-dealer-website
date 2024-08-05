@@ -19,6 +19,8 @@ import { Shield } from "lucide-react";
 import { toast } from "react-toastify";
 import { useCompareList } from "@/lib/userState";
 import SectionTitle from "./HomePage/sectionTitle";
+import { MdCompareArrows } from "react-icons/md";
+
 import {
   Carousel,
   CarouselIndicator,
@@ -329,13 +331,14 @@ function CarCard({ car, isLoading }: CardProps) {
               </ModalBody>
               <ModalFooter className="flex justify-between">
                 <Button
-                  color="secondary"
+                  color="default"
                   variant="faded"
                   onClick={addToComparador}
+                  endContent={<MdCompareArrows size={20} />}
                 >
                   Adicionar ao comparador
                 </Button>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button color="danger"  onPress={onClose}>
                   Fechar
                 </Button>
               </ModalFooter>

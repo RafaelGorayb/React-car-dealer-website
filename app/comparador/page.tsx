@@ -144,64 +144,79 @@ export default function Comparador() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Comparador de Carros</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 md:w-6/12">
         {compareList.map((car, index) => (
           <Card key={index} className="w-full">
-            <CardBody className="p-4">
-              <div className="relative">
+            <CardBody className="relative flex flex-col items-center">
+              <div className="relativeflex items-center justify-center">
                 <Image
                   src={car.fotos[0] || "/carroTeste.png"}
                   alt={`${car.marca} ${car.modelo}`}
-                  className="w-full h-48 object-cover rounded-lg"
+                  className="object-contain rounded-lg"
                 />
                 <Button
                   isIconOnly
                   color="danger"
                   variant="solid"
-                  className="absolute top-2 right-2"
+                  className="absolute top-2 right-2 z-10"
                   onClick={() => removeCar(index)}
                 >
                   <XCircle size={20} />
                 </Button>
               </div>
-              <h2 className="text-xl font-semibold mt-4">
+              <h2 className="text-xl font-semibold mt-4 text-center">
                 {car.marca} {car.modelo}
               </h2>
-              <p className="text-gray-600">{car.versao}</p>
+              <p className="text-gray-600 text-center">{car.versao}</p>
             </CardBody>
-            <CardFooter className="text-lg font-bold">
-              R$ {car.preco.toLocaleString("pt-BR")}
-            </CardFooter>
           </Card>
+
         ))}
+        {/* se tiver menos de 2 carro, adicionar um botão para adicionar mais carros */}
+        {compareList.length < 2 && (
+          <Card className="w-full">
+            <CardBody className="flex items-center justify-center">
+              <Button
+                as={Link}
+                href="/estoque"
+                color="success"
+                variant="shadow"
+              >
+                Adicionar mais carros
+              </Button>
+            </CardBody>
+          </Card>
+        )}
       </div>
 
       <div>
         <h2 className="text-2xl font-bold mb-4">Comparação Detalhada</h2>
-        <Table aria-label="Tabela de comparação de carros">
-          <TableHeader columns={columns}>
-            {(column) => (
-              <TableColumn key={column.key} className="w-12 bg-gray-100 dark:bg-zinc-800 font-bold">
-                {column.label}
-              </TableColumn>
-            )}
-          </TableHeader>
-          <TableBody items={rows}>
-            {(item) => (
-              <TableRow key={item.propriedade}>
-                {(columnKey) => (
-                  <TableCell className="">
-                    {columnKey === "propriedade" ? (
-                      <span className="font-semibold">{item[columnKey]}</span>
-                    ) : (
-                      item[columnKey as keyof typeof item]
-                    )}
-                  </TableCell>
-                )}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        <div className="overflow-x-auto">
+          <Table isStriped aria-label="Tabela de comparação de carros">
+            <TableHeader columns={columns}>
+              {(column) => (
+                <TableColumn key={column.key} className="max-w-[60px] bg-gray-100 dark:bg-zinc-800 font-bold text-xs md:text-sm lg:text-base">
+                  {column.label}
+                </TableColumn>
+              )}
+            </TableHeader>
+            <TableBody items={rows}>
+              {(item) => (
+                <TableRow key={item.propriedade}>
+                  {(columnKey) => (
+                    <TableCell className="max-w-[60px] break-words text-xs md:text-sm lg:text-base">
+                      {columnKey === "propriedade" ? (
+                        <span className="font-semibold">{item[columnKey]}</span>
+                      ) : (
+                        item[columnKey as keyof typeof item]
+                      )}
+                    </TableCell>
+                  )}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
