@@ -97,7 +97,7 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
   };
 
   return (
-    <div className="relative z-50" ref={dropdownRef}>
+    <div className="relative z-10" ref={dropdownRef}>
       <AnimatePresence initial={false}>
         {isExpanded ? (
           <motion.div
