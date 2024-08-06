@@ -184,7 +184,8 @@ function CarCard({ car, isLoading }: CardProps) {
               </ModalHeader>
               
               <ModalBody className="p-0 overflow-x-clip">
-                <Carousel>
+                <div className="lg:flex">
+                <Carousel className="w-full md:w-8/12 lg:w-6/12 lg:pl-10">
                   <CarouselNext className="top-1/3 -translate-y-1/3" />
                   <CarouselPrevious className="top-1/3 -translate-y-1/3" />
                   <CarouselMainContainer>
@@ -192,7 +193,7 @@ function CarCard({ car, isLoading }: CardProps) {
                       <SliderMainItem key={index} className="bg-transparent">
                         <img
                           src={foto}
-                          className="w-full h-64 object-cover"
+                          className="w-full h-64 md:h-[450px] object-cover"
                           alt={`${car.marca} ${car.modelo}`}
                         />
                       </SliderMainItem>
@@ -216,7 +217,7 @@ function CarCard({ car, isLoading }: CardProps) {
                   </CarouselThumbsContainer>
 
                 </Carousel>
-                <div className="px-4">
+                <div className="lg:px-10 p-4">
                   <p className="text-lg font-semibold">
                     {car.marca} {car.modelo}
                   </p>
@@ -253,7 +254,6 @@ function CarCard({ car, isLoading }: CardProps) {
                     R$ {car.preco.toLocaleString("pt-BR")}
                   </p>
                   <br />
-
                   <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-6">
                     <SectionTitle title="Especificações" fontsize="lg" />
                       <div className="grid grid-cols-3 gap-y-2 gap-x-2 text-xs mt-6">
@@ -319,6 +319,10 @@ function CarCard({ car, isLoading }: CardProps) {
                         </div>
                       </div>
                     </div>
+                 </div>
+                 
+                </div>
+                <div className="px-4">
                   <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-6">
                     <SectionTitle title="Opcionais" fontsize="lg" />
                     <ul className="list-disc pl-5 columns-2 md:columns-3 text-xs font-light mt-6">
