@@ -43,8 +43,9 @@ function CarCard({ car, isLoading }: CardProps) {
 
   const { setCompareList } = useCompareList();
 
-  const [modalSize, setModalSize] = useState("5xl");
-  const [modalScroll, setModalScroll] = useState("regular");
+  const [modalSize, setModalSize] = useState<"xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "full">("5xl");
+  const [modalScroll, setModalScroll] = useState<"normal" | "outside" | "inside">("normal");
+
 
   useEffect(() => {
     function handleResize() {
