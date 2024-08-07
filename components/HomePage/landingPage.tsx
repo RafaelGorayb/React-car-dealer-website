@@ -38,7 +38,7 @@ const LandingPage: React.FC = () => {
             href="/estoque"
             color="danger"
             variant="shadow"
-            className="w-full z-10"
+            className="w-full"
           >
             Explorar veículos
           </Button>
