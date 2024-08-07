@@ -6,7 +6,7 @@ import { CircleAlert, Shield } from "lucide-react";
 import { toast } from "react-toastify";
 import { useCompareList } from "@/lib/userState";
 import SectionTitle from "@/components/HomePage/sectionTitle";
-import { Chip, Button, Spinner } from "@nextui-org/react";
+import { Chip, Button, Spinner, Image } from "@nextui-org/react";
 import { createClient } from "@/utils/supabase/client";
 import { formatCars } from "@/utils/functions";
 import {
@@ -94,9 +94,10 @@ export default function PaginaCarro() {
                   <CarouselMainContainer>
                     {car.fotos.map((foto, index) => (
                       <SliderMainItem key={index} className="bg-transparent">
-                        <img
+                        <Image
                           src={foto}
-                          className="w-full h-64 object-cover"
+                          radius="none"
+                          className="object-cover w-[800px] max-h-[500px]"
                           alt={`${car.marca} ${car.modelo}`}
                         />
                       </SliderMainItem>

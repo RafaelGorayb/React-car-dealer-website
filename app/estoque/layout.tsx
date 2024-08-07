@@ -9,7 +9,7 @@ export default function PricingLayout({
   return (
     <div>
       <Navbar />
-      <section>{children}</section>
+      <section className="min-h-screen">{children}</section>
       <Footer />
     </div>
   );

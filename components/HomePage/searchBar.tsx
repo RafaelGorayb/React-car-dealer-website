@@ -132,8 +132,8 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
                       <div className="flex p-1 justify-between items-center">
                         <div>
                           <div className="font-semibold">{`${car.marca} ${car.modelo}`}</div>
-                          <div className="text-sm text-gray-500">{`${car.versao} - ${car.ano_modelo}`}</div>
-                          <div className="text-sm font-medium text-primary-500">{`R$ ${car.preco.toLocaleString("pt-BR")}`}</div>
+                          <div className="text-xs font-light ">{`${car.versao} - ${car.ano_modelo}`}</div>
+                          <div className="text-xs mt-1">{`R$ ${car.preco.toLocaleString("pt-BR")}`}</div>                         
                         </div>
                         <Image
                           src={car.fotos[0]}
@@ -142,6 +142,7 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
                           className="rounded-md"
                         />
                       </div>
+                      
                     </div>
                   ))}
                 </CardBody>

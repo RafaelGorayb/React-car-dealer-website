@@ -300,7 +300,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
       <div className="hidden lg:block fixed bg-background w-80 h-screen overflow-y-auto p-4 shadow-lg">
         <h2 className="text-2xl font-bold mb-6">Filtros</h2>
         <FilterForm />
-        <Button type="submit" color="danger" className="w-full mt-4">
+        <Button type="submit" color="danger" className="w-full mt-4" onClick={handleSubmit(onSubmit)}>
           Aplicar Filtros
         </Button>
       </div>

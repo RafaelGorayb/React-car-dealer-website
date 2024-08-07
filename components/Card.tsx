@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Car } from "../types";
 import {
   Card,
   CardBody,
   CardFooter,
   Skeleton,
+  Image,
   Chip,
   Modal,
   ModalContent,
@@ -15,7 +16,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import "../styles/globals.css";
-import { Shield } from "lucide-react";
+import { Fullscreen, Shield } from "lucide-react";
 import { toast } from "react-toastify";
 import { useCompareList } from "@/lib/userState";
 import SectionTitle from "./HomePage/sectionTitle";
@@ -42,6 +43,31 @@ function CarCard({ car, isLoading }: CardProps) {
 
   const { setCompareList } = useCompareList();
 
+  const [modalSize, setModalSize] = useState("5xl");
+  const [modalScroll, setModalScroll] = useState("regular");
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth >= 1024) {
+        setModalSize("5xl");
+        setModalScroll("outside");
+      } else {
+        setModalSize("full");
+        setModalScroll("normal");
+      }
+    }
+
+    // Set initial size
+    handleResize();
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up event listener on unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   function addToComparador() {
     setCompareList((prev) => (prev ? [...prev, car] : [car]));
     toast.success("Carro adicionado ao comparador");
@@ -168,13 +194,11 @@ function CarCard({ car, isLoading }: CardProps) {
 
       <Modal
         isOpen={isOpen}
-        size="full"
+        size={modalSize}    
         onClose={onClose}        
-        scrollBehavior="normal"
+        scrollBehavior={modalScroll}    
         backdrop="blur"
-        className="overflow-x-clip overflow-y-auto"
-        
-        
+        className="overflow-x-clip overflow-y-auto" 
       >
         <ModalContent className="">
           {(onClose) => (
@@ -183,17 +207,18 @@ function CarCard({ car, isLoading }: CardProps) {
               <p className="text-sm text-center">Detalhes do veículo</p>
               </ModalHeader>
               
-              <ModalBody className="p-0 overflow-x-clip">
-                <div className="lg:flex">
-                <Carousel className="w-full md:w-8/12 lg:w-6/12 lg:pl-10">
+              <ModalBody className="p-0 overflow-x-clip ">
+                <div className="lg:flex lg:pl-5">
+                <Carousel className="">
                   <CarouselNext className="top-1/3 -translate-y-1/3" />
                   <CarouselPrevious className="top-1/3 -translate-y-1/3" />
                   <CarouselMainContainer>
                     {car.fotos.map((foto, index) => (
                       <SliderMainItem key={index} className="bg-transparent">
-                        <img
+                        <Image
                           src={foto}
-                          className="w-full h-64 md:h-[450px] object-cover"
+                          radius="none"
+                          className="object-cover w-[800px] max-h-[500px]"
                           alt={`${car.marca} ${car.modelo}`}
                         />
                       </SliderMainItem>
@@ -217,7 +242,7 @@ function CarCard({ car, isLoading }: CardProps) {
                   </CarouselThumbsContainer>
 
                 </Carousel>
-                <div className="lg:px-10 p-4">
+                <div className="lg:px-5 p-4 lg:p-0 ">
                   <p className="text-lg font-semibold">
                     {car.marca} {car.modelo}
                   </p>
@@ -236,7 +261,7 @@ function CarCard({ car, isLoading }: CardProps) {
                       </Chip>
                     )}
                   </div>
-                  <div className="flex flex-row gap-4 py-2">
+                  <div className="flex flex-row gap-4 ">
                     <div className="flex flex-col">
                       <p className="text-neutral-400 text-md">Ano</p>
                       <p className="font-medium text-md">
