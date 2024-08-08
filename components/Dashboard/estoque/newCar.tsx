@@ -27,6 +27,7 @@ const carSchema = z.object({
   marca: z.string().min(1, "Marca é obrigatória"),
   modelo: z.string().min(1, "Modelo é obrigatório"),
   versao: z.string().min(1, "Versão é obrigatória"),
+  motorizacao: z.string().min(1, "Motorização é obrigatória"),
   cor: z.string().min(1, "Cor é obrigatória"),
   preco: z.number().positive("Preço deve ser positivo"),
   ano_fabricacao: z
@@ -89,11 +90,11 @@ export default function NewCarForm() {
     },
   });
 
-  const onSubmit = async (data: CarFormData) => {
+  const onSubmit = async (dataForm: CarFormData) => {
     try {
       const { data: carData, error: carError } = await supabase
         .from("carro")
-        .insert({ ...data, created_at: new Date().toISOString() })
+        .insert({ ...dataForm })
         .select()
         .single();
 
