@@ -94,7 +94,7 @@ export default function NewCarForm() {
     try {
       const { data: carData, error: carError } = await supabase
         .from("carro")
-        .insert({ ...dataForm })
+        .insert({ ...dataForm }) 
         .select()
         .single();
 
@@ -105,8 +105,8 @@ export default function NewCarForm() {
           .from("opcionais_carro")
           .insert(
             opcionais.map((opcional) => ({
-              nome: opcional,
-              carro_id: carData.id,
+              nome: opcional,              
+              carro_id: carData.id  //id do carro adicionado acima
             }))
           );
 
