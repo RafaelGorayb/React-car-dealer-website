@@ -22,3 +22,10 @@ export function formatCars(Car: CarObjectComplete | CarObjectComplete[]) {
     fotos: Car.fotos_urls ? Car.fotos_urls.map((foto: any) => foto.url) : [],
   };
 }
+
+export function formatCarPrice(price: number) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(price);
+}
