@@ -389,7 +389,7 @@ const DashboardLayout: React.FC = () => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onPress={() => handleEdit(car)}>
+                <DropdownItem color="primary" onPress={() => handleEdit(car)}>
                   Editar
                 </DropdownItem>
                 <DropdownItem
@@ -397,6 +397,7 @@ const DashboardLayout: React.FC = () => {
                     setSelectedCar(car);
                     setIsDeleteModalOpen(true);
                   }}
+                  color="danger"
                 >
                   Deletar
                 </DropdownItem>
