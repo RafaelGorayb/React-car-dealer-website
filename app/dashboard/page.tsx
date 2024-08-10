@@ -295,7 +295,35 @@ const DashboardLayout: React.FC = () => {
     );
   }, [selectedKeys, filteredItems.length, page, pages, hasSearchFilter]);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
+    if (selectedCar?.fotos) {
+      const toasts = toast.loading("Deletando fotos...", {
+        progress: 0,
+      });
+
+      const { data: list, error: errosFotos } = await supabase.storage
+        .from("carros")
+        .list(`${id}`);
+      const filesToRemove = list?.map((x) => `${id}/${x.name}`);
+
+      if (filesToRemove) {
+        const { data, error } = await supabase.storage
+          .from("carros")
+          .remove(filesToRemove);
+        if (error) {
+          toast.error("Error deleting photos:" + error.message);
+          return;
+        }
+      }
+
+      toast.update(toasts, {
+        render: "Fotos deletadas",
+        type: "success",
+        progress: 100,
+        autoClose: 2000,
+      });
+    }
+
     supabase
       .from("carro")
       .delete()

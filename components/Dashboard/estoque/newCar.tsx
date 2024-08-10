@@ -94,7 +94,7 @@ export default function NewCarForm() {
     try {
       const { data: carData, error: carError } = await supabase
         .from("carro")
-        .insert({ ...dataForm }) 
+        .insert({ ...dataForm })
         .select()
         .single();
 
@@ -105,20 +105,31 @@ export default function NewCarForm() {
           .from("opcionais_carro")
           .insert(
             opcionais.map((opcional) => ({
-              nome: opcional,              
-              carro_id: carData.id  //id do carro adicionado acima
+              nome: opcional,
+              carro_id: carData.id,
             }))
           );
 
         if (optionalsError) throw optionalsError;
       }
 
+      const fileLength = files.length;
+
+      let progress = 0;
+
+      const toastEnvio = toast.loading(`Enviando foto 0 de ${fileLength}`, {
+        autoClose: false,
+      });
+
       for (const file of files) {
         const { error: uploadError } = await supabase.storage
           .from("carros")
           .upload(`${carData.id}/${file.name}`, file);
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          toast.error("Erro ao enviar foto. Por favor, tente novamente.");
+          throw uploadError;
+        }
 
         const { data: urlData } = supabase.storage
           .from("carros")
@@ -129,9 +140,18 @@ export default function NewCarForm() {
             .from("fotos_urls")
             .insert({ url: urlData.publicUrl, carro_id: carData.id });
 
-          if (photoError) throw photoError;
+          if (photoError) {
+            toast.error("Erro ao adicionar foto. Por favor, tente novamente.");
+            throw photoError;
+          }
         }
+        progress++;
+        toast.update(toastEnvio, {
+          render: `Enviando foto ${progress} de ${fileLength}`,
+        });
       }
+
+      toast.dismiss(toastEnvio);
 
       toast.success("Carro adicionado com sucesso!");
     } catch (error) {
