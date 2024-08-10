@@ -5,9 +5,11 @@ import LandingPage from "@/components/HomePage/landingPage";
 import RecemChegados from "@/components/HomePage/recem-chegados";
 import SobreNos from "@/components/HomePage/sobre-nos";
 import OndeEstamos from "@/components/HomePage/onde-estamos";
+import InstagramPage from "@/components/HomePage/instagramPage";
 import { Button, Link } from "@nextui-org/react";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
+import { InstagramLogoIcon } from "@radix-ui/react-icons";
 
 export default function Home() {
   return (
@@ -36,6 +38,9 @@ export default function Home() {
             </Button>
           </div>
         </section>
+        <section className="pt-10 sm:pt-20">
+          <InstagramPage />
+          </section>
         <section className="pt-10 w-full bg-gray-100 dark:bg-stone-900 xl:rounded-lg">
           <div className="p-4">
             <SectionTitle title="Sobre Nós" />

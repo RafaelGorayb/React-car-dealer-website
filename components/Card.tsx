@@ -210,40 +210,40 @@ function CarCard({ car, isLoading }: CardProps) {
               
               <ModalBody className="p-0 overflow-x-clip ">
                 <div className="lg:flex lg:pl-5">
-                <Carousel className="">
-                  <CarouselNext className="top-1/3 -translate-y-1/3" />
-                  <CarouselPrevious className="top-1/3 -translate-y-1/3" />
-                  <CarouselMainContainer>
-                    {car.fotos.map((foto, index) => (
-                      <SliderMainItem key={index} className="bg-transparent">
-                        <Image
-                          src={foto}
-                          radius="none"
-                          className="object-cover w-[800px] max-h-[500px]"
-                          alt={`${car.marca} ${car.modelo}`}
-                        />
-                      </SliderMainItem>
-                    ))}
-                  </CarouselMainContainer>
-                  <CarouselThumbsContainer>
-                    {car.fotos.map((foto, index) => (
-                      <SliderThumbItem
-                        key={index}
-                        index={index}
-                        className="bg-transparent"
-                      >
-                        <img
-                          key={index}
-                          src={foto}
-                          className="w-full h-12 object-cover rounded-lg shadow"
-                          alt={`${car.marca} ${car.modelo} - Foto ${index + 2}`}
-                        />
-                      </SliderThumbItem>
-                    ))}
-                  </CarouselThumbsContainer>
+                    <div className="lg:w-7/12">
+                    <Carousel className="">
+                    <CarouselNext className="top-1/3 -translate-y-1/3" />
+                    <CarouselPrevious className="top-1/3 -translate-y-1/3" />
+                    <CarouselMainContainer>
+                      {car.fotos.map((foto, index) => (
+                        <SliderMainItem key={index} className="bg-transparent">
+                          <Image
+                            src={foto}
+                            radius="none"
+                            className="object-cover w-full h-full" // Largura e altura fixas
+                            alt={`${car.marca} ${car.modelo}`}
+  
+                          />
+                        </SliderMainItem>
+                      ))}
+                    </CarouselMainContainer>
+                    <CarouselThumbsContainer>
+                      {car.fotos.map((foto, index) => (
+                        <SliderThumbItem key={index} index={index} className="bg-transparent">
+                          <img
+                            key={index}
+                            src={foto}
+                            className="w-full h-12 object-cover rounded-lg shadow"
+                            alt={`${car.marca} ${car.modelo} - Foto ${index + 2}`}
+                          />
+                        </SliderThumbItem>
+                      ))}
+                    </CarouselThumbsContainer>
+                  </Carousel>
+                </div>
 
-                </Carousel>
-                <div className="lg:px-5 p-4 lg:p-0 ">
+
+                <div className="lg:px-5 p-4 lg:py-0 lg:w-5/12 ">
                   <p className="text-lg font-semibold">
                     {car.marca} {car.modelo}
                   </p>
