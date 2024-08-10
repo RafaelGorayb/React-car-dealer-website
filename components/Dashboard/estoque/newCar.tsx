@@ -22,6 +22,9 @@ import {
 import { createClient } from "@/utils/supabase/client";
 import { BiImageAdd, BiTrash } from "react-icons/bi";
 import { toast } from "react-toastify";
+import OpcionaisTab from "./opcionais";
+
+const currentYear = new Date().getFullYear();
 
 const carSchema = z.object({
   marca: z.string().min(1, "Marca é obrigatória"),
@@ -29,29 +32,61 @@ const carSchema = z.object({
   versao: z.string().min(1, "Versão é obrigatória"),
   motorizacao: z.string().min(1, "Motorização é obrigatória"),
   cor: z.string().min(1, "Cor é obrigatória"),
-  preco: z.number().positive("Preço deve ser positivo"),
-  ano_fabricacao: z
+  preco: z.coerce.number().positive("Preço deve ser positivo"),
+  ano_fabricacao: z.coerce
     .number()
     .int()
-    .positive("Ano de fabricação deve ser positivo"),
-  ano_modelo: z.number().int().positive("Ano do modelo deve ser positivo"),
-  potencia: z.number().positive("Potência deve ser positiva"),
-  torque: z.number().positive("Torque deve ser positivo"),
+    .min(1900, "Ano inválido")
+    .max(currentYear, "Ano não pode ser futuro"),
+  ano_modelo: z.coerce
+    .number()
+    .int()
+    .min(1900, "Ano inválido")
+    .max(
+      currentYear + 1,
+      "Ano do modelo não pode ser mais que um ano no futuro"
+    ),
+  potencia: z.coerce.number().positive("Potência deve ser positiva"),
+  torque: z.coerce.number().positive("Torque deve ser positivo"),
   motor: z.string().min(1, "Motor é obrigatório"),
-  cambio: z.string().min(1, "Câmbio é obrigatório"),
-  carroceria: z.string().min(1, "Carroceria é obrigatória"),
+  cambio: z.enum(["Manual", "Automático", "CVT", "Semi-automático"]),
+  carroceria: z.enum([
+    "Hatch",
+    "Sedan",
+    "SUV",
+    "Picape",
+    "Perua",
+    "Coupé",
+    "Conversível",
+  ]),
   blindado: z.boolean(),
-  tracao: z.number().int().min(2).max(4),
+  tracao: z.enum(["Dianteira", "Traseira", "Integral"]),
   rodas: z.string().min(1, "Rodas são obrigatórias"),
-  freios: z.string().min(1, "Freios são obrigatórios"),
-  direcao: z.string().min(1, "Direção é obrigatória"),
-  bancos: z.string().min(1, "Bancos são obrigatórios"),
-  ar_condicionado: z.string().min(1, "Ar condicionado é obrigatório"),
-  farol: z.string().min(1, "Farol é obrigatório"),
-  multimidia: z.string().min(1, "Multimídia é obrigatória"),
+  freios: z.enum([
+    "Disco nas 4 rodas",
+    "Disco na frente e tambor atrás",
+    "Tambor nas 4 rodas",
+  ]),
+  direcao: z.enum(["Mecânica", "Hidráulica", "Elétrica", "Eletro-hidráulica"]),
+  bancos: z.enum(["Tecido", "Couro", "Couro sintético"]),
+  ar_condicionado: z.enum([
+    "Manual",
+    "Digital",
+    "Dual zone",
+    "Tri zone",
+    "Não possui",
+  ]),
+  farol: z.enum(["Halógeno", "LED", "Xenon"]),
+  multimidia: z.enum(["Não possui", "Com tela", "Sem tela"]),
   final_placa: z.string().length(1, "Final da placa deve ter 1 caractere"),
-  km: z.number().nonnegative("Quilometragem deve ser não negativa"),
-  airbag: z.string().min(1, "Airbag é obrigatório"),
+  km: z.coerce.number().nonnegative("Quilometragem deve ser não negativa"),
+  airbag: z.enum([
+    "Motorista",
+    "Motorista e passageiro",
+    "Lateral",
+    "Cortina",
+    "Todos",
+  ]),
 });
 
 type CarFormData = z.infer<typeof carSchema>;
@@ -73,7 +108,7 @@ export default function NewCarForm() {
     resolver: zodResolver(carSchema),
     defaultValues: {
       blindado: false,
-      tracao: 2,
+      tracao: "Dianteira",
     },
   });
 
@@ -160,7 +195,14 @@ export default function NewCarForm() {
     }
   };
 
-  const renderFormField = (fieldName: keyof CarFormData) => {
+  const formatFieldName = (fieldName: string) => {
+    return fieldName
+      .split("_")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  };
+
+  const renderFormField = (fieldName: keyof CarFormData, label: string) => {
     const fieldSchema = carSchema.shape[fieldName];
 
     if (fieldSchema instanceof z.ZodBoolean) {
@@ -172,10 +214,10 @@ export default function NewCarForm() {
             <Switch
               {...field}
               value={field.value as any}
-              checked={field.value as any}
-              onChange={(e) => field.onChange(e.target.checked)}
+              isSelected={field.value as boolean}
+              onValueChange={field.onChange}
             >
-              {fieldName}
+              {label}
             </Switch>
           )}
         />
@@ -189,13 +231,37 @@ export default function NewCarForm() {
             <Input
               {...field}
               type="number"
-              label={fieldName}
+              label={label}
               value={field.value as any}
-              placeholder={`Digite ${fieldName}`}
+              placeholder={`Digite ${label}`}
               isInvalid={!!errors[fieldName]}
               errorMessage={errors[fieldName]?.message}
-              onChange={(e) => field.onChange(Number(e.target.value))}
+              onChange={(e) => field.onChange(e.target.value)}
             />
+          )}
+        />
+      );
+    } else if (fieldSchema instanceof z.ZodEnum) {
+      const options = (fieldSchema as any)._def.values;
+      return (
+        <Controller
+          name={fieldName}
+          control={control}
+          render={({ field }) => (
+            <Select
+              {...field}
+              label={label}
+              value={field.value as any}
+              placeholder={`Selecione ${label}`}
+              isInvalid={!!errors[fieldName]}
+              errorMessage={errors[fieldName]?.message}
+            >
+              {options.map((option: string) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </Select>
           )}
         />
       );
@@ -207,10 +273,10 @@ export default function NewCarForm() {
           render={({ field }) => (
             <Input
               {...field}
-              label={fieldName}
+              label={label}
               isInvalid={!!errors[fieldName]}
               value={field.value as any}
-              placeholder={`Digite ${fieldName}`}
+              placeholder={`Digite ${label}`}
               errorMessage={errors[fieldName]?.message}
             />
           )}
@@ -230,10 +296,13 @@ export default function NewCarForm() {
           <Tab key="especificacoes" title="Especificações">
             <Card>
               <CardBody>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {Object.keys(carSchema.shape).map((fieldName) => (
                     <div key={fieldName}>
-                      {renderFormField(fieldName as keyof CarFormData)}
+                      {renderFormField(
+                        fieldName as keyof CarFormData,
+                        formatFieldName(fieldName)
+                      )}
                     </div>
                   ))}
                 </div>
@@ -241,35 +310,7 @@ export default function NewCarForm() {
             </Card>
           </Tab>
           <Tab key="opcionais" title="Opcionais">
-            <Card>
-              <CardBody>
-                <Input
-                  label="Novo item opcional"
-                  placeholder="Digite um item opcional"
-                  onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                    if (e.key === "Enter") {
-                      const target = e.target as HTMLInputElement;
-                      if (target.value.trim()) {
-                        setOpcionais([...opcionais, target.value.trim()]);
-                        target.value = "";
-                      }
-                    }
-                  }}
-                />
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {opcionais.map((opcional, index) => (
-                    <Chip
-                      key={index}
-                      onClose={() =>
-                        setOpcionais(opcionais.filter((_, i) => i !== index))
-                      }
-                    >
-                      {opcional}
-                    </Chip>
-                  ))}
-                </div>
-              </CardBody>
-            </Card>
+            <OpcionaisTab opcionais={opcionais} setOpcionais={setOpcionais} />
           </Tab>
           <Tab key="fotos" title="Fotos">
             <Card className="min-w-72 md:min-w-96 min-h-60">
