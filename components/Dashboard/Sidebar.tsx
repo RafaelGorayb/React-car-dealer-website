@@ -47,7 +47,6 @@ const SidebarMenu = ({ user, children }: SidebarMenuProps) => {
         if (error) {
           console.error("Error fetching avatar URL:", error);
         } else {
-          console.log("Avatar URL fetched:", data.signedUrl);
           setAvatarUrl(data.signedUrl);
         }
       }

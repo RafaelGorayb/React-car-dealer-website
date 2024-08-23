@@ -334,14 +334,13 @@ const DashboardLayout: React.FC = () => {
           return;
         }
         setCars(cars.filter((car) => car.id !== id));
-        toast.success("Car deleted successfully");
+        toast.success("Carro deletado com sucesso");
         setIsDeleteModalOpen(false);
       });
   };
 
   const handleEdit = (car: Car) => {
-    setSelectedCar(car);
-    setIsEditModalOpen(true);
+    router.push(`/dashboard/estoque?id=${car.id}`);
   };
 
   const handleInputChange = (

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -93,10 +93,18 @@ type CarFormData = z.infer<typeof carSchema>;
 
 type FileWithPreview = File & { preview: string };
 
-export default function NewCarForm() {
+interface NewCarFormProps {
+  editCardId?: string;
+}
+
+export default function NewCarForm({ editCardId }: NewCarFormProps) {
   const [activeTab, setActiveTab] = useState<string>("especificacoes");
   const [opcionais, setOpcionais] = useState<string[]>([]);
   const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [existingPhotos, setExistingPhotos] = useState<
+    { id: string; url: string }[]
+  >([]);
+  const [photosToDelete, setPhotosToDelete] = useState<string[]>([]);
 
   const supabase = createClient();
 
@@ -104,6 +112,7 @@ export default function NewCarForm() {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CarFormData>({
     resolver: zodResolver(carSchema),
     defaultValues: {
@@ -125,74 +134,155 @@ export default function NewCarForm() {
     },
   });
 
-  const onSubmit = async (dataForm: CarFormData) => {
+  const fetchCarData = async () => {
+    if (!editCardId) return;
+
     try {
       const { data: carData, error: carError } = await supabase
         .from("carro")
-        .insert({ ...dataForm })
-        .select()
+        .select("*, opcionais_carro(*), fotos_urls(*)")
+        .eq("id", editCardId)
         .single();
 
       if (carError) throw carError;
 
-      if (opcionais.length > 0) {
-        const { error: optionalsError } = await supabase
-          .from("opcionais_carro")
-          .insert(
-            opcionais.map((opcional) => ({
-              nome: opcional,
-              carro_id: carData.id,
-            }))
-          );
-
-        if (optionalsError) throw optionalsError;
+      if (carData) {
+        reset(carData);
+        setOpcionais(
+          carData.opcionais_carro.map((opcional: any) => opcional.nome)
+        );
+        setExistingPhotos(carData.fotos_urls);
       }
-
-      const fileLength = files.length;
-
-      let progress = 0;
-
-      const toastEnvio = toast.loading(`Enviando foto 0 de ${fileLength}`, {
-        autoClose: false,
-      });
-
-      for (const file of files) {
-        const { error: uploadError } = await supabase.storage
-          .from("carros")
-          .upload(`${carData.id}/${file.name}`, file);
-
-        if (uploadError) {
-          toast.error("Erro ao enviar foto. Por favor, tente novamente.");
-          throw uploadError;
-        }
-
-        const { data: urlData } = supabase.storage
-          .from("carros")
-          .getPublicUrl(`${carData.id}/${file.name}`);
-
-        if (urlData) {
-          const { error: photoError } = await supabase
-            .from("fotos_urls")
-            .insert({ url: urlData.publicUrl, carro_id: carData.id });
-
-          if (photoError) {
-            toast.error("Erro ao adicionar foto. Por favor, tente novamente.");
-            throw photoError;
-          }
-        }
-        progress++;
-        toast.update(toastEnvio, {
-          render: `Enviando foto ${progress} de ${fileLength}`,
-        });
-      }
-
-      toast.dismiss(toastEnvio);
-
-      toast.success("Carro adicionado com sucesso!");
     } catch (error) {
-      console.error("Erro ao adicionar carro:", error);
-      toast.error("Erro ao adicionar carro. Por favor, tente novamente.");
+      console.error("Error fetching car data:", error);
+      toast.error("Erro ao buscar dados do carro. Por favor, tente novamente.");
     }
+  };
+
+  useEffect(() => {
+    if (editCardId) {
+      fetchCarData();
+    }
+  }, [editCardId]);
+
+  const onSubmit = async (dataForm: CarFormData) => {
+    try {
+      let carId = editCardId;
+
+      if (editCardId) {
+        const { error: updateError } = await supabase
+          .from("carro")
+          .update(dataForm)
+          .eq("id", editCardId);
+
+        if (updateError) throw updateError;
+      } else {
+        const { data: carData, error: carError } = await supabase
+          .from("carro")
+          .insert({ ...dataForm })
+          .select()
+          .single();
+
+        if (carError) throw carError;
+        carId = carData.id;
+      }
+
+      // Handle optional features
+      await handleOptionals(carId as string);
+
+      // Handle photo deletions
+      await handlePhotoDeletions();
+
+      // Handle new photo uploads
+      await handlePhotoUploads(carId as string);
+
+      toast.success(
+        editCardId
+          ? "Carro atualizado com sucesso!"
+          : "Carro adicionado com sucesso!"
+      );
+    } catch (error) {
+      console.error("Erro no processamento dos dados", error);
+      toast.error("Erro ao processar dados. Por favor, tente novamente.");
+    }
+  };
+
+  const handlePhotoDeletions = async () => {
+    for (const photoId of photosToDelete) {
+      const photoToDelete = existingPhotos.find(
+        (photo) => photo.id === photoId
+      );
+      if (
+        photoToDelete &&
+        photoToDelete.url.includes("https://hkuzikocskwbvvucobqa.supabase.co")
+      ) {
+        const fileName = photoToDelete.url.split("/").pop();
+        await supabase.storage
+          .from("carros")
+          .remove([`${editCardId}/${fileName}`]);
+      }
+      await supabase.from("fotos_urls").delete().eq("id", photoId);
+    }
+  };
+
+  const handleOptionals = async (carId: string) => {
+    if (editCardId) {
+      await supabase.from("opcionais_carro").delete().eq("carro_id", carId);
+    }
+
+    if (opcionais.length > 0) {
+      const { error: optionalsError } = await supabase
+        .from("opcionais_carro")
+        .insert(
+          opcionais.map((opcional) => ({
+            nome: opcional,
+            carro_id: carId,
+          }))
+        );
+
+      if (optionalsError) throw optionalsError;
+    }
+  };
+
+  const handlePhotoUploads = async (carId: string) => {
+    const fileLength = files.length;
+    let progress = 0;
+
+    const toastEnvio = toast.loading(`Enviando foto 0 de ${fileLength}`, {
+      autoClose: false,
+    });
+
+    for (const file of files) {
+      const { error: uploadError } = await supabase.storage
+        .from("carros")
+        .upload(`${carId}/${file.name}`, file);
+
+      if (uploadError) {
+        toast.error("Erro ao enviar foto. Por favor, tente novamente.");
+        throw uploadError;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("carros")
+        .getPublicUrl(`${carId}/${file.name}`);
+
+      if (urlData) {
+        const { error: photoError } = await supabase
+          .from("fotos_urls")
+          .insert({ url: urlData.publicUrl, carro_id: carId });
+
+        if (photoError) {
+          toast.error("Erro ao adicionar foto. Por favor, tente novamente.");
+          throw photoError;
+        }
+      }
+      progress++;
+      toast.update(toastEnvio, {
+        render: `Enviando foto ${progress} de ${fileLength}`,
+      });
+    }
+
+    toast.dismiss(toastEnvio);
   };
 
   const formatFieldName = (fieldName: string) => {
@@ -249,12 +339,11 @@ export default function NewCarForm() {
           control={control}
           render={({ field }) => (
             <Select
-              {...field}
               label={label}
-              value={field.value as any}
               placeholder={`Selecione ${label}`}
               isInvalid={!!errors[fieldName]}
               errorMessage={errors[fieldName]?.message}
+              selectedKeys={[field.value as any]}
             >
               {options.map((option: string) => (
                 <SelectItem key={option} value={option}>
@@ -287,7 +376,9 @@ export default function NewCarForm() {
 
   return (
     <div className="p-16">
-      <h1 className="text-2xl font-bold mb-4">Adicionar novo veículo</h1>
+      <h1 className="text-2xl font-bold mb-4">
+        {editCardId ? "Editar Veículo" : "Adicionar Veículo"}
+      </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Tabs
           selectedKey={activeTab}
@@ -312,7 +403,7 @@ export default function NewCarForm() {
           <Tab key="opcionais" title="Opcionais">
             <OpcionaisTab opcionais={opcionais} setOpcionais={setOpcionais} />
           </Tab>
-          <Tab key="fotos" title="Fotos">
+          <Tab key="fotos" title="Photos">
             <Card className="min-w-72 md:min-w-96 min-h-60">
               <CardBody>
                 <div
@@ -322,15 +413,33 @@ export default function NewCarForm() {
                   })}
                 >
                   <input {...getInputProps()} />
-                  <p>
-                    Arraste e solte algumas imagens aqui, ou clique para
-                    selecionar arquivos
-                  </p>
+                  <p>Arraste e solte as fotos aqui ou clique para selecionar</p>
                   <BiImageAdd size={40} opacity={0.5} />
                 </div>
               </CardBody>
               <CardFooter>
-                <div className="grid grid-cols-6 gap-4 ">
+                <div className="grid md:grid-cols-8 grid-cols-3 gap-4 max-h-[500px] w-full overflow-y-scroll overflow-x-hidden">
+                  {existingPhotos.map((photo) => (
+                    <div key={photo.id} className="relative ">
+                      <img
+                        src={photo.url}
+                        alt="Existing photo"
+                        className="w-[160] h-[90] object-cover rounded hover:opacity-50"
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-2 right-2 p-1 bg-gray-700 rounded-full hover:bg-red-500"
+                        onClick={() => {
+                          setExistingPhotos(
+                            existingPhotos.filter((p) => p.id !== photo.id)
+                          );
+                          setPhotosToDelete([...photosToDelete, photo.id]);
+                        }}
+                      >
+                        <BiTrash size={20} color="white" />
+                      </button>
+                    </div>
+                  ))}
                   {files.map((file, index) => (
                     <div key={file.name} className="relative ">
                       <img
@@ -356,7 +465,7 @@ export default function NewCarForm() {
           </Tab>
         </Tabs>
         <Button type="submit" color="primary" className="mt-4">
-          Adicionar Veículo
+          {editCardId ? "Atualizar Veículo" : "Adicionar Veículo"}
         </Button>
       </form>
     </div>
