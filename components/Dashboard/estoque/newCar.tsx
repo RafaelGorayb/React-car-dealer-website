@@ -30,7 +30,11 @@ const carSchema = z.object({
   marca: z.string().min(1, "Marca é obrigatória"),
   modelo: z.string().min(1, "Modelo é obrigatório"),
   versao: z.string().min(1, "Versão é obrigatória"),
-  motorizacao: z.string().min(1, "Motorização é obrigatória"),
+  motorizacao: z.enum([
+    "Combustão",
+    "Elétrico",
+    "Híbrido",
+  ]),
   cor: z.string().min(1, "Cor é obrigatória"),
   preco: z.coerce.number().positive("Preço deve ser positivo"),
   ano_fabricacao: z.coerce
@@ -48,45 +52,26 @@ const carSchema = z.object({
     ),
   potencia: z.coerce.number().positive("Potência deve ser positiva"),
   torque: z.coerce.number().positive("Torque deve ser positivo"),
-  motor: z.string().min(1, "Motor é obrigatório"),
-  cambio: z.enum(["Manual", "Automático", "CVT", "Semi-automático"]),
+  motor: z.string().min(1, "Motorização é obrigatória"),
+  cambio: z.enum(["Manual", "Automático"]),
   carroceria: z.enum([
     "Hatch",
     "Sedan",
     "SUV",
     "Picape",
-    "Perua",
-    "Coupé",
-    "Conversível",
+    "Esportivo"
   ]),
-  blindado: z.boolean(),
   tracao: z.enum(["Dianteira", "Traseira", "Integral"]),
-  rodas: z.string().min(1, "Rodas são obrigatórias"),
-  freios: z.enum([
-    "Disco nas 4 rodas",
-    "Disco na frente e tambor atrás",
-    "Tambor nas 4 rodas",
-  ]),
+  rodas: z.string(),
+  freios: z.string(),
   direcao: z.enum(["Mecânica", "Hidráulica", "Elétrica", "Eletro-hidráulica"]),
-  bancos: z.enum(["Tecido", "Couro", "Couro sintético"]),
-  ar_condicionado: z.enum([
-    "Manual",
-    "Digital",
-    "Dual zone",
-    "Tri zone",
-    "Não possui",
-  ]),
-  farol: z.enum(["Halógeno", "LED", "Xenon"]),
-  multimidia: z.enum(["Não possui", "Com tela", "Sem tela"]),
+  bancos: z.string(),
+  ar_condicionado: z.string(),
+  farol: z.string(),
+  multimidia: z.string(),
   final_placa: z.string().length(1, "Final da placa deve ter 1 caractere"),
   km: z.coerce.number().nonnegative("Quilometragem deve ser não negativa"),
-  airbag: z.enum([
-    "Motorista",
-    "Motorista e passageiro",
-    "Lateral",
-    "Cortina",
-    "Todos",
-  ]),
+  airbag: z.string(),
 });
 
 type CarFormData = z.infer<typeof carSchema>;
@@ -116,7 +101,7 @@ export default function NewCarForm({ editCardId }: NewCarFormProps) {
   } = useForm<CarFormData>({
     resolver: zodResolver(carSchema),
     defaultValues: {
-      blindado: false,
+
       tracao: "Dianteira",
     },
   });
@@ -136,21 +121,27 @@ export default function NewCarForm({ editCardId }: NewCarFormProps) {
 
   const fetchCarData = async () => {
     if (!editCardId) return;
-
+  
     try {
       const { data: carData, error: carError } = await supabase
         .from("carro")
         .select("*, opcionais_carro(*), fotos_urls(*)")
         .eq("id", editCardId)
         .single();
-
+  
       if (carError) throw carError;
-
+  
       if (carData) {
-        reset(carData);
-        setOpcionais(
-          carData.opcionais_carro.map((opcional: any) => opcional.nome)
-        );
+        // Resetando os valores do formulário, incluindo os valores dos campos controlados (selects e switches)
+        reset({
+          ...carData,
+          motorizacao: carData.motorizacao || "Combustão",  // Exemplo: preencha com um valor padrão se estiver vazio
+          tracao: carData.tracao || "Dianteira",
+          cambio: carData.cambio || "Manual",
+          direcao: carData.direcao || "Mecânica",
+        });
+        
+        setOpcionais(carData.opcionais_carro.map((opcional: any) => opcional.nome));
         setExistingPhotos(carData.fotos_urls);
       }
     } catch (error) {
@@ -158,6 +149,7 @@ export default function NewCarForm({ editCardId }: NewCarFormProps) {
       toast.error("Erro ao buscar dados do carro. Por favor, tente novamente.");
     }
   };
+  
 
   useEffect(() => {
     if (editCardId) {
@@ -302,17 +294,17 @@ export default function NewCarForm({ editCardId }: NewCarFormProps) {
           control={control}
           render={({ field }) => (
             <Switch
-              {...field}
-              value={field.value as any}
-              isSelected={field.value as boolean}
-              onValueChange={field.onChange}
+              isSelected={field.value as unknown as boolean}  // Define o estado do switch
+              onChange={(val) => field.onChange(val)}  // Atualiza o estado ao mudar
             >
-              {label}
+              {label}  {/* Esse seria o label do switch */}
             </Switch>
           )}
         />
+
       );
-    } else if (fieldSchema instanceof z.ZodNumber) {
+    }
+     else if (fieldSchema instanceof z.ZodNumber) {
       return (
         <Controller
           name={fieldName}
@@ -343,7 +335,8 @@ export default function NewCarForm({ editCardId }: NewCarFormProps) {
               placeholder={`Selecione ${label}`}
               isInvalid={!!errors[fieldName]}
               errorMessage={errors[fieldName]?.message}
-              selectedKeys={[field.value as any]}
+              value={field.value || "batata"}  // Certifique-se de que o valor está sendo atribuído corretamente
+              onChange={(val) => field.onChange(val.target.value)}  // Atribua corretamente a mudança de valor
             >
               {options.map((option: string) => (
                 <SelectItem key={option} value={option}>
@@ -354,7 +347,7 @@ export default function NewCarForm({ editCardId }: NewCarFormProps) {
           )}
         />
       );
-    } else {
+    }  else {
       return (
         <Controller
           name={fieldName}
