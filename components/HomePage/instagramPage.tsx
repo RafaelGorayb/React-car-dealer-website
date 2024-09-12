@@ -8,10 +8,10 @@ return(
     <div className="flex items-center justify-center">
         <div className="w-9/12">
             <p
-                className="lg:text-lg text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-600">
+                className="lg:text-[20px] text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-600">
                 ACOMPANHE NOSSO INSTAGRAM.
             </p>
-            <p className="text-[10px] lgfont-light text-balance">
+            <p className="text-[10px] md:text-[24px] lgfont-light text-balance">
                 Conecte-se ao melhor do universo automotivo. Fique por dentro de novidades, curiosidades, lançamentos e
                 descubra os recém-chegados de nosso estoque em primeira mão.
             </p>
@@ -24,10 +24,10 @@ return(
     <div className="flex justify-end mt-10">
         <div className="w-9/12 ">
             <p
-                className="lg:text-lg text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-600">
+                className="lg:text-[20px] text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-600">
                 EM PRIMEIRA MÃO
             </p>
-            <p className="text-[10px] font-light text-balance">
+            <p className="text-[10px] md:text-[24px] font-light text-balance">
                 Fique por dentro dos recém chegados ao nosso estoque. Conheça em primeira mão os veículos que acabaram
                 de chegar e aproveite as melhores oportunidades.
             </p>

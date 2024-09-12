@@ -1,5 +1,5 @@
 "use client";
-import NewCarForm from "@/components/Dashboard/estoque/newCar";
+import NewCarForm from "@/components/Dashboard/estoque/CarForm";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 

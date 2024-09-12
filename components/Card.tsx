@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { FaWhatsapp } from 'react-icons/fa';
+
 import { Car } from "../types";
 import {
 Card,
@@ -242,6 +244,21 @@ const [modalSize, setModalSize] = useState<"xs" | "sm" | "md" | "lg" | "xl" | "2
                     R$ {car.preco.toLocaleString("pt-BR")}
                   </p>
                   <br />
+
+                  {/* botao para enviar mensagem no whatsapp */}
+                  <Button
+                    color="danger"
+                    variant="solid"
+                    className="w-full"
+                    onPress={() => {
+                      window.open(
+                        `https://api.whatsapp.com/send?phone=5519999083534&text=Ol%C3%A1%2C%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20carro%20${car.marca}%20${car.modelo}%20${car.versao}`,
+                        "_blank"
+                      );
+                    }}>
+                      <FaWhatsapp className="inline-block mr-2" size={24} /> Envie uma proposta
+                    </Button>
+                                       
                   <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-6">
                     <SectionTitle title="Especificações" fontsize="lg" />
                     <div className="grid grid-cols-3 gap-y-2 gap-x-2 text-xs mt-6">
@@ -251,19 +268,11 @@ const [modalSize, setModalSize] = useState<"xs" | "sm" | "md" | "lg" | "xl" | "2
                       </div>
                       <div>
                         <p className="text-xs font-light">Ano</p>
-                        <p className="text-xs font-bold">{car.ano_modelo}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Modelo</p>
-                        <p className="text-xs font-bold">{car.ano_fabricacao}</p>
+                        <p className="text-xs font-bold">{car.ano_fabricacao}/{car.ano_modelo}</p>
                       </div>
                       <div>
                         <p className="text-xs font-light">Km</p>
                         <p className="text-xs font-bold">{car.km.toLocaleString("pt-BR")}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Motor</p>
-                        <p className="text-xs font-bold">{car.motorizacao}</p>
                       </div>
                       <div>
                         <p className="text-xs font-light">Potência</p>
@@ -304,6 +313,10 @@ const [modalSize, setModalSize] = useState<"xs" | "sm" | "md" | "lg" | "xl" | "2
                       <div>
                         <p className="text-xs font-light">Direção</p>
                         <p className="text-xs font-bold">{car.direcao}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-light">Motor</p>
+                        <p className="text-xs font-bold">{car.motorizacao}</p>
                       </div>
                     </div>
                   </div>
