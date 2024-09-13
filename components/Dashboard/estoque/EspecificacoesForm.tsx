@@ -15,7 +15,12 @@ const formatFieldName = (fieldName: string) => {
 
 
 
-const renderFormField = (fieldName: keyof CarFormData, label: string, control: any, errors: any) => {
+const renderFormField = (
+  fieldName: keyof CarFormData,
+  label: string,
+  control: any,
+  errors: any
+) => {
   const fieldSchema = carSchema.shape[fieldName];
   
   if (fieldSchema instanceof z.ZodNumber) {
@@ -28,7 +33,6 @@ const renderFormField = (fieldName: keyof CarFormData, label: string, control: a
             {...field}
             type="number"
             label={label}
-            value={field.value}
             placeholder={`Digite ${label}`}
             isInvalid={!!errors[fieldName]}
             errorMessage={errors[fieldName]?.message}
@@ -48,8 +52,11 @@ const renderFormField = (fieldName: keyof CarFormData, label: string, control: a
             placeholder={`Selecione ${label}`}
             isInvalid={!!errors[fieldName]}
             errorMessage={errors[fieldName]?.message}
-            value={field.value}
-            onChange={(val) => field.onChange(val.target.value)}
+            selectedKeys={field.value ? new Set([field.value]) : new Set()}
+            onSelectionChange={(keys) => {
+              const selectedValue = Array.from(keys).join("");
+              field.onChange(selectedValue);
+            }}
           >
             {options.map((option: string) => (
               <SelectItem key={option} value={option}>
@@ -69,9 +76,8 @@ const renderFormField = (fieldName: keyof CarFormData, label: string, control: a
           <Input
             {...field}
             label={label}
-            isInvalid={!!errors[fieldName]}
-            value={field.value}
             placeholder={`Digite ${label}`}
+            isInvalid={!!errors[fieldName]}
             errorMessage={errors[fieldName]?.message}
           />
         )}
@@ -79,6 +85,7 @@ const renderFormField = (fieldName: keyof CarFormData, label: string, control: a
     );
   }
 };
+
 
 const EspecificacoesForm = ({ control, errors }: { control: any; errors: any }) => {
   return (

@@ -9,6 +9,8 @@ import { createClient } from "@/utils/supabase/client";
 import EspecificacoesForm from "./EspecificacoesForm";
 import FotosForm from "./FotosForm";
 import OpcionaisTab from "./opcionais";
+import { useRouter } from 'next/navigation';
+
 
 const currentYear = new Date().getFullYear();
 
@@ -42,6 +44,7 @@ export const carSchema = z.object({
 type CarFormData = z.infer<typeof carSchema>;
 
 export default function NewCarForm({ editCardId }: { editCardId?: string }) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<string>("especificacoes");
   const [opcionais, setOpcionais] = useState<string[]>([]);
   const [files, setFiles] = useState<File[]>([]);
@@ -96,13 +99,13 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
   const onSubmit = async (dataForm: CarFormData) => {
     try {
       let carId = editCardId;
-
+  
       if (editCardId) {
         const { error: updateError } = await supabase
           .from("carro")
           .update(dataForm)
           .eq("id", editCardId);
-
+  
         if (updateError) throw updateError;
       } else {
         const { data: carData, error: carError } = await supabase
@@ -110,30 +113,35 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
           .insert({ ...dataForm })
           .select()
           .single();
-
+  
         if (carError) throw carError;
         carId = carData.id;
       }
-
+  
       // Handle optional features
       await handleOptionals(carId as string);
-
+  
       // Handle photo deletions
       await handlePhotoDeletions();
-
+  
       // Handle new photo uploads
       await handlePhotoUploads(carId as string);
-
+  
       toast.success(
         editCardId
           ? "Carro atualizado com sucesso!"
           : "Carro adicionado com sucesso!"
       );
+  
+      // Redirecionar para a página da tabela
+      router.push('/dashboard/estoque'); // Ajuste o caminho conforme necessário
+  
     } catch (error) {
       console.error("Erro no processamento dos dados", error);
       toast.error("Erro ao processar dados. Por favor, tente novamente.");
     }
   };
+  
 
   const handlePhotoDeletions = async () => {
     for (const photoId of photosToDelete) {
@@ -222,7 +230,7 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
 
 
   return (
-    <div className="p-16">
+    <div className="p-2 md:p-16 max-h-screen overflow-auto">
       <h1 className="text-2xl font-bold mb-4">
         {editCardId ? "Editar Veículo" : "Adicionar Veículo"}
       </h1>
