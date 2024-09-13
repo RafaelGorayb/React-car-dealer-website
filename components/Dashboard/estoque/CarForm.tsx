@@ -134,7 +134,7 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
       );
   
       // Redirecionar para a página da tabela
-      router.push('/dashboard'); // Ajuste o caminho conforme necessário
+      router.push('/dashboard/estoque'); // Ajuste o caminho conforme necessário
   
     } catch (error) {
       console.error("Erro no processamento dos dados", error);
@@ -230,7 +230,7 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
 
 
   return (
-    <div className="p-16">
+    <div className="p-2 md:p-16 max-h-screen overflow-auto">
       <h1 className="text-2xl font-bold mb-4">
         {editCardId ? "Editar Veículo" : "Adicionar Veículo"}
       </h1>
