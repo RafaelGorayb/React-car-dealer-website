@@ -300,13 +300,13 @@ const DashboardLayout: React.FC = () => {
       const toasts = toast.loading("Deletando fotos...", {
         progress: 0,
       });
-
+    
       const { data: list, error: errosFotos } = await supabase.storage
         .from("carros")
         .list(`${id}`);
       const filesToRemove = list?.map((x) => `${id}/${x.name}`);
-
-      if (filesToRemove) {
+    
+      if (filesToRemove && filesToRemove.length > 0) {
         const { data, error } = await supabase.storage
           .from("carros")
           .remove(filesToRemove);
@@ -315,7 +315,7 @@ const DashboardLayout: React.FC = () => {
           return;
         }
       }
-
+    
       toast.update(toasts, {
         render: "Fotos deletadas",
         type: "success",
@@ -323,6 +323,7 @@ const DashboardLayout: React.FC = () => {
         autoClose: 2000,
       });
     }
+    
 
     supabase
       .from("carro")
