@@ -206,7 +206,7 @@ function LoginPage() {
           </CardBody>
           <CardFooter className="flex gap-4 justify-center">
             <Button
-              color="primary"
+              color="default"
               onPress={async () => {
                 await supabase.auth.signOut();
                 setUser(null);
@@ -215,7 +215,7 @@ function LoginPage() {
             >
               Sair
             </Button>
-            <Button color="secondary" onPress={() => router.push("/dashboard")}>
+            <Button color="primary" onPress={() => router.push("/dashboard")}>
               Ir para o Dashboard
             </Button>
           </CardFooter>
@@ -261,7 +261,7 @@ function LoginPage() {
                   Entrar
                 </Button>
                 <Button
-                  color="secondary"
+                  color="default"
                   variant="light"
                   onPress={() => setFormType("forgotPassword")}
                 >
@@ -269,7 +269,7 @@ function LoginPage() {
                 </Button>
               </div>
               <Button
-                color="secondary"
+                color="default"
                 variant="light"
                 onPress={() => setFormType("otp")}
                 className="w-full"
@@ -305,7 +305,7 @@ function LoginPage() {
                   Enviar email de recuperação
                 </Button>
                 <Button
-                  color="secondary"
+                  color="default"
                   variant="light"
                   onPress={() => setFormType("login")}
                 >
@@ -377,7 +377,7 @@ function LoginPage() {
                   Enviar código OTP
                 </Button>
                 <Button
-                  color="secondary"
+                  color="default"
                   variant="light"
                   onPress={() => setFormType("login")}
                 >
