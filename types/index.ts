@@ -15,6 +15,7 @@ export type Car = {
   km: number;
   cor: string;
   motorizacao: string;
+  motor: string;
   potencia: string;
   torque: string;
   cambio: string;
@@ -45,6 +46,7 @@ export interface FiltrosPesquisa {
   kmMin: number;
   kmMax: number;
   cor: string;
+  motorizacao: string;
   carroceria: string;
   blindado: boolean;
 }
@@ -60,6 +62,7 @@ export interface CarObjectComplete {
   km: number;
   cor: string;
   motorizacao: string;
+  motor: string;
   potencia: string;
   torque: string;
   cambio: string;

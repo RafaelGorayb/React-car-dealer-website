@@ -9,7 +9,6 @@ import InstagramPage from "@/components/HomePage/instagramPage";
 import { Button, Link } from "@nextui-org/react";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
-import { InstagramLogoIcon } from "@radix-ui/react-icons";
 
 export default function Home() {
 return (
@@ -32,18 +31,18 @@ return (
         </Button>
       </div>
     </section>
-    <section className="pt-10 sm:pt-20">
+    <section className="pt-10 sm:pt-20 px-2">
+      <div className="p-4">
+        <SectionTitle title="Redes sociais" />
+      </div>
       <InstagramPage />
     </section>
     <section className="pt-10 w-full bg-gray-100 dark:bg-stone-900 xl:rounded-lg">
-      <div className="p-4">
-        <SectionTitle title="Sobre Nós" />
-      </div>
       <div>
         <SobreNos />
       </div>
     </section>
-    <section className="pt-10 w-full">
+    <section id="localizacao" className="pt-10 w-full">
       <div className="p-4">
         <SectionTitle title="Onde Estamos" />
       </div>

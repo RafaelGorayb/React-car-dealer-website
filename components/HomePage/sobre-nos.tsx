@@ -1,10 +1,15 @@
 import React from "react";
 import { Image } from "@nextui-org/react";
+import SectionTitle from "@/components/HomePage/sectionTitle";
 
 const SobreNos: React.FC = () => {
   return (
+    <>
     <div className="sm:columns-2 sm:flex sm:justify-between sm:items-start px-4">
       <div className="sm:w-3/4">
+      <div className="p-4">
+        <SectionTitle title="Sobre Nós" />
+      </div>
         <p className="text-justify font-extralight px-4 ">
           Com 35 anos de experiência no mercado, nossa loja se destaca pela
           excelência na comercialização de veículos de luxo seminovos Localizada
@@ -23,10 +28,11 @@ const SobreNos: React.FC = () => {
           isBlurred
           width="360"
           alt="Sobre nós"
-          className="m-auto"
+          className="mb-8"
         />
       </div>
     </div>
+    </>
   );
 };
 
