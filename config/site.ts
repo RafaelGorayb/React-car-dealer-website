@@ -22,7 +22,7 @@ export const siteConfig = {
     },
     {
       label: "Localização",
-      href: "/localizacao",
+      href: "#localizacao",
     },
     {
       label: "Baixar App",
@@ -58,7 +58,7 @@ export const siteConfig = {
 };
 
 export const dashboardConfig = {
-  name: "Akkar Motors",
+  name: "Akkar Admin panel",
   description: "Admin page",
   navItems: [
     {

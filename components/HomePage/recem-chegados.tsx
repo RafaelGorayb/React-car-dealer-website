@@ -45,6 +45,7 @@ const RecemChegados = () => {
           km: carro.km,
           cor: carro.cor,
           motorizacao: carro.motorizacao,
+          motor: carro.motor,
           potencia: carro.potencia,
           torque: carro.torque,
           cambio: carro.cambio,

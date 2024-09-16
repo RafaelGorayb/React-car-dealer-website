@@ -279,20 +279,24 @@ const [modalSize, setModalSize] = useState<"xs" | "sm" | "md" | "lg" | "xl" | "2
                         <p className="text-xs font-bold">{car.potencia} cv</p>
                       </div>
                       <div>
-                        <p className="text-xs font-light">Rodas</p>
-                        <p className="text-xs font-bold">{car.rodas}</p>
+                        <p className="text-xs font-light">Tipo motor</p>
+                        <p className="text-xs font-bold">{car.motorizacao}</p>
                       </div>
                       <div>
                         <p className="text-xs font-light">Torque</p>
                         <p className="text-xs font-bold">{car.torque} kgmf</p>
                       </div>
                       <div>
+                        <p className="text-xs font-light">Cor</p>
+                        <p className="text-xs font-bold">{car.cor}</p>
+                      </div>
+                      <div>
                         <p className="text-xs font-light">Blindado</p>
                         <p className="text-xs font-bold">{car.blindado ? "Sim" : "Não"}</p>
                       </div>
                       <div>
-                        <p className="text-xs font-light">Câmbio</p>
-                        <p className="text-xs font-bold">{car.cambio}</p>
+                        <p className="text-xs font-light">Direção</p>
+                        <p className="text-xs font-bold">{car.direcao}</p>
                       </div>
                       <div>
                         <p className="text-xs font-light">Carroceria</p>
@@ -307,16 +311,16 @@ const [modalSize, setModalSize] = useState<"xs" | "sm" | "md" | "lg" | "xl" | "2
                         <p className="text-xs font-bold">{car.final_placa}</p>
                       </div>
                       <div>
-                        <p className="text-xs font-light">Cor</p>
-                        <p className="text-xs font-bold">{car.cor}</p>
+                        <p className="text-xs font-light">Câmbio</p>
+                        <p className="text-xs font-bold">{car.cambio}</p>
                       </div>
                       <div>
-                        <p className="text-xs font-light">Direção</p>
-                        <p className="text-xs font-bold">{car.direcao}</p>
+                        <p className="text-xs font-light">Rodas</p>
+                        <p className="text-xs font-bold">{car.rodas}</p>
                       </div>
                       <div>
                         <p className="text-xs font-light">Motor</p>
-                        <p className="text-xs font-bold">{car.motorizacao}</p>
+                        <p className="text-xs font-bold">{car.motor}</p>
                       </div>
                     </div>
                   </div>
@@ -324,7 +328,7 @@ const [modalSize, setModalSize] = useState<"xs" | "sm" | "md" | "lg" | "xl" | "2
 
               </div>
               <div className="px-4">
-                <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-6">
+                <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 ">
                   <SectionTitle title="Opcionais" fontsize="lg" />
                   <ul className="list-disc pl-5 columns-2 md:columns-3 text-xs font-light mt-6">
                     {car.opcionais.map((opcional, index) => (
