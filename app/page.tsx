@@ -14,7 +14,7 @@ export default function Home() {
 return (
 <>
   <Navbar />
-  <div className="mx-auto w-full max-w-7xl pt-16">
+  <div className="mx-auto w-full overflow-x-hidden max-w-7xl pt-16">
     <section className="flex">
       <LandingPage />
     </section>

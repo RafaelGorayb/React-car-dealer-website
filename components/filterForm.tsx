@@ -3,6 +3,13 @@ import React from 'react';
 import { useFormContext } from "react-hook-form";
 import { Input, Select, SelectItem } from "@nextui-org/react";
 import { FiltrosPesquisa } from "../types/index";
+import {
+  Select1,
+  Select1Content,
+  Select1Item,
+  Select1Trigger,
+  Select1Value,
+} from "@/components/ui/select"
 
 interface FilterFormProps {
   marcas: string[];
@@ -13,8 +20,10 @@ interface FilterFormProps {
   carrocerias: string[];
   selectedMarca: string;
   selectedModelo: string;
+  selectedVersao: string;
   setSelectedMarca: (value: string) => void;
   setSelectedModelo: (value: string) => void;
+  setSelectedVersao: (value: string) => void;
   setSelectedMotorizacao: (value: string) => void;
 }
 
@@ -27,28 +36,43 @@ const FilterForm: React.FC<FilterFormProps> = ({
   carrocerias,
   selectedMarca,
   selectedModelo,
+  selectedVersao,
   setSelectedMarca,
   setSelectedModelo,
+  setSelectedVersao,
   setSelectedMotorizacao
 }) => {
   const { register, setValue, watch } = useFormContext<FiltrosPesquisa>();
 
   return (
-    <form className="space-y-4 overflow-y-auto">
-            <div>
+    <form className="space-y-4">
+     <div>
         <label htmlFor="marca">Marca</label>
-        <Select
-          items={marcas.map((marca) => ({ label: marca, value: marca }))}
-          placeholder="Selecione a marca"
-          selectedKeys={new Set([selectedMarca])}
-          onSelectionChange={(keys) => {
-            const selected = Array.from(keys).join(", ");
-            setSelectedMarca(selected);
-            setValue("marca", selected);
-          }}
-        >
-          {(marca) => <SelectItem key={marca.value}>{marca.label}</SelectItem>}
-        </Select>
+        <Select1
+      value={selectedMarca}
+      onValueChange={(selected) => {
+        setSelectedMarca(selected);
+        setValue("marca", selected);
+
+        // Resetar Modelo e Versão
+        setSelectedModelo("");
+        setValue("modelo", "");
+        setSelectedVersao("");
+        setValue("versao", "");
+      }}
+    >
+      <Select1Trigger>
+        <Select1Value placeholder="Selecione a marca" />
+      </Select1Trigger>
+      <Select1Content className='bg-background'>
+        {marcas.map((marca) => (
+          <Select1Item key={marca} value={marca}>
+            {marca}
+          </Select1Item>
+        ))}
+      </Select1Content>
+    </Select1>
+
       </div>
 
       <div>
@@ -56,7 +80,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
         <Select
           items={modelos.map((modelo) => ({ label: modelo, value: modelo }))}
           placeholder="Selecione o modelo"
-          selectedKeys={new Set([selectedModelo])}
+          selectedKeys={[selectedModelo]}
           disabled={!selectedMarca}
           onSelectionChange={(keys) => {
             const selected = Array.from(keys).join(", ");
@@ -71,14 +95,15 @@ const FilterForm: React.FC<FilterFormProps> = ({
       </div>
 
       <div>
-        <label htmlFor="versao">Versão</label>
+        <label htmlFor="versao">Modelo</label>
         <Select
           items={versoes.map((versao) => ({ label: versao, value: versao }))}
-          placeholder="Selecione a versão"
-          selectedKeys={new Set([watch("versao")])}
+          placeholder="Selecione a versao"
+          selectedKeys={new Set([selectedVersao])}
           disabled={!selectedModelo}
           onSelectionChange={(keys) => {
             const selected = Array.from(keys).join(", ");
+            setSelectedVersao(selected);
             setValue("versao", selected);
           }}
         >
@@ -160,6 +185,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
           selectedKeys={new Set([watch("motorizacao")])}
           onSelectionChange={(keys) => {
             const selected = Array.from(keys).join(", ");
+            setSelectedMotorizacao(selected);
             setValue("motorizacao", selected);
           }}
         >
