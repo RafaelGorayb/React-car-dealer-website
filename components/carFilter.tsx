@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useForm, FormProvider, set } from "react-hook-form";
 import { FiltrosPesquisa } from "../types/index";
-import { Button, Input, Switch, Select, SelectItem, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter,} from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { Filter, X } from "lucide-react";
 import { supabase } from "../lib/initSupabase";
 import FilterForm from "./filterForm";
@@ -190,10 +190,12 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
       )}
 
       {!isMobile && (
-        <div className="hidden lg:block fixed bg-background w-80 h-screen overflow-y-auto p-4 shadow-lg">
+        <div className="hidden lg:block flex flex-col fixed bg-background h-screen w-80 pl-4 shadow-lg">
           <h2 className="text-2xl font-bold mb-6">Filtros</h2>
+
           <FormProvider {...methods}>
-            <FilterForm
+            <div className="flex-1 overflow-y-auto max-h-full pb-52  shadow-lg"> {/* Adicionando max-h-full e padding-bottom */}
+              <FilterForm
                 marcas={marcas}
                 modelos={modelos}
                 versoes={versoes}
@@ -205,17 +207,22 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
                 setSelectedMarca={setSelectedMarca}
                 setSelectedModelo={setSelectedModelo}
                 setSelectedMotorizacao={setSelectedMotorizacao}
-            />
+              />
+            </div>
           </FormProvider>
-          <Button
-            type="submit"
-            color="danger"
-            className="w-full mt-4"
-            onClick={handleSubmit(onSubmit)}
-          >
-            Aplicar Filtros
-          </Button>
+
+          <div className="fixed bottom-0 z-10 left-0 p-4 w-80 bg-background">
+            <Button
+              type="submit"
+              color="danger"
+              className="w-full mt-4"
+              onClick={handleSubmit(onSubmit)}
+            >
+              Aplicar Filtros
+            </Button>
+          </div>
         </div>
+
       )}
     </>
   );

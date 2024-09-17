@@ -34,7 +34,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
   const { register, setValue, watch } = useFormContext<FiltrosPesquisa>();
 
   return (
-    <form className="space-y-4">
+    <form className="space-y-4 overflow-y-auto">
             <div>
         <label htmlFor="marca">Marca</label>
         <Select
