@@ -34,6 +34,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
   const [carrocerias, setCarrocerias] = useState<string[]>([]);
   const [selectedMarca, setSelectedMarca] = useState<string>("");
   const [selectedModelo, setSelectedModelo] = useState<string>("");
+  const [selectedVersao, setSelectedVersao] = useState<string>("");
   const [selectedMotorizacao, setSelectedMotorizacao] = useState<string>("");
 
   const methods = useForm<FiltrosPesquisa>();
@@ -151,7 +152,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
   return (
     <>
       {isMobile && isOpen && (
-        <div className="fixed pt-12 inset-y-0 w-full h-full bg-background transform transition-transform duration-200 ease-in-out lg:hidden">
+        <div className="fixed pt-12 inset-y-0 w-full h-full bg-background transform transition-transform duration-200 ease-in-out z-10 lg:hidden">
           <div className="p-6 pb-24 overflow-y-auto h-full">
             <div className="flex justify-between">
               <h2 className="text-2xl font-bold mb-6">Filtros</h2>
@@ -169,14 +170,16 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
                 carrocerias={carrocerias}
                 selectedMarca={selectedMarca}
                 selectedModelo={selectedModelo}
+                selectedVersao={selectedVersao}
                 setSelectedMarca={setSelectedMarca}
                 setSelectedModelo={setSelectedModelo}
+                setSelectedVersao={setSelectedVersao}
                 setSelectedMotorizacao={setSelectedMotorizacao}
                 
               />
             </FormProvider>
           </div>
-          <div className="fixed bottom-0 left-0 w-full p-4 bg-background">
+          <div className="fixed bottom-0 z-10 left-0 w-full p-4 bg-background">
             <Button
               type="submit"
               color="danger"
@@ -190,11 +193,11 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
       )}
 
       {!isMobile && (
-        <div className="hidden lg:block flex flex-col fixed bg-background h-screen w-80 pl-4 shadow-lg">
+        <div className="hidden lg:block flex flex-col fixed bg-background h-screen w-80 ">
           <h2 className="text-2xl font-bold mb-6">Filtros</h2>
 
           <FormProvider {...methods}>
-            <div className="flex-1 overflow-y-auto max-h-full pb-52  shadow-lg"> {/* Adicionando max-h-full e padding-bottom */}
+            <div className="flex-1 overflow-y-auto max-h-full pb-52 px-4"> {/* Adicionando max-h-full e padding-bottom */}
               <FilterForm
                 marcas={marcas}
                 modelos={modelos}
@@ -204,8 +207,10 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
                 carrocerias={carrocerias}
                 selectedMarca={selectedMarca}
                 selectedModelo={selectedModelo}
+                selectedVersao={selectedVersao}
                 setSelectedMarca={setSelectedMarca}
                 setSelectedModelo={setSelectedModelo}
+                setSelectedVersao={setSelectedVersao}
                 setSelectedMotorizacao={setSelectedMotorizacao}
               />
             </div>
