@@ -1,7 +1,7 @@
 // FilterForm.tsx
 import React from 'react';
 import { useFormContext } from "react-hook-form";
-import { Input, Select, SelectItem } from "@nextui-org/react";
+import { Input, Select, SelectItem, Button } from "@nextui-org/react";
 import { FiltrosPesquisa } from "../types/index";
 import {
   Select1,
@@ -10,6 +10,7 @@ import {
   Select1Trigger,
   Select1Value,
 } from "@/components/ui/select"
+
 
 interface FilterFormProps {
   marcas: string[];
@@ -42,43 +43,67 @@ const FilterForm: React.FC<FilterFormProps> = ({
   setSelectedVersao,
   setSelectedMotorizacao
 }) => {
-  const { register, setValue, watch } = useFormContext<FiltrosPesquisa>();
+  const { register, setValue, watch, reset } = useFormContext<FiltrosPesquisa>();
+
+  const clearAllFilters = () => {
+    reset();
+    setSelectedMarca('');
+    setSelectedModelo('');
+    setSelectedVersao('');
+    setSelectedMotorizacao('');
+  };
+
+   // Função para limpar um filtro individual
+   const clearFilter = (filterName: keyof FiltrosPesquisa, setter?: (value: string) => void) => {
+    setValue(filterName, '');
+    if (setter) setter('');
+  };
 
   return (
     <form className="space-y-4">
-     <div>
+           <Button color="warning" onClick={clearAllFilters}>
+        Limpar Todos os Filtros
+      </Button>
+      <div>
         <label htmlFor="marca">Marca</label>
-        <Select1
-      value={selectedMarca}
-      onValueChange={(selected) => {
-        setSelectedMarca(selected);
-        setValue("marca", selected);
+        <div className="flex items-center gap-4">
+          <Select1
+            value={selectedMarca}
+            onValueChange={(selected) => {
+              setSelectedMarca(selected);
+              setValue("marca", selected);
 
-        // Resetar Modelo e Versão
-        setSelectedModelo("");
-        setValue("modelo", "");
-        setSelectedVersao("");
-        setValue("versao", "");
-      }}
-    >
-      <Select1Trigger>
-        <Select1Value placeholder="Selecione a marca" />
-      </Select1Trigger>
-      <Select1Content className='bg-background'>
-        {marcas.map((marca) => (
-          <Select1Item key={marca} value={marca}>
-            {marca}
-          </Select1Item>
-        ))}
-      </Select1Content>
-    </Select1>
-
+              // Resetar Modelo e Versão
+              setSelectedModelo("");
+              setValue("modelo", "");
+              setSelectedVersao("");
+              setValue("versao", "");
+            }}
+          >
+            <Select1Trigger>
+              <Select1Value placeholder="Selecione a marca" />
+            </Select1Trigger>
+            <Select1Content className='bg-background'>
+              {marcas.map((marca) => (
+                <Select1Item key={marca} value={marca}>
+                  {marca}
+                </Select1Item>
+              ))}
+            </Select1Content>
+          </Select1>
+          {/* Botão para limpar filtro individual */}
+          {selectedMarca && (
+            <Button onClick={() => clearFilter('marca', setSelectedMarca)}>
+              x
+            </Button>
+          )}
+        </div>
       </div>
 
       <div>
         <label htmlFor="modelo">Modelo</label>
         <Select
-          items={modelos.map((modelo) => ({ label: modelo, value: modelo }))}
+          items={modelos.map((modelo) => ({ label: modelo, value: modelo }))}          
           placeholder="Selecione o modelo"
           selectedKeys={[selectedModelo]}
           disabled={!selectedMarca}
