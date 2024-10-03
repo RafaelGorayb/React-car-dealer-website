@@ -78,7 +78,7 @@ const DashboardLayout: React.FC = () => {
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: "marca",
     direction: "ascending",
@@ -238,6 +238,7 @@ const DashboardLayout: React.FC = () => {
             <select
               className="bg-transparent outline-none text-default-400 text-small"
               onChange={onRowsPerPageChange}
+              defaultValue={rowsPerPage}
             >
               <option value="5">5</option>
               <option value="10">10</option>
