@@ -92,11 +92,11 @@ const FilterForm: React.FC<FilterFormProps> = ({
             </Select1Content>
           </Select1>
           {/* Botão para limpar filtro individual */}
-          {selectedMarca && (
+          {/* {selectedMarca && (
             <Button onClick={() => clearFilter('marca', setSelectedMarca)}>
               x
             </Button>
-          )}
+          )} */}
         </div>
       </div>
 
