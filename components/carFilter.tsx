@@ -194,7 +194,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
 
       {!isMobile && (
         <div className="hidden lg:block flex flex-col fixed bg-background h-screen w-80 ">
-          <h2 className="text-2xl font-bold mb-6">Filtros</h2>
+          <h2 className="text-2xl font-bold mb-6 ml-4">Filtros</h2>
 
           <FormProvider {...methods}>
             <div className="flex-1 overflow-y-auto max-h-full pb-52 px-4"> {/* Adicionando max-h-full e padding-bottom */}

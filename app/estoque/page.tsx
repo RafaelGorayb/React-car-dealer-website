@@ -149,26 +149,27 @@ function Estoque() {
 
   return (
     <div className="flex">
-      <div className="left-0 z-10">
+      <div className="left-0 z-20 md:z-20">
         <CarFilterSideMenu submitForm={handleFilterSubmit} isOpen={isOpen} toggleMenu={toggleMenu} />
       </div>
-      <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center">        
+      <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center pt-16">
         <p className="text-gray-500 mb-4">{totalCarsCount} carros encontrados</p>
-
-        <div className="bg-gray-100 dark:bg-zinc-950 w-full flex rounded-xl p-2 mb-4 justify-between">
-            <div className="w-4/12 lg:hidden block">
-              <Button
-                color="danger"
-                variant="shadow"
-                endContent={<FilterIcon size={16} />}
-                className="lg:hidden relative"
-                onClick={toggleMenu}
-              >
-                Filtrar
-              </Button>
-            </div>
-            <SortSelector onChange={handleSortChange} />
+  
+        <div className="fixed top-16 left-0 w-full bg-white dark:bg-black flex rounded-xl p-2 px-5 mb-4 justify-between lg:justify-end z-10">
+          <div className="w-4/12 lg:hidden block justify-end">
+            <Button
+              color="danger"
+              variant="shadow"
+              endContent={<FilterIcon size={16} />}
+              className="lg:hidden relative"
+              onClick={toggleMenu}
+            >
+              Filtrar
+            </Button>
           </div>
+          <SortSelector onChange={handleSortChange} />
+        </div>
+  
         <div className="grid gap-4 justify-items-center grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
           {cars.map((car, index) => (
             <div key={car.id} ref={index === cars.length - 1 ? lastCarElementRef : null}>
@@ -184,6 +185,7 @@ function Estoque() {
       </div>
     </div>
   );
+  
 }
 
 export default Estoque;
