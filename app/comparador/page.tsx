@@ -17,21 +17,22 @@ import {
   Tooltip,
   Link
 } from "@nextui-org/react";
-import { XCircle, AlertCircle, Check, X } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip as RechartsTooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { XCircle, AlertCircle} from "lucide-react";
+import { SearchBar } from "@/components/HomePage/searchBar";
+import { toast } from "react-toastify";
+
 
 export default function Comparador() {
   const { compareList, setCompareList } = useCompareList();
-  const [selectedFeature, setSelectedFeature] = useState("preco");
+
+  const handleCarSelect = (car: Car) => {
+    if (compareList && compareList.find((c) => c.id === car.id)) {
+      toast.warn("Este carro já está no comparador.");
+      return;
+    }
+    setCompareList((prevList) => (prevList ? [...prevList, car] : [car]));
+    toast.success("Carro adicionado ao comparador");
+  };
 
   if (!compareList || compareList.length === 0) {
     return (
@@ -41,15 +42,7 @@ export default function Comparador() {
         <p className="text-gray-600">
           Adicione carros ao comparador para começar.
         </p>
-        <Button
-          as={Link}
-          href="/estoque"
-          color="danger"
-          variant="shadow"
-          className="w-10/12 mt-4"
-        >
-          Explorar veículos
-        </Button>
+        <SearchBar onSelect={handleCarSelect} /> {/* Adicione a barra de pesquisa aqui */}
       </div>
     );
   }
@@ -58,19 +51,7 @@ export default function Comparador() {
     setCompareList(compareList.filter((_, i) => i !== index));
   };
 
-  const features = [
-    { key: "preco", label: "Preço" },
-    { key: "km", label: "Quilometragem" },
-    { key: "potencia", label: "Potência" },
-    { key: "ano_modelo", label: "Ano do Modelo" },
-  ];
 
-  const getChartData = () => {
-    return compareList.map((car) => ({
-      name: `${car.marca} ${car.modelo}`,
-      value: car[selectedFeature as keyof Car],
-    }));
-  };
 
   const formatValue = (key: string, value: any) => {
     if (key === "preco") {
@@ -143,16 +124,16 @@ export default function Comparador() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Comparador de Carros</h1>
-
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 md:w-6/12">
+      <SearchBar onSelect={handleCarSelect} /> {/* Adicione a barra de pesquisa aqui */}
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 mb-8 md:w-6/12">
         {compareList.map((car, index) => (
           <Card key={index} className="w-full">
-            <CardBody className="relative flex flex-col items-center">
+            <CardBody className="relative flex flex-col items-center p-2">
               <div className="relativeflex items-center justify-center">
                 <Image
                   src={car.fotos[0] || "/carroTeste.png"}
                   alt={`${car.marca} ${car.modelo}`}
-                  className="object-contain rounded-lg"
+                  className="rounded-lg h-[9rem] w-[16rem] object-cover"
                 />
                 <Button
                   isIconOnly
@@ -164,7 +145,7 @@ export default function Comparador() {
                   <XCircle size={20} />
                 </Button>
               </div>
-              <h2 className="text-xl font-semibold mt-4 text-center">
+              <h2 className="text-md font-medium">
                 {car.marca} {car.modelo}
               </h2>
               <p className="text-gray-600 text-center">{car.versao}</p>
@@ -176,14 +157,7 @@ export default function Comparador() {
         {compareList.length < 2 && (
           <Card className="w-full">
             <CardBody className="flex items-center justify-center">
-              <Button
-                as={Link}
-                href="/estoque"
-                color="success"
-                variant="shadow"
-              >
-                Adicionar mais carros
-              </Button>
+              <p>Adicione mais um veículo para comparar</p>
             </CardBody>
           </Card>
         )}

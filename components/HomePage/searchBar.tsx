@@ -20,9 +20,10 @@ import { toast } from "react-toastify";
 interface SearchBarProps {
   isExpanded?: boolean;
   onToggle?: () => void;
+  onSelect?: (car: Car) => void; // Nova prop
 }
 
-export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
+export const SearchBar = ({ isExpanded = true, onToggle, onSelect }: SearchBarProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cars, setCars] = useState<Car[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +31,9 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
   const supabase = createClient();
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const isSearchExpanded = onToggle ? isExpanded : true;
 
+  
   useEffect(() => {
     const fetchCars = async () => {
       if (searchTerm.length > 0) {
@@ -93,20 +96,27 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
   }, []);
 
   const handleSelect = (car: Car) => {
-    router.push(`/carro/${car.id}`);
+    if (onSelect) {
+      onSelect(car);
+    } else {
+      router.push(`/carro/${car.id}`);
+    }
   };
 
+  
+
   return (
-    <div className="relative z-10" ref={dropdownRef}>
+    <div className="relative z-20 w-6/12" ref={dropdownRef}>
       <AnimatePresence initial={false}>
-        {isExpanded ? (
+        
+      {isSearchExpanded ? (
           <motion.div
             key="expanded"
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "100%", opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="w-full max-w-md min-w-[300px]"
+            className=""
           >
             <Input
               type="text"
@@ -118,15 +128,15 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
                 <FaMagnifyingGlass className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
               }
               endContent={isLoading && <Spinner size="sm" />}
-              className="w-full"
+              className=""
             />
             {showDropdown && cars.length > 0 && (
-              <Card className="w-full mt-1 absolute">
+              <Card className="mt-1 absolute w-full">
                 <CardBody className="p-0">
                   {cars.map((car) => (
                     <div
                       key={car.id}
-                      className="p-2 hover:bg-gray-100 cursor-pointer transition-colors"
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-500 cursor-pointer transition-colors"
                       onClick={() => handleSelect(car)}
                     >
                       <div className="flex p-1 justify-between items-center">
@@ -136,10 +146,11 @@ export const SearchBar = ({ isExpanded, onToggle }: SearchBarProps) => {
                           <div className="text-xs mt-1">{`R$ ${car.preco.toLocaleString("pt-BR")}`}</div>                         
                         </div>
                         <Image
+                          removeWrapper
                           src={car.fotos[0]}
                           alt={car.modelo}
-                          height={60}
-                          className="rounded-md"
+                          
+                          className="rounded-md max-h-[5rem] w-[8rem] object-cover"
                         />
                       </div>
                       
@@ -184,3 +195,7 @@ export const Navbar = () => {
     </nav>
   );
 };
+
+
+
+
