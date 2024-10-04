@@ -14,7 +14,7 @@ const SortSelector: React.FC<SortSelectorProps> = ({ onChange }) => {
   return (
     <div className="items-center w-40">
       {/* <label htmlFor="sort" className="mr-2 text-gray-500">Ordenar por:</label> */}
-      <Select id="sort" placeholder="Ordenar por:" onChange={handleSortChange}>
+      <Select variant='underlined' id="sort" placeholder="Ordenar por:" onChange={handleSortChange}>
         <SelectItem key="marca-asc" value="marca-asc">Marca A - Z</SelectItem>
         <SelectItem key="marca-desc" value="marca-desc">Marca Z - A</SelectItem>
         <SelectItem key="preco-asc" value="preco-asc">Preço Menor - Maior</SelectItem>
