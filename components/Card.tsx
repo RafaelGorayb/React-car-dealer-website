@@ -71,6 +71,8 @@ const [modalSize, setModalSize] = useState<"xs" | "sm" | "md" | "lg" | "xl" | "2
     window.removeEventListener("resize", handleResize);
     };
     }, []);
+
+    
     function addToComparador() {
     setCompareList((prev) => (prev ? [...prev, car] : [car]));
     toast.success("Carro adicionado ao comparador");
