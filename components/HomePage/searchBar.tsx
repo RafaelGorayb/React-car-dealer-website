@@ -6,7 +6,6 @@ import {
   Button,
   Card,
   CardBody,
-  Avatar,
   Image,
 } from "@nextui-org/react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
@@ -16,24 +15,31 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { formatCars } from "@/utils/functions";
 import { toast } from "react-toastify";
+import CarModal from "../CarModal"; // Ajuste o caminho de importação conforme necessário
 
 interface SearchBarProps {
   isExpanded?: boolean;
   onToggle?: () => void;
-  onSelect?: (car: Car) => void; // Nova prop
+  onSelect?: (car: Car) => void;
 }
 
-export const SearchBar = ({ isExpanded = true, onToggle, onSelect }: SearchBarProps) => {
+export const SearchBar = ({
+  isExpanded = true,
+  onToggle,
+  onSelect,
+}: SearchBarProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cars, setCars] = useState<Car[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const supabase = createClient();
-  const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const isSearchExpanded = onToggle ? isExpanded : true;
 
-  
+  // Estados para controlar o carro selecionado e o modal
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   useEffect(() => {
     const fetchCars = async () => {
       if (searchTerm.length > 0) {
@@ -98,18 +104,18 @@ export const SearchBar = ({ isExpanded = true, onToggle, onSelect }: SearchBarPr
   const handleSelect = (car: Car) => {
     if (onSelect) {
       onSelect(car);
+      setShowDropdown(false); // Fecha o dropdown após a seleção
     } else {
-      router.push(`/carro/${car.id}`);
+      setSelectedCar(car);
+      setIsModalOpen(true);
+      setShowDropdown(false); // Fecha o dropdown após a seleção
     }
   };
 
-  
-
   return (
-    <div className="relative z-20 w-6/12" ref={dropdownRef}>
+    <div className="relative z-20 w-full" ref={dropdownRef}>
       <AnimatePresence initial={false}>
-        
-      {isSearchExpanded ? (
+        {isSearchExpanded ? (
           <motion.div
             key="expanded"
             initial={{ width: 0, opacity: 0 }}
@@ -143,17 +149,17 @@ export const SearchBar = ({ isExpanded = true, onToggle, onSelect }: SearchBarPr
                         <div>
                           <div className="font-semibold">{`${car.marca} ${car.modelo}`}</div>
                           <div className="text-xs font-light ">{`${car.versao} - ${car.ano_modelo}`}</div>
-                          <div className="text-xs mt-1">{`R$ ${car.preco.toLocaleString("pt-BR")}`}</div>                         
+                          <div className="text-xs mt-1">{`R$ ${car.preco.toLocaleString(
+                            "pt-BR"
+                          )}`}</div>
                         </div>
                         <Image
                           removeWrapper
                           src={car.fotos[0]}
                           alt={car.modelo}
-                          
                           className="rounded-md max-h-[5rem] w-[8rem] object-cover"
                         />
                       </div>
-                      
                     </div>
                   ))}
                 </CardBody>
@@ -179,6 +185,15 @@ export const SearchBar = ({ isExpanded = true, onToggle, onSelect }: SearchBarPr
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Renderiza o CarModal se onSelect não estiver definido */}
+      {selectedCar && !onSelect && (
+        <CarModal
+          car={selectedCar}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
 };
@@ -195,7 +210,3 @@ export const Navbar = () => {
     </nav>
   );
 };
-
-
-
-
