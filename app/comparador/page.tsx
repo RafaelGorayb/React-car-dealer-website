@@ -36,13 +36,16 @@ export default function Comparador() {
 
   if (!compareList || compareList.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center  h-screen p-4 mt-4">
         <AlertCircle size={48} className="text-yellow-500 mb-4" />
         <h1 className="text-2xl font-bold mb-2">Nenhum carro para comparar</h1>
         <p className="text-gray-600">
           Adicione carros ao comparador para começar.
         </p>
-        <SearchBar onSelect={handleCarSelect} /> {/* Adicione a barra de pesquisa aqui */}
+        <div className="w-full lg:w-6/12 mt-4">
+        <SearchBar onSelect={handleCarSelect} /> 
+        </div>
+        
       </div>
     );
   }
@@ -157,7 +160,7 @@ export default function Comparador() {
         {compareList.length < 2 && (
           <Card className="w-full">
             <CardBody className="flex items-center justify-center">
-              <p>Adicione mais um veículo para comparar</p>
+              <p className="opacity-60 text-xs">Adicione mais um veículo para comparar</p>
             </CardBody>
           </Card>
         )}

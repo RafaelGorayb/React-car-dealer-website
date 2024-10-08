@@ -32,11 +32,11 @@ const OndeEstamos: React.FC = () => {
           <FiMail className="text-2xl text-gray-700" />
           <div>
             <SectionTitle title="email" fontsize="sm" />
-            <p className="pt-4 font-light">vendas@akkarmotors.com.br</p>
+            <p className="p-4 font-light">vendas@akkarmotors.com.br</p>
           </div>
         </div>
       </div>
-      <div className="w-full sm:w-3/4">
+      <div className="w-full sm:w-3/4 mt-4">
         <iframe
           className="w-full h-64 sm:h-96 rounded-lg"
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.430220486901!2d-47.06258168445755!3d-22.900994785013885!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94c8cf60ab7b1295%3A0x4f0e0e0e0e0e0e0e!2sAv.%20Orosimbo%20Maia%2C%202042%20-%20Cambu%C3%AD%2C%20Campinas%20-%20SP%2C%2013024-045!5e0!3m2!1sen!2sbr!4v1623859292932!5m2!1sen!2sbr"

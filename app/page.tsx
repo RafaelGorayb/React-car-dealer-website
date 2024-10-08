@@ -46,7 +46,7 @@ return (
       <div className="p-4">
         <SectionTitle title="Onde Estamos" />
       </div>
-      <div>
+      <div className="mt-4">
         <OndeEstamos />
       </div>
     </section>
