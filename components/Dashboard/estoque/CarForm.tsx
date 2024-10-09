@@ -256,6 +256,7 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
         <Button type="submit" color="primary" className="mt-4">
           {editCardId ? "Atualizar Veículo" : "Adicionar Veículo"}
         </Button>
+       
       </form>
     </div>
   );

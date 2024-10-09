@@ -354,6 +354,14 @@ const DashboardLayout: React.FC = () => {
     }
   };
 
+  const handleRowAction = (key: React.Key) => {
+    const car = cars.find((car) => car.id === key);
+    if (car) {
+      handleEdit(car);
+    }
+  };
+  
+
   const handleSave = () => {
     if (selectedCar) {
       supabase
@@ -423,13 +431,15 @@ const DashboardLayout: React.FC = () => {
           wrapper: "max-h-[600px]",
         }}
         selectedKeys={selectedKeys}
-        selectionMode="multiple"
+ 
         sortDescriptor={sortDescriptor}
         topContent={topContent}
         topContentPlacement="outside"
         onSelectionChange={setSelectedKeys}
         onSortChange={setSortDescriptor}
+        onRowAction={handleRowAction} // Adiciona essa linha para pegar a ação da linha
       >
+
         <TableHeader columns={headerColumns}>
           {(column) => (
             <TableColumn
