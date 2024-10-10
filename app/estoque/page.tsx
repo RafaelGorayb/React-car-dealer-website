@@ -148,7 +148,7 @@ function Estoque() {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <div className="flex">
+    <div className="flex bg-slate-50">
       <div className="left-0 z-20 md:z-20">
         <CarFilterSideMenu submitForm={handleFilterSubmit} isOpen={isOpen} toggleMenu={toggleMenu} />
       </div>

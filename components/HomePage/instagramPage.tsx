@@ -8,7 +8,7 @@ return(
     <div className="flex items-center justify-center">
         <div className="w-9/12">
             <p
-                className="lg:text-[20px] text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-600">
+                className="lg:text-[20px] text-sm font-semibold ">
                 ACOMPANHE NOSSO INSTAGRAM.
             </p>
             <p className="text-[10px] md:text-[24px] font-light text-balance">
@@ -16,15 +16,15 @@ return(
                 descubra os recém-chegados de nosso estoque em primeira mão.
             </p>
         </div>
-        <div className="w-4/12">
+        <div className="w-4/12 lg:w-3/12">
             <Image src="/CardInstagramPagina.png" isBlurred alt="InstagramPag" />
         </div>
     </div>
 
-    <div className="flex justify-end mt-10">
-        <div className="w-9/12 ">
+    <div className="flex justify-end mt-8">
+        <div className="w-7/12 ">
             <p
-                className="lg:text-[20px] text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-orange-500 to-red-600">
+                className="lg:text-[20px] text-sm font-semibold ">
                 EM PRIMEIRA MÃO
             </p>
             <p className="text-[10px] md:text-[24px] font-light text-balance">
@@ -34,7 +34,7 @@ return(
             </div>
         </div>
         <div className="flex items-center px-2">
-            <Image src="/CelularInstagramCarro.png" isBlurred alt="InstagramCarro" className="mt-7 h-[215px] lg:h-[430px] shadow-lg" />
+            <Image src="/CelularInstagramCarro.png" isBlurred alt="InstagramCarro" className=" h-[215px] lg:h-[430px] shadow-lg" />
             <div className="flex">
                 <Image src="/carroCardInstagram(1).jpeg" isBlurred alt="InstagramCarro" className="h-[104px] lg:h-[208px] shadow-lg" radius="sm" />
                 <Image src="/carroCardInstagram(2).jpeg" isBlurred alt="InstagramCarro" className="h-[104px] lg:h-[208px] px-1 shadow-lg" radius="sm" />
