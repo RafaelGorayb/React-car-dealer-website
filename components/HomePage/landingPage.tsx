@@ -17,7 +17,7 @@ const LandingPage: React.FC = () => {
           />
         </div>
         <div className="p-4 place-content-center relative">
-          <p className="sm:text-3xl text-2xl font-bold">
+          <p className="sm:text-3xl text-2xl font-semibold">
             Excelência em Cada Detalhe
           </p>
           <p className="font-light sm:text-md text-sm w-10/12">

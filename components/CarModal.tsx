@@ -80,216 +80,219 @@ function CarModal({ car, isOpen, onClose }: CarModalProps) {
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      size={modalSize}
-      onClose={onClose}
-      scrollBehavior={modalScroll}
-      backdrop="blur"
-      className="overflow-x-clip overflow-y-auto"
-    >
-      <ModalContent className="">
-        {(onClose) => (
-          <>
-            <ModalHeader className="flex justify-center">
-              <p className="text-sm text-center">Detalhes do veículo</p>
-            </ModalHeader>
+<Modal
+     isOpen={isOpen}
+     size={modalSize}
+     onClose={onClose}
+     scrollBehavior={modalScroll}
+  backdrop="blur"
+  className=""
+>
+  <ModalContent className="max-h-screen overflow-y-auto">
+    {(onClose) => (
+      <>
+        <ModalHeader className="flex justify-center">
+          <p className="text-sm text-center">Detalhes do veículo</p>
+        </ModalHeader>
 
-            <ModalBody className="p-0 overflow-x-clip ">
-              <div className="lg:flex lg:pl-5">
-                <div className="lg:w-7/12">
-                  <Carousel className="">
-                    <CarouselNext className="top-1/3 -translate-y-1/3" />
-                    <CarouselPrevious className="top-1/3 -translate-y-1/3" />
-                    <CarouselMainContainer>
-                      {car.fotos.map((foto, index) => (
-                        <SliderMainItem
-                          key={index}
-                          className="bg-transparent"
-                        >
-                          <Image
-                            src={foto}
-                            radius="none"
-                            className="object-cover w-full h-full"
-                            alt={`${car.marca} ${car.modelo}`}
-                          />
-                        </SliderMainItem>
-                      ))}
-                    </CarouselMainContainer>
-                    <CarouselThumbsContainer>
-                      {car.fotos.map((foto, index) => (
-                        <SliderThumbItem
-                          key={index}
-                          index={index}
-                          className="bg-transparent"
-                        >
-                          <img
-                            src={foto}
-                            className="w-full h-12 object-cover rounded-lg shadow"
-                            alt={`${car.marca} ${car.modelo} - Foto ${
-                              index + 1
-                            }`}
-                          />
-                        </SliderThumbItem>
-                      ))}
-                    </CarouselThumbsContainer>
-                  </Carousel>
-                </div>
-
-                <div className="lg:px-5 p-4 lg:py-0 lg:w-5/12 ">
-                  <p className="text-lg font-semibold">
-                    {car.marca} {car.modelo}
-                  </p>
-                  <h3 className="text-lg font-semibold text-red-500 min-h-10 line-clamp-2">
-                    {car.versao}
-                  </h3>
-                  <div>
-                    {car.blindado && (
-                      <Chip
-                        startContent={<Shield size={12} />}
-                        variant="solid"
-                        color="danger"
-                        size="sm"
-                      >
-                        Blindado
-                      </Chip>
-                    )}
-                  </div>
-                  <div className="flex flex-row gap-4 ">
-                    <div className="flex flex-col">
-                      <p className="text-neutral-400 text-md">Ano</p>
-                      <p className="font-medium text-md">
-                        {car.ano_fabricacao}/{car.ano_modelo}
-                      </p>
-                    </div>
-                    <div className="flex flex-col">
-                      <p className="text-neutral-400 text-md">Km</p>
-                      <p className="font-medium text-md mt-2">
-                        {car.km.toLocaleString("pt-BR")}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-lg font-semibold">
-                    R$ {car.preco.toLocaleString("pt-BR")}
-                  </p>
-                  <br />
-
-                  <Button
-                    color="danger"
-                    variant="solid"
-                    className="w-full"
-                    onPress={() => {
-                      window.open(
-                        `https://api.whatsapp.com/send?phone=5519999083534&text=Ol%C3%A1%2C%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20carro%20${car.marca}%20${car.modelo}%20${car.versao}`,
-                        "_blank"
-                      );
-                    }}
+        <ModalBody className="p-0 overflow-y-auto max-h-[80vh] bg-slate-50">
+          {/* Container da Imagem do Veículo */}
+          <div className="w-full lg:px-8 mb-6 ">
+            <Carousel className="rounded-md overflow-hidden h-full lg:h-[45rem] object-cover">
+              <CarouselNext className="top-1/3 -translate-y-1/3" />
+              <CarouselPrevious className="top-1/3 -translate-y-1/3" />
+              <CarouselMainContainer className="h-full">
+                {car.fotos.map((foto, index) => (
+                  <SliderMainItem key={index} className="bg-transparent h-full">
+                    <Image
+                      removeWrapper
+                      src={foto}
+                      alt={`${car.marca} ${car.modelo}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </SliderMainItem>
+                ))}
+              </CarouselMainContainer>
+              <CarouselThumbsContainer className="mt-4">
+                {car.fotos.map((foto, index) => (
+                  <SliderThumbItem
+                    key={index}
+                    index={index}
+                    className="bg-transparent"
                   >
-                    <FaWhatsapp className="inline-block mr-2" size={24} /> Envie
-                    uma proposta
-                  </Button>
+                    <img
+                      src={foto}
+                      className="w-full h-16 object-cover rounded-md shadow"
+                      alt={`${car.marca} ${car.modelo} - Foto ${index + 1}`}
+                    />
+                  </SliderThumbItem>
+                ))}
+              </CarouselThumbsContainer>
+            </Carousel>
+          </div>
 
-                  <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 mt-6">
-                    <SectionTitle title="Especificações" fontsize="lg" />
-                    <div className="grid grid-cols-3 gap-y-2 gap-x-2 text-xs mt-6">
-                      <div>
-                        <p className="text-xs font-light">Marca</p>
-                        <p className="text-xs font-bold">{car.marca}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Ano</p>
-                        <p className="text-xs font-bold">
-                          {car.ano_fabricacao}/{car.ano_modelo}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Km</p>
-                        <p className="text-xs font-bold">
-                          {car.km.toLocaleString("pt-BR")}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Potência</p>
-                        <p className="text-xs font-bold">{car.potencia} cv</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Tipo motor</p>
-                        <p className="text-xs font-bold">{car.motorizacao}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Torque</p>
-                        <p className="text-xs font-bold">{car.torque} kgmf</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Cor</p>
-                        <p className="text-xs font-bold">{car.cor}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Blindado</p>
-                        <p className="text-xs font-bold">
-                          {car.blindado ? "Sim" : "Não"}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Direção</p>
-                        <p className="text-xs font-bold">{car.direcao}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Carroceria</p>
-                        <p className="text-xs font-bold">{car.carroceria}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Tração</p>
-                        <p className="text-xs font-bold">{car.tracao}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Final da Placa</p>
-                        <p className="text-xs font-bold">{car.final_placa}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Câmbio</p>
-                        <p className="text-xs font-bold">{car.cambio}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Rodas</p>
-                        <p className="text-xs font-bold">{car.rodas}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs font-light">Motor</p>
-                        <p className="text-xs font-bold">{car.motor}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+          {/* Container das Informações */}
+          <div className="px-4 lg:px-8 mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+              {car.marca} {car.modelo}
+            </h2>
+
+            <h3 className="text-lg font-semibold text-red-500 mb-4 line-clamp-2">
+              {car.versao}
+            </h3>
+
+            {car.blindado && (
+              <div className="mb-4">
+                <Chip
+                  startContent={<Shield size={16} />}
+                  variant="solid"
+                  color="danger"
+                  size="sm"
+                >
+                  Blindado
+                </Chip>
               </div>
-              <div className="px-4">
-                <div className="bg-gray-100 dark:bg-zinc-950 rounded-lg p-4 ">
-                  <SectionTitle title="Opcionais" fontsize="lg" />
-                  <ul className="list-disc pl-5 columns-2 md:columns-3 text-xs font-light mt-6">
-                    {car.opcionais.map((opcional, index) => (
-                      <li key={index}>{opcional}</li>
-                    ))}
-                  </ul>
-                </div>
+            )}
+
+            <div className="flex gap-x-12 gap-y-2 mb-4">
+              <div>
+                <p className="text-neutral-500 text-sm">Ano</p>
+                <p className="font-medium text-base text-gray-900 dark:text-white">
+                  {car.ano_fabricacao}/{car.ano_modelo}
+                </p>
               </div>
-            </ModalBody>
-            <ModalFooter className="flex justify-between">
-              <Button
-                color="default"
-                variant="faded"
-                onClick={addToComparador}
-                endContent={<MdCompareArrows size={20} />}
-              >
-                Adicionar ao comparador
-              </Button>
-              <Button color="danger" onPress={onClose}>
-                Fechar
-              </Button>
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
+              <div>
+                <p className="text-neutral-500 text-sm">Km</p>
+                <p className="font-medium text-base text-gray-900 dark:text-white">
+                  {car.km.toLocaleString("pt-BR")}
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xl font-bold text-gray-800 dark:text-white mb-6">
+              R$ {car.preco.toLocaleString("pt-BR")}
+            </p>
+
+            <Button
+              color="danger"
+              variant="solid"
+              className="w-full py-3 text-lg font-semibold flex items-center justify-center gap-2 rounded-lg shadow-lg hover:bg-red-600 transition-all duration-300 mb-6"
+              onPress={() => {
+                window.open(
+                  `https://api.whatsapp.com/send?phone=5519999083534&text=Ol%C3%A1%2C%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es%20sobre%20o%20carro%20${car.marca}%20${car.modelo}%20${car.versao}`,
+                  "_blank"
+                );
+              }}
+            >
+              <FaWhatsapp size={24} /> Envie uma proposta
+            </Button>
+
+            <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-md border border-gray-200 dark:border-slate-800 ">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Especificações</h2>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-4 gap-x-6 text-sm font-light text-gray-700 dark:text-gray-300">
+                {/* Código de especificações mantido */}
+                        <div>
+                         <p className="font-light text-gray-500">Marca</p>
+                          <p className="font-semibold">{car.marca}</p>
+                          </div>
+                        <div>
+                          <p className="font-light text-gray-500">Ano</p>
+                          <p className="font-semibold">{car.ano_fabricacao}/{car.ano_modelo}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Km</p>
+                          <p className="font-semibold">{car.km.toLocaleString("pt-BR")}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Potência</p>
+                          <p className="font-semibold">{car.potencia} cv</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Tipo motor</p>
+                          <p className="font-semibold">{car.motorizacao}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Torque</p>
+                          <p className="font-semibold">{car.torque} kgmf</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Cor</p>
+                          <p className="font-semibold">{car.cor}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Blindado</p>
+                          <p className="font-semibold">{car.blindado ? "Sim" : "Não"}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Direção</p>
+                          <p className="font-semibold">{car.direcao}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Carroceria</p>
+                          <p className="font-semibold">{car.carroceria}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Tração</p>
+                          <p className="font-semibold">{car.tracao}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Final da Placa</p>
+                          <p className="font-semibold">{car.final_placa}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Câmbio</p>
+                          <p className="font-semibold">{car.cambio}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Rodas</p>
+                          <p className="font-semibold">{car.rodas}</p>
+                        </div>
+                        <div>
+                          <p className="font-light text-gray-500">Motor</p>
+                          <p className="font-semibold">{car.motor}</p>
+                        </div>
+                        
+              </div>
+            </div>
+          </div>
+
+          {/* Container de Opcionais */}
+          <div className="px-4 lg:px-8">
+            <div className="bg-white dark:bg-zinc-900 rounded-xl p-6 shadow-md border border-gray-200 dark:border-slate-800">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Opcionais</h2>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-2 text-sm font-light text-gray-700 dark:text-gray-300">
+                {car.opcionais.map((opcional, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="mr-2  font-light">
+                      -
+                    </span>
+                    {opcional}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </ModalBody>
+
+        <ModalFooter className="flex justify-between px-4 lg:px-8 ">
+          <Button
+            color="default"
+            variant="faded"
+            onClick={addToComparador}
+            endContent={<MdCompareArrows size={20} />}
+          >
+            Adicionar ao comparador
+          </Button>
+          <Button color="danger" onPress={onClose}>
+            Fechar
+          </Button>
+        </ModalFooter>
+      </>
+    )}
+  </ModalContent>
+</Modal>
+
+
   );
 }
 

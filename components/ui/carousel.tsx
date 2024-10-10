@@ -207,7 +207,7 @@ const Carousel = forwardRef<
 );
 
 Carousel.displayName = "Carousel";
-
+// Ajuste no CarouselMainContainer para permitir scroll horizontal se necessário
 const CarouselMainContainer = forwardRef<
   HTMLDivElement,
   {} & React.HTMLAttributes<HTMLDivElement>
@@ -215,7 +215,7 @@ const CarouselMainContainer = forwardRef<
   const { mainRef, orientation, direction } = useCarousel();
 
   return (
-    <div {...props} ref={mainRef} className="overflow-hidden" dir={direction}>
+    <div {...props} ref={mainRef} className="overflow-x-hidden" dir={direction}>
       <div
         ref={ref}
         className={cn(
@@ -230,8 +230,7 @@ const CarouselMainContainer = forwardRef<
   );
 });
 
-CarouselMainContainer.displayName = "CarouselMainContainer";
-
+// Ajuste no CarouselThumbsContainer para permitir o scroll adequado das thumbs
 const CarouselThumbsContainer = forwardRef<
   HTMLDivElement,
   {} & React.HTMLAttributes<HTMLDivElement>
@@ -239,7 +238,7 @@ const CarouselThumbsContainer = forwardRef<
   const { thumbsRef, orientation, direction } = useCarousel();
 
   return (
-    <div {...props} ref={thumbsRef} className="overflow-hidden" dir={direction}>
+    <div {...props} ref={thumbsRef} className="overflow-x-hidden" dir={direction}>
       <div
         ref={ref}
         className={cn(
@@ -254,8 +253,7 @@ const CarouselThumbsContainer = forwardRef<
   );
 });
 
-CarouselThumbsContainer.displayName = "CarouselThumbsContainer";
-
+// Ajuste no SliderMainItem para manter a imagem sempre proporcional e centralizada
 const SliderMainItem = forwardRef<
   HTMLDivElement,
   {} & React.HTMLAttributes<HTMLDivElement>
@@ -277,8 +275,7 @@ const SliderMainItem = forwardRef<
   );
 });
 
-SliderMainItem.displayName = "SliderMainItem";
-
+// Ajuste no SliderThumbItem para garantir visualização adequada das miniaturas
 const SliderThumbItem = forwardRef<
   HTMLDivElement,
   {
@@ -293,13 +290,13 @@ const SliderThumbItem = forwardRef<
       ref={ref}
       onClick={() => onThumbClick(index)}
       className={cn(
-        "flex min-w-0 shrink-0 grow-0 basis-1/5 bg-background p-0", // Aqui está o valor ajustado para 'basis'
+        "flex min-w-0 shrink-0 grow-0 basis-1/5 bg-background p-0",
         `${orientation === "vertical" ? "pb-1" : "pr-1"}`,
         className
       )}
     >
       <div
-        className={`relative aspect-square h-12 w-full opacity-40 rounded-md transition-opacity ${
+        className={`relative aspect-square h-16 w-full opacity-40 rounded-md transition-opacity ${
           isSlideActive ? "!opacity-100" : ""
         }`}
       >
@@ -308,6 +305,7 @@ const SliderThumbItem = forwardRef<
     </div>
   );
 });
+
 
 
 SliderThumbItem.displayName = "SliderThumbItem";

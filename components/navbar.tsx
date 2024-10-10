@@ -78,7 +78,7 @@ export const Navbar = () => {
         {/* <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
         </NavbarItem> */}
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
+        <NavbarItem className="hidden w-9/12 lg:flex">{searchInput}</NavbarItem>
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
@@ -87,8 +87,10 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarMenu>
+        <div className="w-full">
         <SearchBar isExpanded={true} />
-        <div className="mx-4 mt-2 flex flex-col gap-2">
+        </div>
+        <div className="mx-4 mt-2 flex flex-col gap-2 ">
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link
