@@ -197,7 +197,7 @@ function LoginPage() {
       <div className="flex justify-center items-center min-h-screen">
         <Card className="w-full max-w-md">
           <CardHeader className="flex justify-center p-5">
-            <h1 className="text-2xl font-bold">Akkar</h1>
+            <h1 className="text-2xl font-">Akkar Motors</h1>
           </CardHeader>
           <CardBody>
             <p className="text-center">
@@ -225,10 +225,10 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Card className="w-full max-w-md">
+    <div className="flex justify-center items-center min-h-screen px-4">
+      <Card className="w-full max-w-md px-2">
         <CardHeader className="flex justify-center p-5">
-          <h1 className="text-2xl font-bold">Akkar</h1>
+          <h1 className="text-2xl font-medium">Akkar Motors</h1>
         </CardHeader>
         <CardBody>
           {formType === "login" && (
