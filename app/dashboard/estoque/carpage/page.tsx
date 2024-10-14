@@ -10,6 +10,7 @@ const EstoquePage = () => {
     return (
       <div className="">
         <NewCarForm editCardId={id} />
+        
       </div>
     );
   }

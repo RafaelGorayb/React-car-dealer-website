@@ -231,10 +231,18 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
 
   return (
     <div className="p-2 md:p-16 max-h-screen overflow-auto">
+      <div className="flex">
       <h1 className="text-2xl font-bold mb-4">
         {editCardId ? "Editar Veículo" : "Adicionar Veículo"}
       </h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Button      
+        className="ml-auto"
+        onClick={() => router.push('/dashboard/estoque')}
+      >
+        Voltar
+      </Button>
+      </div>
+      <form className="mb-12" onSubmit={handleSubmit(onSubmit)}>
         <Tabs selectedKey={activeTab} onSelectionChange={(key: Key) => setActiveTab(key as string)}>
           <Tab key="especificacoes" title="Especificações">
             <EspecificacoesForm control={control} errors={errors} />
