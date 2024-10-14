@@ -28,10 +28,10 @@ export default async function DashboardLayout({
   }
 
   const Dashboard = () => (
-    <div className="flex flex-1">
+
       <div className="rounded-tl-2xl border border-neutral-200 bg-white flex flex-col gap-2 flex-1 w-full h-full">
         <div className="w-full h-full">{children}</div>
-      </div>
+ 
     </div>
   );
 
