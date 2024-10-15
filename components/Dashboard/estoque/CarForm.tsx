@@ -230,7 +230,7 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
 
 
   return (
-    <div className="p-2 md:p-16 max-h-screen overflow-auto">
+    <div className="p-2 md:p-16 overflow-auto">
       <div className="flex">
       <h1 className="text-2xl font-bold mb-4">
         {editCardId ? "Editar Veículo" : "Adicionar Veículo"}
