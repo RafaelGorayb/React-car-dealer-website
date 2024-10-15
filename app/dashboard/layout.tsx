@@ -28,16 +28,16 @@ export default async function DashboardLayout({
   }
 
   const Dashboard = () => (
-
-      <div className="rounded-tl-2xl border border-neutral-200 bg-white flex flex-col gap-2 flex-1 w-full h-full">
-        <div className="w-full h-full">{children}</div>
- 
+<div className="flex flex-1 "> 
+      <div className="rounded-tl-2xl border border-neutral-200 bg-white flex flex-col gap-2 flex-1 w-full">
+        <div className="flex-1">{children}</div>
     </div>
+  </div>
   );
 
   return (
-    <section>
+    <div className="w-full">
       <SidebarMenu user={data.user} children={<Dashboard />} />
-    </section>
+    </div>
   );
 }

@@ -58,8 +58,8 @@ const SidebarMenu = ({ user, children }: SidebarMenuProps) => {
   return (
     <div
       className={cn(
-        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700 overflow-hidden",
-        "h-screen"
+        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700",
+        "min-h-screen"
       )}
     >
       <Sidebar open={open} setOpen={setOpen}>
@@ -101,7 +101,7 @@ const SidebarMenu = ({ user, children }: SidebarMenuProps) => {
           </div>
         </SidebarBody>
       </Sidebar>
-      {children}
+      <div className="flex-1 overflow-auto">{children}</div>
     </div>
   );
 };
