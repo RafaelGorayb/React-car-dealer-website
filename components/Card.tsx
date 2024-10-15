@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import { FaWhatsapp } from 'react-icons/fa';
 import { Car } from "../types";
 import {
@@ -20,16 +21,24 @@ interface CardProps {
 
 function CarCard({ car, isLoading }: CardProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const renderCardContent = () => (
     <>
       <div className="relative w-full h-[170px]">
+        {!imageLoaded && (
+          <Skeleton className="absolute inset-0 w-full h-full object-cover" />
+        )}
         <img
           src={car.fotos[0] || "/carroTeste.png"}
           className="w-full h-full object-cover"
           alt={`${car.marca} ${car.modelo}`}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageLoaded(true)} // Você pode optar por tratar erros de forma diferente
+          style={{ display: imageLoaded ? "block" : "none" }}
         />
       </div>
+
 
       <CardBody className="overflow-visible pt-2">
         <div>

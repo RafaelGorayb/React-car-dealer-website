@@ -19,15 +19,7 @@ export const siteConfig = {
     {
       label: "Contato",
       href: "/contato",
-    },
-    {
-      label: "Localização",
-      href: "#localizacao",
-    },
-    {
-      label: "Baixar App",
-      href: "/baixar-app",
-    },
+    }
   ],
   navMenuItems: [
     {
@@ -45,15 +37,7 @@ export const siteConfig = {
     {
       label: "Contato",
       href: "/contato",
-    },
-    {
-      label: "Localização",
-      href: "/localizacao",
-    },
-    {
-      label: "Baixar App",
-      href: "/baixar-app",
-    },
+    }
   ],
 };
 

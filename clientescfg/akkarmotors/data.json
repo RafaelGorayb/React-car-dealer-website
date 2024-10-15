@@ -1,0 +1,21 @@
+{
+    "url"    : "http://akkarmotors.com",
+    "navegador_titulo" : "Akkar Motors",
+    "navegador_subtitulo" : "Concesionario Oficial",
+    "navegador_themecolor" : "#000000",
+    "logo"  : "/logo.png",
+    "favicon" : "/favicon.ico",
+    "telefone" : "123456789",
+    "email" : "",
+    "endereco" : "Rua do Conde, 123",
+    "link_instagram" : "https://www.instagram.com/akkarmotors",
+    "texto_sobrenos" : "A Akkar Motors é uma empresa especializada na venda de automóveis novos e usados. Com uma vasta experiência no mercado, a Akkar Motors é uma referência no setor automóvel.",
+    "print_instagrampage" : "/print_instagrampage.png",
+    "print_instagrampost" : "/print_instagramcarropage.png",
+    "print_instagramcarro1" : "/print_instagramcarro1.png",
+    "print_instagramcarro2" : "/print_instagramcarro2.png",
+    "print_instagramcarro3" : "/print_instagramcarro3.png",
+    "databaseurl" : "https://akkarmotors.firebaseio.com"
+
+
+}
