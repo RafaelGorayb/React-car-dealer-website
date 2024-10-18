@@ -15,7 +15,7 @@ import { Shield } from "lucide-react";
 import { toast } from "react-toastify";
 import { useCompareList } from "@/lib/userState";
 import SectionTitle from "./HomePage/sectionTitle";
-import { MdCompareArrows } from "react-icons/md";
+import { MdCompareArrows, MdChevronLeft } from "react-icons/md";
 import {
   Carousel,
   CarouselNext,
@@ -25,6 +25,7 @@ import {
   SliderMainItem,
   SliderThumbItem,
 } from "./ui/carousel";
+import { useRouter } from 'next/navigation';
 
 interface CarModalProps {
   car: Car;
@@ -34,6 +35,7 @@ interface CarModalProps {
 
 function CarModal({ car, isOpen, onClose }: CarModalProps) {
   const { setCompareList } = useCompareList();
+  const router = useRouter();
 
   const [modalSize, setModalSize] = useState<
     | "xs"
@@ -76,6 +78,7 @@ function CarModal({ car, isOpen, onClose }: CarModalProps) {
 
   function addToComparador() {
     setCompareList((prev) => (prev ? [...prev, car] : [car]));
+    router.push('/comparador');
     toast.success("Carro adicionado ao comparador");
   }
 
@@ -85,17 +88,38 @@ function CarModal({ car, isOpen, onClose }: CarModalProps) {
      size={modalSize}
      onClose={onClose}
      scrollBehavior={modalScroll}
+     hideCloseButton={true}
   backdrop="blur"
   className=""
 >
   <ModalContent className="max-h-screen overflow-y-auto">
     {(onClose) => (
       <>
-        <ModalHeader className="flex justify-center">
-          <p className="text-sm text-center">Detalhes do veículo</p>
+        <ModalHeader className="dark bg-zinc-900 flex items-center">
+          <div className="absolute left-0">          
+            <Button 
+            variant="light"
+            onPress={onClose}
+            className="flex items-center gap-0"
+             >  
+             <MdChevronLeft size={24} />           
+            Fechar
+          </Button>
+          </div>
+          <p className="text-white text-sm mx-auto">Detalhes do veículo</p>
+          <div className="absolute right-2">
+            <Button
+             variant="flat"
+              onPress={addToComparador}
+              className="flex items-center gap-2"
+            >
+              <MdCompareArrows size={20} />
+              Comparar
+            </Button>
+          </div>
         </ModalHeader>
 
-        <ModalBody className="p-0 overflow-y-auto max-h-[80vh] bg-slate-50">
+        <ModalBody className="p-0 overflow-y-auto  bg-slate-50">
           {/* Container da Imagem do Veículo */}
           <div className="w-full lg:px-8 mb-6 ">
             <Carousel className="rounded-md overflow-hidden h-full lg:h-[45rem] object-cover">
@@ -273,20 +297,6 @@ function CarModal({ car, isOpen, onClose }: CarModalProps) {
             </div>
           </div>
         </ModalBody>
-
-        <ModalFooter className="flex justify-between px-4 lg:px-8 ">
-          <Button
-            color="default"
-            variant="faded"
-            onClick={addToComparador}
-            endContent={<MdCompareArrows size={20} />}
-          >
-            Adicionar ao comparador
-          </Button>
-          <Button color="danger" onPress={onClose}>
-            Fechar
-          </Button>
-        </ModalFooter>
       </>
     )}
   </ModalContent>

@@ -44,13 +44,13 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar 
-              maxWidth="xl"  
-              className="bg-white dark:bg-black border border-white dark:border-black " 
+              maxWidth="xl"              
+              className="dark bg-zinc-900 text-white" 
               >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
-            <Image src="/logo-akkar.png" alt="Logo" className="h-6" />
+            <Image src="/logo-akkar.png" alt="Logo" className="h-6" radius="sm" />
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-center ml-2">
@@ -90,7 +90,7 @@ export const Navbar = () => {
         <div className="w-full">
         <SearchBar isExpanded={true} />
         </div>
-        <div className="mx-4 mt-2 flex flex-col gap-2 ">
+        <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navMenuItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
               <Link

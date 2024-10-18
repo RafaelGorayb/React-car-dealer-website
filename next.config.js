@@ -11,6 +11,11 @@ const nextConfig = {
                 protocol: 'https',
                 hostname: 'hkuzikocskwbvvucobqa.supabase.co',
                 port: "",
+            },
+            {
+                protocol: 'https',
+                hostname: 'api.imgbb.com',
+                port: "",
             }
         ]
     }

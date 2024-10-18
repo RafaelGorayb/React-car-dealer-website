@@ -183,43 +183,66 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
   const handlePhotoUploads = async (carId: string) => {
     const fileLength = files.length;
     let progress = 0;
-
+  
     const toastEnvio = toast.loading(`Enviando foto 0 de ${fileLength}`, {
       autoClose: false,
     });
-
+  
     for (const file of files) {
-      const { error: uploadError } = await supabase.storage
-        .from("carros")
-        .upload(`${carId}/${file.name}`, file);
+      // Convertendo a imagem em base64 para envio via API ImgBB
+      const base64Image = await toBase64(file);
 
-      if (uploadError) {
-        toast.error("Erro ao enviar foto. Por favor, tente novamente.");
-        throw uploadError;
-      }
-
-      const { data: urlData } = supabase.storage
-        .from("carros")
-        .getPublicUrl(`${carId}/${file.name}`);
-
-      if (urlData) {
+      // Removendo o prefixo "data:image/*;base64," para enviar apenas a string base64
+      const cleanBase64Image = base64Image.replace(/^data:image\/[a-z]+;base64,/, "");
+  
+      const formData = new FormData();
+      formData.append("key", "678deb6913ea31aa4d00701313ecd255");
+      formData.append("image", cleanBase64Image);
+  
+      // Fazendo o upload via API ImgBB
+      const response = await fetch("https://api.imgbb.com/1/upload", {
+        method: "POST",
+        body: formData,
+      });
+  
+      const result = await response.json();
+  
+      if (result.success) {
+        const imageUrl = result.data.url; // URL da imagem hospedada
+  
+        // Salvando a URL no Supabase
         const { error: photoError } = await supabase
           .from("fotos_urls")
-          .insert({ url: urlData.publicUrl, carro_id: carId });
-
+          .insert({ url: imageUrl, carro_id: carId });
+  
         if (photoError) {
           toast.error("Erro ao adicionar foto. Por favor, tente novamente.");
           throw photoError;
         }
+      } else {
+        toast.error("Erro ao enviar foto. Por favor, tente novamente.");
+        throw new Error(result.error.message);
       }
+  
       progress++;
       toast.update(toastEnvio, {
         render: `Enviando foto ${progress} de ${fileLength}`,
       });
     }
-
+  
     toast.dismiss(toastEnvio);
   };
+  
+  // Função auxiliar para converter a imagem para Base64
+  const toBase64 = (file: File) => {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+  
 
   const formatFieldName = (fieldName: string) => {
     return fieldName
