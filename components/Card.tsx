@@ -13,6 +13,8 @@ import {
 import "../styles/globals.css";
 import { Shield } from "lucide-react";
 import CarModal from "./CarModal";
+import { Blurhash } from "react-blurhash";
+
 
 interface CardProps {
   car: Car;

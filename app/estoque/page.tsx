@@ -155,12 +155,13 @@ function Estoque() {
       <div className="flex-1 lg:ml-80 p-4 flex flex-col items-center pt-16">
         <p className="text-gray-500 mb-4">{totalCarsCount} carros encontrados</p>
   
-        <div className="fixed top-16 left-0 w-full bg-white dark:bg-black flex rounded-lg p-2 px-5 mb-4 justify-between lg:justify-end z-10 drop-shadow">
+        <div className="fixed top-16 left-0 w-full dark bg-zinc-900 flex p-2 px-5 mb-4 justify-between lg:justify-end z-10 drop-shadow">
           <div className="w-4/12 lg:hidden block justify-end">
             <Button                    
               endContent={<FilterIcon size={16} />}
-              className="lg:hidden relative bg-white"
+              className="lg:hidden relative"
               onClick={toggleMenu}
+              variant="light"
             >
               Filtrar
             </Button>
