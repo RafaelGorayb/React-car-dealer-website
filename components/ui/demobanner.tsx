@@ -20,6 +20,9 @@ const DemoBanner = () => {
     }
   }, [isVisible]);
 
+  // Aqui o retorno foi alterado de `false` para `null`
+  if (!isVisible) return null;
+  
   return (
     isVisible && (
       <div className="fixed bottom-20 lg:top-20 w-full z-50 opacity-90 hover:opacity-80" onClick={handleClick}>

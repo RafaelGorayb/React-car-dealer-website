@@ -45,9 +45,8 @@ export default function RootLayout({
       >
 
         
-      
+      <DemoBanner />
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-          <DemoBanner/>
           <div className="relative flex flex-col h-screen">
 
             <main className="mx-auto w-full">{children}</main>
