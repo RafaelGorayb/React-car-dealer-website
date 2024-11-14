@@ -215,7 +215,7 @@ const CarouselMainContainer = forwardRef<
   const { mainRef, orientation, direction } = useCarousel();
 
   return (
-    <div {...props} ref={mainRef} className="overflow-x-hidden" dir={direction}>
+    <div {...props} ref={mainRef} className="overflow-hidden" dir={direction}>
       <div
         ref={ref}
         className={cn(
@@ -238,7 +238,7 @@ const CarouselThumbsContainer = forwardRef<
   const { thumbsRef, orientation, direction } = useCarousel();
 
   return (
-    <div {...props} ref={thumbsRef} className="overflow-x-hidden" dir={direction}>
+    <div {...props} ref={thumbsRef} className="overflow-hidden" dir={direction}>
       <div
         ref={ref}
         className={cn(
