@@ -95,9 +95,8 @@ const [modalSize, setModalSize] = useState< | "xs" | "sm" | "md" | "lg" | "xl" |
           <ModalBody className="p-0 overflow-y-auto  bg-slate-50">
             {/* Container da Imagem do Veículo */}
             <div className="w-full lg:px-8 mb-6 ">
-            <Carousel className="rounded-md overflow-hidden w-full max-h-[35rem] lg:max-h-[45rem] lg:min-h-[45rem] object-cover">
-  <CarouselNext className="top-1/3 -translate-y-1/3" />
-  <CarouselPrevious className="top-1/3 -translate-y-1/3" />
+<Carousel className="rounded-md overflow-hidden w-full h-[35rem] lg:h-[45rem]">
+  {/* Controles do Carrossel */}
   <CarouselMainContainer className="h-full">
     {car.fotos.map((foto, index) => (
       <SliderMainItem key={index} className="h-full">
@@ -106,7 +105,7 @@ const [modalSize, setModalSize] = useState< | "xs" | "sm" | "md" | "lg" | "xl" |
           radius="none"
           src={foto}
           alt={`${car.marca} ${car.modelo}`}
-          className="h-full w-full object-cover"
+          className="w-full h-full object-cover"
         />
         {/* Gradiente Overlay */}
         <div className="absolute z-20 bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-50 to-transparent pointer-events-none"></div>
@@ -114,20 +113,21 @@ const [modalSize, setModalSize] = useState< | "xs" | "sm" | "md" | "lg" | "xl" |
     ))}
   </CarouselMainContainer>
 
-  <CarouselThumbsContainer className="">
+  {/* Thumbnails */}
+  <CarouselThumbsContainer className="mt-4 flex  space-x-2">
     {car.fotos.map((foto, index) => (
       <SliderThumbItem key={index} index={index} className="bg-transparent">
-        <div className="absolute z-20 top-0 left-0 w-full h-5 bg-gradient-to-t from-transparent to-slate-50 pointer-events-none"></div>
         <Image
           removeWrapper
           src={foto}
-          className="h-full w-full object-cover rounded-md shadow"
+          className="w-full h-full object-cover rounded-md shadow"
           alt={`${car.marca} ${car.modelo} - Foto ${index + 1}`}
         />
       </SliderThumbItem>
     ))}
   </CarouselThumbsContainer>
 </Carousel>
+
 
 
             </div>
