@@ -95,42 +95,39 @@ const [modalSize, setModalSize] = useState< | "xs" | "sm" | "md" | "lg" | "xl" |
           <ModalBody className="p-0 overflow-y-auto  bg-slate-50">
             {/* Container da Imagem do Veículo */}
             <div className="w-full lg:px-8 mb-6 ">
-<Carousel className="rounded-md overflow-hidden w-full h-[35rem] lg:h-[45rem]">
-  {/* Controles do Carrossel */}
-  <CarouselMainContainer className="h-full">
-    {car.fotos.map((foto, index) => (
-      <SliderMainItem key={index} className="h-full">
-        <Image
-          removeWrapper
-          radius="none"
-          src={foto}
-          alt={`${car.marca} ${car.modelo}`}
-          className="w-full h-full object-cover"
-        />
-        {/* Gradiente Overlay */}
-        <div className="absolute z-20 bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-50 to-transparent pointer-events-none"></div>
-      </SliderMainItem>
-    ))}
-  </CarouselMainContainer>
+        <Carousel className="rounded-md overflow-hidden w-full h-[25rem] lg:h-[45rem]">
+          {/* Controles do Carrossel */}
+          <CarouselMainContainer className="h-full">
+            {car.fotos.map((foto, index) => (
+              <SliderMainItem key={index} className="h-full">
+                <Image
+                  removeWrapper
+                  radius="none"
+                  src={foto}
+                  alt={`${car.marca} ${car.modelo}`}
+                  className="w-full h-[20rem] lg:h-[45rem] object-cover"
+                />
+                {/* Gradiente Overlay */}
+                <div className="absolute z-0 bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-50 to-transparent pointer-events-none"></div>
+              </SliderMainItem>
+            ))}
+          </CarouselMainContainer>
 
-  {/* Thumbnails */}
-  <CarouselThumbsContainer className="mt-4 flex  space-x-2">
-    {car.fotos.map((foto, index) => (
-      <SliderThumbItem key={index} index={index} className="bg-transparent">
-        <Image
-          removeWrapper
-          src={foto}
-          className="w-full h-full object-cover rounded-md shadow"
-          alt={`${car.marca} ${car.modelo} - Foto ${index + 1}`}
-        />
-      </SliderThumbItem>
-    ))}
-  </CarouselThumbsContainer>
-</Carousel>
-
-
-
-            </div>
+          {/* Thumbnails */}
+          <CarouselThumbsContainer className="mt-0 flex  space-x-2">
+            {car.fotos.map((foto, index) => (
+              <SliderThumbItem key={index} index={index} className="bg-transparent">
+                <Image
+                  removeWrapper
+                  src={foto}
+                  className="w-full h-full object-cover rounded-md shadow"
+                  alt={`${car.marca} ${car.modelo} - Foto ${index + 1}`}
+                />
+              </SliderThumbItem>
+            ))}
+          </CarouselThumbsContainer>
+        </Carousel>
+      </div>
 
             {/* Container das Informações */}
             <div className="px-4 lg:px-8 mb-6">
