@@ -116,7 +116,7 @@ const [modalSize, setModalSize] = useState< | "xs" | "sm" | "md" | "lg" | "xl" |
           {/* Thumbnails */}
           <CarouselThumbsContainer className="mt-0 flex  space-x-2">
             {car.fotos.map((foto, index) => (
-              <SliderThumbItem key={index} index={index} className="bg-transparent">
+              <SliderThumbItem key={index} index={index} className="bg-transparent w-20 h-20">
                 <Image
                   removeWrapper
                   src={foto}
