@@ -10,6 +10,8 @@ interface CarFilterProps {
   submitForm: (data: FiltrosPesquisa) => void;
   isOpen: boolean;
   toggleMenu: () => void;
+  currentFilters: FiltrosPesquisa | null;
+  resetForm: () => void;
 }
 
 interface CarroData {
@@ -25,6 +27,8 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
   submitForm,
   isOpen,
   toggleMenu,
+  currentFilters,
+  resetForm,
 }) => {
   const [marcas, setMarcas] = useState<string[]>([]);
   const [modelos, setModelos] = useState<string[]>([]);
@@ -175,7 +179,8 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
                 setSelectedModelo={setSelectedModelo}
                 setSelectedVersao={setSelectedVersao}
                 setSelectedMotorizacao={setSelectedMotorizacao}
-                
+                currentFilters={currentFilters}
+                resetForm={resetForm}
               />
             </FormProvider>
           </div>
@@ -212,6 +217,8 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
                 setSelectedModelo={setSelectedModelo}
                 setSelectedVersao={setSelectedVersao}
                 setSelectedMotorizacao={setSelectedMotorizacao}
+                currentFilters={currentFilters}
+                resetForm={resetForm}
               />
             </div>
           </FormProvider>

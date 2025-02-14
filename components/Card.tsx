@@ -13,7 +13,6 @@ import {
 import "../styles/globals.css";
 import { Shield } from "lucide-react";
 import CarModal from "./CarModal";
-import { Blurhash } from "react-blurhash";
 
 
 interface CardProps {
@@ -42,24 +41,24 @@ function CarCard({ car, isLoading }: CardProps) {
       </div>
 
 
-      <CardBody className="overflow-visible pt-2">
-        <div>
-          <p className="text-xs font-semibold">
+      <CardBody className="overflow-visible pt-2 h-[140px]">
+        <div className="flex flex-col h-full">
+          <p className="text-xs font-semibold min-h-8 line-clamp-2">
             {car.marca} {car.modelo}
           </p>
-          <h3 className="text-sm font-semibold text-red-500 min-h-10 line-clamp-2">
+          <h3 className="text-sm font-semibold text-red-500 min-h-8 line-clamp-2">
             {car.versao}
           </h3>
-          <div className="flex text-sm flex-row gap-4 pb-2">
-            <div className="flex flex-col">
+          <div className="flex text-sm flex-row gap-4 py-2">
+            <div className="flex flex-col w-20">
               <p className="text-neutral-400 text-xs">Ano</p>
-              <p className="font-medium text-sm">
+              <p className="font-medium text-sm truncate">
                 {car.ano_fabricacao}/{car.ano_modelo}
               </p>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col w-20">
               <p className="text-neutral-400 text-xs">Km</p>
-              <p className="font-medium text-sm">
+              <p className="font-medium text-sm truncate">
                 {car.km.toLocaleString("pt-BR")}
               </p>
             </div>
@@ -78,7 +77,7 @@ function CarCard({ car, isLoading }: CardProps) {
           </div>
         </div>
       </CardBody>
-      <CardFooter className="">
+      <CardFooter className="h-[40px]">
         <p className="text-md font-semibold">
           R$ {car.preco.toLocaleString("pt-BR")}
         </p>

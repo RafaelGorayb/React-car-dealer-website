@@ -1,5 +1,5 @@
 // FilterForm.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useFormContext } from "react-hook-form";
 import { Input, Select, SelectItem, Button } from "@nextui-org/react";
 import { FiltrosPesquisa } from "../types/index";
@@ -10,7 +10,6 @@ import {
   Select1Trigger,
   Select1Value,
 } from "@/components/ui/select"
-
 
 interface FilterFormProps {
   marcas: string[];
@@ -26,6 +25,8 @@ interface FilterFormProps {
   setSelectedModelo: (value: string) => void;
   setSelectedVersao: (value: string) => void;
   setSelectedMotorizacao: (value: string) => void;
+  currentFilters: FiltrosPesquisa | null;
+  resetForm: () => void;
 }
 
 const FilterForm: React.FC<FilterFormProps> = ({
@@ -41,29 +42,84 @@ const FilterForm: React.FC<FilterFormProps> = ({
   setSelectedMarca,
   setSelectedModelo,
   setSelectedVersao,
-  setSelectedMotorizacao
+  setSelectedMotorizacao,
+  currentFilters,
+  resetForm
 }) => {
-  const { register, setValue, watch, reset } = useFormContext<FiltrosPesquisa>();
+  const { register, setValue, watch, reset, getValues } = useFormContext<FiltrosPesquisa>();
+
+  // Add effect to sync form with currentFilters
+  useEffect(() => {
+    if (currentFilters) {
+      // Reset all form values to match currentFilters
+      reset(currentFilters);
+      
+      // Reset selected states
+      setSelectedMarca(currentFilters.marca || '');
+      setSelectedModelo(currentFilters.modelo || '');
+      setSelectedVersao(currentFilters.versao || '');
+      setSelectedMotorizacao(currentFilters.motorizacao || '');
+    }
+  }, [currentFilters, reset, setSelectedMarca, setSelectedModelo, setSelectedVersao, setSelectedMotorizacao]);
 
   const clearAllFilters = () => {
-    reset();
-    setSelectedMarca('');
-    setSelectedModelo('');
-    setSelectedVersao('');
-    setSelectedMotorizacao('');
+    resetForm();
   };
 
-   // Função para limpar um filtro individual
-   const clearFilter = (filterName: keyof FiltrosPesquisa, setter?: (value: string) => void) => {
-    setValue(filterName, '');
-    if (setter) setter('');
+  const handleRemoveFilter = (key: keyof FiltrosPesquisa) => {
+    switch (key) {
+      case 'marca':
+        setSelectedMarca('');
+        setSelectedModelo('');
+        setSelectedVersao('');
+        setValue('marca', '');
+        setValue('modelo', '');
+        setValue('versao', '');
+        break;
+      case 'modelo':
+        setSelectedModelo('');
+        setSelectedVersao('');
+        setValue('modelo', '');
+        setValue('versao', '');
+        break;
+      case 'versao':
+        setSelectedVersao('');
+        setValue('versao', '');
+        break;
+      case 'motorizacao':
+        setSelectedMotorizacao('');
+        setValue('motorizacao', '');
+        break;
+      default:
+        if (typeof getValues()[key] === 'number') {
+          setValue(key, 0);
+        } else if (typeof getValues()[key] === 'boolean') {
+          setValue(key, false);
+        } else {
+          setValue(key, '');
+        }
+    }
+    
+    // Force trigger form submission to update filters
+    const form = document.querySelector('form');
+    if (form) {
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
   };
+
+  const formValues = getValues();
+  const hasActiveFilters = Object.values(formValues).some(value => 
+    value !== '' && value !== 0 && value !== false
+  );
 
   return (
     <form className="space-y-4">
-           <Button color="warning" onClick={clearAllFilters}>
-        Limpar Todos os Filtros
-      </Button>
+      <div className="flex justify-between items-center">
+        <Button color="warning" size="sm" onClick={clearAllFilters}>
+          Limpar Todos
+        </Button>
+      </div>
+
       <div>
         <label htmlFor="marca">Marca</label>
         <div className="flex items-center gap-4">

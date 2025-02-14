@@ -87,46 +87,63 @@ export default function Comparador() {
   ];
 
   const propertiesToShow = [
-    "marca",
-    "modelo",
-    "versao",
-    "preco",
-    "ano_modelo",
-    "ano_fabricacao",
-    "km",
-    "cor",
-    "motorizacao",
-    "potencia",
-    "torque",
-    "cambio",
-    "tracao",
-    "direcao",
-    "freios",
-    "rodas",
-    "bancos",
-    "airbags",
-    "ar_condicionado",
-    "farol",
-    "multimidia",
-    "final_placa",
-    "carroceria",
-    "blindado",
-    "opcionais",
+    {
+      category: "Informações Básicas",
+      properties: ["marca", "modelo", "versao", "preco", "ano_modelo", "ano_fabricacao", "km", "cor", "carroceria"]
+    },
+    {
+      category: "Motor e Desempenho",
+      properties: ["motorizacao", "potencia", "torque", "cambio", "tracao"]
+    },
+    {
+      category: "Equipamentos",
+      properties: ["direcao", "freios", "rodas", "bancos", "airbags"]
+    },
+    {
+      category: "Conforto e Tecnologia",
+      properties: ["ar_condicionado", "farol", "multimidia"]
+    },
+    {
+      category: "Outros",
+      properties: ["final_placa", "blindado", "opcionais"]
+    }
   ];
 
-  const rows = propertiesToShow.map((key) => {
-    const row: any = {
-      propriedade: key.charAt(0).toUpperCase() + key.slice(1).replace("_", " "),
-    };
-    compareList.forEach((car, index) => {
-      row[`car-${index}`] = formatValue(key, car[key as keyof Car]);
-    });
-    return row;
-  });
+  const getBackgroundColor = (value: any, key: string) => {
+    if (key === "preco") {
+      return ""; // Preço não precisa de destaque
+    }
+    if (typeof value === "boolean") {
+      return value ? "bg-green-100 dark:bg-green-900/20" : "";
+    }
+    return "";
+  };
+
+  const rows = propertiesToShow.flatMap((category) => [
+    // Categoria header
+    {
+      isCategory: true,
+      propriedade: category.category,
+    },
+    // Propriedades da categoria
+    ...category.properties.map((key) => {
+      const row: any = {
+        propriedade: key
+          .split("_")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" "),
+      };
+      compareList.forEach((car, index) => {
+        row[`car-${index}`] = formatValue(key, car[key as keyof Car]);
+      });
+      return row;
+    }),
+  ]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Comparador de Carros</h1>
+    <div className="container mx-auto py-8">
+      <div className="px-2">
+            <h1 className="text-3xl font-bold mb-6">Comparador de Carros</h1>
       <SearchBar onSelect={handleCarSelect} /> {/* Adicione a barra de pesquisa aqui */}
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 mb-8 md:w-6/12">
         {compareList.map((car, index) => (
@@ -165,35 +182,54 @@ export default function Comparador() {
           </Card>
         )}
       </div>
+      </div>
 
       <div>
-        <h2 className="text-2xl font-bold mb-4">Comparação Detalhada</h2>
-        <div className="overflow-x-auto">
-          <Table isStriped aria-label="Tabela de comparação de carros">
+        <h2 className="text-2xl font-bold mb-4 px-2">Comparação Detalhada</h2>
+          <Table 
+            isStriped={false} 
+            aria-label="Tabela de comparação de carros"
+            classNames={{
+              base: "rounded-lg w-full overflow-x-none shadow-none",
+              th: "bg-gray-100 dark:bg-zinc-800 text-default-700 dark:text-default-300",
+              td: "whitespace-normal break-words max-w-[100px]",
+            }}
+          >
             <TableHeader columns={columns}>
               {(column) => (
-                <TableColumn key={column.key} className="max-w-[60px] bg-gray-100 dark:bg-zinc-800 font-bold text-xs md:text-sm lg:text-base">
+                <TableColumn 
+                  key={column.key} 
+                  className={`font-bold text-xs md:text-sm lg:text-base py-4 ${
+                    column.key === "propriedade" ? "max-w-[100px]" : "max-w-[120px]"
+                  }`}
+                >
                   {column.label}
                 </TableColumn>
               )}
             </TableHeader>
             <TableBody items={rows}>
-              {(item) => (
-                <TableRow key={item.propriedade}>
+              {(item: any) => (
+                <TableRow 
+                  key={item.propriedade}
+                  className={item.isCategory ? "bg-gray-50 dark:bg-zinc-900" : ""}
+                >
                   {(columnKey) => (
-                    <TableCell className="max-w-[60px] break-words text-xs md:text-sm lg:text-base">
-                      {columnKey === "propriedade" ? (
-                        <span className="font-semibold">{item[columnKey]}</span>
-                      ) : (
-                        item[columnKey as keyof typeof item]
-                      )}
+                    <TableCell 
+                      className={`text-xs md:text-sm lg:text-base py-3 break-words ${
+                        item.isCategory ? "font-bold text-primary" : ""
+                      } ${
+                        columnKey !== "propriedade" && !item.isCategory
+                          ? getBackgroundColor(item[columnKey], item.propriedade.toLowerCase())
+                          : ""
+                      }`}
+                    >
+                      {item[columnKey as keyof typeof item]}
                     </TableCell>
                   )}
                 </TableRow>
               )}
             </TableBody>
           </Table>
-        </div>
       </div>
     </div>
   );
