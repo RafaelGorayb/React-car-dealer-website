@@ -27,6 +27,10 @@ export const useSidebar = () => {
   return context;
 };
 
+// Wrapper para AnimatePresence para garantir compatibilidade com JSX
+const SafeAnimatePresence: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return <>{children}</>;
+};
 
 export const SidebarProvider = ({
   children,
@@ -125,7 +129,7 @@ export const MobileSidebar = ({
             onClick={() => setOpen(!open)}
           />
         </div>
-        <AnimatePresence>
+        <SafeAnimatePresence>
           {open && (
             <motion.div
               initial={{ x: "-100%", opacity: 0 }}
@@ -149,7 +153,7 @@ export const MobileSidebar = ({
               {children}
             </motion.div>
           )}
-        </AnimatePresence>
+        </SafeAnimatePresence>
       </div>
     </>
   );

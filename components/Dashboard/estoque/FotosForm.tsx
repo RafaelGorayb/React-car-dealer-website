@@ -1,6 +1,6 @@
 import React from "react";
-import { BiImageAdd, BiTrash } from "react-icons/bi";
 import { Card, CardBody, CardFooter, Divider, Button } from "@nextui-org/react";
+import { ImagePlus, Trash } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 
 interface FotosFormProps {
@@ -48,7 +48,7 @@ const FotosForm = ({
             })}
           >
             <input {...getInputProps()} />
-            <BiImageAdd size={40} className="text-gray-500 mb-2" />
+            <ImagePlus size={40} className="text-gray-500 mb-2" />
             <p className="text-gray-600 dark:text-gray-300">
               Arraste e solte as fotos aqui ou clique para selecionar
             </p>
@@ -103,7 +103,7 @@ const FotosForm = ({
                     }}
                     aria-label="Remover foto"
                   >
-                    <BiTrash size={16} color="white" />
+                    <Trash size={16} color="white" />
                   </button>
                 </div>
               ))}
@@ -131,7 +131,7 @@ const FotosForm = ({
                     }}
                     aria-label="Remover foto"
                   >
-                    <BiTrash size={16} color="white" />
+                    <Trash size={16} color="white" />
                   </button>
                 </div>
               ))}

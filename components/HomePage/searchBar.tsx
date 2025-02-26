@@ -8,7 +8,6 @@ import {
   CardBody,
   Image,
 } from "@nextui-org/react";
-import { FaMagnifyingGlass } from "react-icons/fa6";
 import { Car } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
@@ -16,12 +15,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import { formatCars } from "@/utils/functions";
 import { toast } from "react-toastify";
 import CarModal from "../CarModal"; // Ajuste o caminho de importação conforme necessário
+import { Search } from "lucide-react";
 
 interface SearchBarProps {
   isExpanded?: boolean;
   onToggle?: () => void;
   onSelect?: (car: Car) => void;
 }
+
+// Componentes wrapper para garantir compatibilidade com JSX
+const SafeAnimatePresence: React.FC<{ children: React.ReactNode, initial?: boolean }> = ({
+  children,
+  initial,
+}) => {
+  return <>{children}</>;
+};
+
+const SearchIcon: React.FC<{ className?: string }> = ({ className }) => {
+  return <Search className={className} />;
+};
 
 export const SearchBar = ({
   isExpanded = true,
@@ -114,7 +126,7 @@ export const SearchBar = ({
 
   return (
     <div className="relative z-20 w-full" ref={dropdownRef}>
-      <AnimatePresence initial={false}>
+      <SafeAnimatePresence initial={false}>
         {isSearchExpanded ? (
           <motion.div
             key="expanded"
@@ -131,7 +143,7 @@ export const SearchBar = ({
               onChange={(e) => setSearchTerm(e.target.value)}
               labelPlacement="outside"
               startContent={
-                <FaMagnifyingGlass className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
               }
               endContent={isLoading && <Spinner size="sm" />}
               className=""
@@ -180,11 +192,11 @@ export const SearchBar = ({
               aria-label="pesquisar"
               onClick={onToggle}
             >
-              <FaMagnifyingGlass className="text-xl" />
+              <SearchIcon className="text-xl" />
             </Button>
           </motion.div>
         )}
-      </AnimatePresence>
+      </SafeAnimatePresence>
 
       {/* Renderiza o CarModal se onSelect não estiver definido */}
       {selectedCar && !onSelect && (

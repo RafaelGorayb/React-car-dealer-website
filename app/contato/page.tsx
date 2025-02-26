@@ -4,7 +4,7 @@ import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 import SectionTitle from "@/components/HomePage/sectionTitle";
 import { Input, Textarea, Button, Card, CardBody } from "@nextui-org/react";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { IconPhone, IconMail, IconMapPin } from "@tabler/icons-react";
 
 export default function ContatoPage() {
   const [formData, setFormData] = useState({
@@ -77,7 +77,7 @@ export default function ContatoPage() {
                 <Card className="bg-gray-50 dark:bg-zinc-900 border-none shadow-md">
                   <CardBody className="flex flex-row items-center gap-4 p-6">
                     <div className="bg-red-600 p-3 rounded-full">
-                      <FaPhone className="text-white text-xl" />
+                      <IconPhone className="text-white text-xl" />
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold mb-1">Telefone</h3>
@@ -89,7 +89,7 @@ export default function ContatoPage() {
                 <Card className="bg-gray-50 dark:bg-zinc-900 border-none shadow-md">
                   <CardBody className="flex flex-row items-center gap-4 p-6">
                     <div className="bg-red-600 p-3 rounded-full">
-                      <FaEnvelope className="text-white text-xl" />
+                      <IconMail className="text-white text-xl" />
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold mb-1">Email</h3>
@@ -101,7 +101,7 @@ export default function ContatoPage() {
                 <Card className="bg-gray-50 dark:bg-zinc-900 border-none shadow-md">
                   <CardBody className="flex flex-row items-center gap-4 p-6">
                     <div className="bg-red-600 p-3 rounded-full">
-                      <FaMapMarkerAlt className="text-white text-xl" />
+                      <IconMapPin className="text-white text-xl" />
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold mb-1">Endereço</h3>

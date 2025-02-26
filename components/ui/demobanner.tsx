@@ -1,6 +1,10 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { FaWhatsapp, FaLinkedin } from 'react-icons/fa';
+import { MessageSquare, Linkedin } from 'lucide-react';
+
+// Usando a função utilitária para criar ícones compatíveis
+// const WhatsappIcon = createIconWrapper(FaWhatsapp);
+// const LinkedinIcon = createIconWrapper(FaLinkedin);
 
 const DemoBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -38,7 +42,7 @@ const DemoBanner = () => {
               rel="noopener noreferrer"
               className="flex items-center text-sm ml-2 font-bold text-green-900 hover:text-yellow-700"
             >
-              <FaWhatsapp className="mr-1" /> WhatsApp
+              <MessageSquare className="mr-1" size={16} /> WhatsApp
             </a>
             <a
               href="https://www.linkedin.com/in/rafael-gorayb-correa-2bb3a2234/"
@@ -46,7 +50,7 @@ const DemoBanner = () => {
               rel="noopener noreferrer"
               className="flex items-center text-sm ml-4 font-bold text-blue-900 hover:text-yellow-700"
             >
-              <FaLinkedin className="mr-1" /> LinkedIn
+              <Linkedin className="mr-1" size={16} /> LinkedIn
             </a>
           </div>
         </div>

@@ -1,5 +1,4 @@
-import {nextui} from '@nextui-org/theme'
-import { color } from 'framer-motion'
+import { nextui } from '@nextui-org/theme'
 
 /** @type {import('tailwindcss').Config} */
 export default {

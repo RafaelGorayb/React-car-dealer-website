@@ -54,7 +54,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
         let query = supabase
           .from("carro")
           .select(column)
-          .neq(column, null)
+          .not(column, 'is', null)  
           .neq(column, "")
           .order(column, { ascending: true });
   

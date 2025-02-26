@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
+import { IconBrandWhatsapp, IconBrandLinkedin } from '@tabler/icons-react';
 import clsx from "clsx";
-import { FaWhatsapp, FaLinkedin } from 'react-icons/fa'
 
 import { Providers } from "./providers";
 

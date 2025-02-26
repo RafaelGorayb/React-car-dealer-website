@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { FaWhatsapp } from 'react-icons/fa';
+import { IconBrandWhatsapp } from '@tabler/icons-react';
 import { Car } from "../types";
 import {
   Card,

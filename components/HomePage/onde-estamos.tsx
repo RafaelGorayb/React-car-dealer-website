@@ -1,13 +1,13 @@
 import React from "react";
 import SectionTitle from "./sectionTitle";
-import { FiMapPin, FiPhone, FiMail } from "react-icons/fi";
+import { MapPin, Phone, Mail } from "lucide-react";
 
 const OndeEstamos: React.FC = () => {
   return (
     <div className="pb-20 px-4 w-full flex sm:flex-row flex-col justify-between sm:items-center">
       <div className="space-y-4">
         <div className="flex items-start space-x-2">
-          <FiMapPin className="text-2xl text-gray-700" />
+          <MapPin className="text-2xl text-gray-700" />
           <div>
             <SectionTitle title="endereço" fontsize="sm" />
             <p className="pt-4 font-light">
@@ -21,7 +21,7 @@ const OndeEstamos: React.FC = () => {
         </div>
 
         <div className="flex items-start space-x-2">
-          <FiPhone className="text-2xl text-gray-700" />
+          <Phone className="text-2xl text-gray-700" />
           <div>
             <SectionTitle title="telefone" fontsize="sm" />
             <p className="pt-4 font-light">(19) 3251-0331</p>
@@ -29,7 +29,7 @@ const OndeEstamos: React.FC = () => {
         </div>
 
         <div className="flex items-start space-x-2">
-          <FiMail className="text-2xl text-gray-700" />
+          <Mail className="text-2xl text-gray-700" />
           <div>
             <SectionTitle title="email" fontsize="sm" />
             <p className="p-4 font-light">vendas@akkarmotors.com.br</p>

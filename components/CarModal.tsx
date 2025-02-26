@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { FaWhatsapp } from 'react-icons/fa';
 import { Car } from "../types";
 import {
 Modal,
 ModalContent,
 ModalHeader,
 ModalBody,
-ModalFooter,
 Button,
 Image,
 Chip,
 } from "@nextui-org/react";
-import { Shield } from "lucide-react";
+import { Shield, ChevronLeft, ArrowLeftRight, MessageSquare } from "lucide-react";
 import { toast } from "react-toastify";
 import { useCompareList } from "@/lib/userState";
-import SectionTitle from "./HomePage/sectionTitle";
-import { MdCompareArrows, MdChevronLeft } from "react-icons/md";
 import {
 Carousel,
-CarouselNext,
-CarouselPrevious,
 CarouselMainContainer,
 CarouselThumbsContainer,
 SliderMainItem,
@@ -40,6 +34,7 @@ const router = useRouter();
 const [modalSize, setModalSize] = useState< | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "full">
   ("5xl");
   const [modalScroll, setModalScroll] = useState< "normal" | "outside" | "inside">("normal");
+
 
     useEffect(() => {
     function handleResize() {
@@ -78,15 +73,13 @@ const [modalSize, setModalSize] = useState< | "xs" | "sm" | "md" | "lg" | "xl" |
         <>
           <ModalHeader className="dark bg-zinc-900 flex items-center">
             <div className="absolute left-0">
-              <Button variant="light" onPress={onClose} className="flex items-center gap-0">
-                <MdChevronLeft size={24} />
+              <Button variant="light" onPress={onClose} className="flex items-center gap-0" startContent={<ChevronLeft size={24} />}>
                 Fechar
               </Button>
             </div>
             <p className="text-white text-sm mx-auto">Detalhes do veículo</p>
             <div className="absolute right-2">
-              <Button variant="flat" onPress={addToComparador} className="flex items-center gap-2">
-                <MdCompareArrows size={20} />
+              <Button variant="flat" onPress={addToComparador} className="flex items-center gap-2" startContent={<ArrowLeftRight size={20} />}>
                 Comparar
               </Button>
             </div>
@@ -178,8 +171,9 @@ const [modalSize, setModalSize] = useState< | "xs" | "sm" | "md" | "lg" | "xl" |
                 "_blank"
                 );
                 }}
+                startContent={<MessageSquare size={24} />}
                 >
-                <FaWhatsapp size={24} /> Envie uma proposta
+                Envie uma proposta
               </Button>
 
               <div

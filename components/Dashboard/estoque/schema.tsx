@@ -20,7 +20,7 @@ import {
   Image,
 } from "@nextui-org/react";
 import { createClient } from "@/utils/supabase/client";
-import { BiImageAdd, BiTrash } from "react-icons/bi";
+import { ImagePlus, Trash } from "lucide-react";
 import { toast } from "react-toastify";
 import OpcionaisTab from "./opcionais";
 
@@ -407,7 +407,7 @@ export default function NewCarForm({ editCardId }: NewCarFormProps) {
                 >
                   <input {...getInputProps()} />
                   <p>Arraste e solte as fotos aqui ou clique para selecionar</p>
-                  <BiImageAdd size={40} opacity={0.5} />
+                  <ImagePlus size={40} opacity={0.5} />
                 </div>
               </CardBody>
               <CardFooter>
@@ -429,7 +429,7 @@ export default function NewCarForm({ editCardId }: NewCarFormProps) {
                           setPhotosToDelete([...photosToDelete, photo.id]);
                         }}
                       >
-                        <BiTrash size={20} color="white" />
+                        <Trash size={20} color="white" />
                       </button>
                     </div>
                   ))}
@@ -448,7 +448,7 @@ export default function NewCarForm({ editCardId }: NewCarFormProps) {
                           URL.revokeObjectURL(file.preview);
                         }}
                       >
-                        <BiTrash size={20} color="white" />
+                        <Trash size={20} color="white" />
                       </button>
                     </div>
                   ))}

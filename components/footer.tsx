@@ -1,6 +1,6 @@
 import React from "react";
 import NextLink from "next/link";
-import { FaFacebookF, FaInstagram, FaYoutube } from "react-icons/fa";
+import { Facebook, Instagram, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -78,21 +78,21 @@ const Footer = () => {
               className="text-gray-400 hover:text-white transition-colors"
               aria-label="Facebook"
             >
-              <FaFacebookF className="w-5 h-5" />
+              <Facebook className="w-5 h-5" />
             </NextLink>
             <NextLink
               href="https://www.instagram.com/akkarmotors/"
               className="text-gray-400 hover:text-white transition-colors"
               aria-label="Instagram"
             >
-              <FaInstagram className="w-5 h-5" />
+              <Instagram className="w-5 h-5" />
             </NextLink>
             <NextLink
               href="https://www.youtube.com/channel/UCWzvvsZpl_6oA8c03Q_Ynzg"
               className="text-gray-400 hover:text-white transition-colors"
               aria-label="YouTube"
             >
-              <FaYoutube className="w-5 h-5" />
+              <Youtube className="w-5 h-5" />
             </NextLink>
           </div>
           <p className="text-gray-400 text-sm">
