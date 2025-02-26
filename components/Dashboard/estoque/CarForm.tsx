@@ -2,46 +2,14 @@
 import React, { useState, useEffect, Key } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { toast } from "react-toastify";
-import { Tabs, Tab, Button } from "@nextui-org/react";
+import { Tabs, Tab, Button, Card } from "@nextui-org/react";
 import { createClient } from "@/utils/supabase/client";
 import EspecificacoesForm from "./EspecificacoesForm";
 import FotosForm from "./FotosForm";
 import OpcionaisTab from "./opcionais";
 import { useRouter } from 'next/navigation';
-
-
-const currentYear = new Date().getFullYear();
-
-export const carSchema = z.object({
-  marca: z.string().min(1, "Marca é obrigatória"),
-  modelo: z.string().min(1, "Modelo é obrigatório"),
-  versao: z.string().min(1, "Versão é obrigatória"),
-  motorizacao: z.enum(["Combustão", "Elétrico", "Híbrido"]),
-  cor: z.string().min(1, "Cor é obrigatória"),
-  preco: z.coerce.number().positive("Preço deve ser positivo"),
-  ano_fabricacao: z.coerce.number().int().min(1900, "Ano inválido").max(currentYear, "Ano não pode ser futuro"),
-  ano_modelo: z.coerce.number().int().min(1900, "Ano inválido").max(currentYear + 1, "Ano do modelo não pode ser mais que um ano no futuro"),
-  potencia: z.coerce.number().positive("Potência deve ser positiva"),
-  torque: z.coerce.number().positive("Torque deve ser positivo"),
-  motor: z.string().min(1, "Motorização é obrigatória"),
-  cambio: z.enum(["Manual", "Automático"]),
-  carroceria: z.enum(["Hatch", "Sedan", "SUV", "Picape", "Esportivo"]),
-  tracao: z.enum(["Dianteira", "Traseira", "Integral"]),
-  rodas: z.string(),
-  freios: z.string(),
-  direcao: z.enum(["Mecânica", "Hidráulica", "Elétrica", "Eletro-hidráulica"]),
-  bancos: z.string(),
-  ar_condicionado: z.string(),
-  farol: z.string(),
-  multimidia: z.string(),
-  final_placa: z.string().length(1, "Final da placa deve ter 1 caractere"),
-  km: z.coerce.number().nonnegative("Quilometragem deve ser não negativa"),
-  airbag: z.string(),
-});
-
-type CarFormData = z.infer<typeof carSchema>;
+import { carSchema, CarFormData } from "./schema";
 
 export default function NewCarForm({ editCardId }: { editCardId?: string }) {
   const router = useRouter();
@@ -56,8 +24,6 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
     resolver: zodResolver(carSchema),
     defaultValues: { tracao: "Dianteira" },
   });
-
-
 
   const fetchCarData = async () => {
     if (!editCardId) return;
@@ -253,41 +219,86 @@ export default function NewCarForm({ editCardId }: { editCardId?: string }) {
 
 
   return (
-    <div className="p-2 md:p-16 overflow-auto">
-      <div className="flex">
-      <h1 className="text-2xl font-bold mb-4">
-        {editCardId ? "Editar Veículo" : "Adicionar Veículo"}
-      </h1>
-      <Button      
-        className="ml-auto"
-        onClick={() => router.push('/dashboard/estoque')}
-      >
-        Voltar
-      </Button>
-      </div>
-      <form className="mb-12" onSubmit={handleSubmit(onSubmit)}>
-        <Tabs selectedKey={activeTab} onSelectionChange={(key: Key) => setActiveTab(key as string)}>
-          <Tab key="especificacoes" title="Especificações">
-            <EspecificacoesForm control={control} errors={errors} />
-          </Tab>
-          <Tab key="opcionais" title="Opcionais">
-            <OpcionaisTab opcionais={opcionais} setOpcionais={setOpcionais} />
-          </Tab>
-          <Tab key="fotos" title="Fotos">
-            <FotosForm
-              files={files}
-              setFiles={setFiles}
-              existingPhotos={existingPhotos}
-              setExistingPhotos={setExistingPhotos}
-              photosToDelete={photosToDelete}
-              setPhotosToDelete={setPhotosToDelete}
-            />
-          </Tab>
-        </Tabs>
-        <Button type="submit" color="primary" className="mt-4">
-          {editCardId ? "Atualizar Veículo" : "Adicionar Veículo"}
+    <div className=" w-full">
+      <div className="flex items-center pb-6">
+        <h1 className="text-2xl font-bold">
+          {editCardId ? "Editar Veículo" : "Adicionar Veículo"}
+        </h1>
+        <Button      
+          className="ml-auto"
+          color="default"
+          variant="light"
+          startContent={<span>←</span>}
+          onClick={() => router.push('/dashboard/estoque')}
+        >
+          Voltar
         </Button>
-       
+      </div>
+      
+      <form className="mb-12" onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <Tabs 
+          className="px-2"
+            selectedKey={activeTab} 
+            onSelectionChange={(key: Key) => setActiveTab(key as string)}
+            variant="solid"
+          >
+            <Tab 
+              key="especificacoes" 
+              title={
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">Especificações</span>
+                </div>
+              }
+            >
+              <div className="mt-6 p-2">
+                <EspecificacoesForm control={control} errors={errors} />
+              </div>
+            </Tab>
+            <Tab 
+              key="opcionais" 
+              title={
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">Opcionais</span>
+                </div>
+              }
+            >
+              <div className="mt-6 p-2">
+                <OpcionaisTab opcionais={opcionais} setOpcionais={setOpcionais} />
+              </div>
+            </Tab>
+            <Tab 
+              key="fotos" 
+              title={
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">Fotos</span>
+                </div>
+              }
+            >
+              <div className="mt-6 p-2">
+                <FotosForm
+                  files={files}
+                  setFiles={setFiles}
+                  existingPhotos={existingPhotos}
+                  setExistingPhotos={setExistingPhotos}
+                  photosToDelete={photosToDelete}
+                  setPhotosToDelete={setPhotosToDelete}
+                />
+              </div>
+            </Tab>
+          </Tabs>
+        </div>
+        
+        <div className="mt-6 flex justify-end">
+          <Button 
+            type="submit" 
+            color="primary" 
+            size="lg"
+            className="px-8"
+          >
+            {editCardId ? "Atualizar Veículo" : "Adicionar Veículo"}
+          </Button>
+        </div>
       </form>
     </div>
   );

@@ -73,7 +73,7 @@ const [modalSize, setModalSize] = useState< | "xs" | "sm" | "md" | "lg" | "xl" |
     return (
     <Modal isOpen={isOpen} size={modalSize} onClose={onClose} scrollBehavior={modalScroll} hideCloseButton={true}
       backdrop="blur" className="">
-      <ModalContent className="max-h-screen overflow-y-auto">
+      <ModalContent className=" overflow-y-auto">
         {(onClose) => (
         <>
           <ModalHeader className="dark bg-zinc-900 flex items-center">

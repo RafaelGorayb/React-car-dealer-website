@@ -45,7 +45,7 @@ export default function RootLayout({
       >
 
         
-      <DemoBanner />
+      {/* <DemoBanner /> */}
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <div className="relative flex flex-col h-screen">
 

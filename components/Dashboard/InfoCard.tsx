@@ -8,7 +8,7 @@ interface InfoCardProps {
 
 const InfoCard: React.FC<InfoCardProps> = ({ title, value }) => {
   return (
-    <Card className="mb-4">
+    <Card shadow="sm" className="mb-4 p-2">
       <CardHeader className="text-lg font-bold">{title}</CardHeader>
       <CardBody>
         <h2 className="text-2xl font-semibold">{value}</h2>

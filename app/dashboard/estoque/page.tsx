@@ -22,6 +22,14 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  Chip,
+  Tooltip,
+  Avatar,
+  Card,
+  CardBody,
+  Tabs,
+  Tab,
+  Spinner,
 } from "@nextui-org/react";
 import { Database } from "@/database.types";
 import { createClient } from "@/utils/supabase/client";
@@ -33,6 +41,11 @@ import {
   EllipsisVertical,
   PlusIcon,
   SearchIcon,
+  FilterIcon,
+  EyeIcon,
+  EditIcon,
+  TrashIcon,
+  CarIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -42,13 +55,8 @@ type CarroUpdate = Database["public"]["Tables"]["carro"]["Update"];
 
 const supabase = createClient();
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  novo: "success",
-  usado: "warning",
-  seminovo: "primary",
-};
-
 const INITIAL_VISIBLE_COLUMNS = [
+  "foto",
   "marca",
   "modelo",
   "versao",
@@ -58,6 +66,7 @@ const INITIAL_VISIBLE_COLUMNS = [
 ];
 
 const columns = [
+  { name: "FOTO", uid: "foto" },
   { name: "MARCA", uid: "marca", sortable: true },
   { name: "MODELO", uid: "modelo", sortable: true },
   { name: "VERSÃO", uid: "versao", sortable: true },
@@ -73,6 +82,7 @@ const DashboardLayout: React.FC = () => {
   const [selectedCar, setSelectedCar] = useState<Car | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
   const [filterValue, setFilterValue] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
   const [visibleColumns, setVisibleColumns] = useState<Selection>(
@@ -84,6 +94,7 @@ const DashboardLayout: React.FC = () => {
     direction: "ascending",
   });
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   const router = useRouter();
 
@@ -92,6 +103,7 @@ const DashboardLayout: React.FC = () => {
   }, []);
 
   const fetchCars = async () => {
+    setIsLoading(true);
     const { data, error } = await supabase.from("carro").select(`
       *,
       opcionais_carro (nome),
@@ -99,10 +111,12 @@ const DashboardLayout: React.FC = () => {
     `);
     if (error) {
       toast.error("Error fetching cars:" + error.message);
+      setIsLoading(false);
       return;
     }
     const formattedCars = formatCars(data as CarObjectComplete[]) as Car[];
     setCars(formattedCars);
+    setIsLoading(false);
   };
 
   const hasSearchFilter = Boolean(filterValue);
@@ -122,7 +136,8 @@ const DashboardLayout: React.FC = () => {
       filteredCars = filteredCars.filter(
         (car) =>
           car.marca.toLowerCase().includes(filterValue.toLowerCase()) ||
-          car.modelo.toLowerCase().includes(filterValue.toLowerCase())
+          car.modelo.toLowerCase().includes(filterValue.toLowerCase()) ||
+          car.versao.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
@@ -188,23 +203,27 @@ const DashboardLayout: React.FC = () => {
 
   const topContent = useMemo(() => {
     return (
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-3 items-end">
+      <div className="flex flex-col gap-4 py-4">
+        <div className="flex flex-col sm:flex-row justify-between gap-3 items-end">
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Pesquisar por Marca ou Modelo"
-            startContent={<SearchIcon />}
+            placeholder="Pesquisar por Marca, Modelo ou Versão"
+            startContent={<SearchIcon className="text-default-300" />}
             value={filterValue}
             onClear={() => onClear()}
             onValueChange={onSearchChange}
+            size="sm"
+            radius="lg"
           />
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
                 <Button
                   endContent={<ChevronDownIcon className="text-small" />}
                   variant="flat"
+                  size="sm"
+                  startContent={<FilterIcon className="text-small" />}
                 >
                   Colunas
                 </Button>
@@ -224,25 +243,32 @@ const DashboardLayout: React.FC = () => {
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />} onPress={goTo}>
-              Adicionar novo Carro
+            <Button 
+              color="primary" 
+              endContent={<PlusIcon />} 
+              onPress={goTo}
+              size="sm"
+              className="ml-auto"
+            >
+              Adicionar Carro
             </Button>
           </div>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total de {cars.length} Carros
+            Total de {filteredItems.length} de {cars.length} Carros
           </span>
           <label className="flex items-center text-default-400 text-small">
-            Número de carros por pagina:
+            Carros por página:
             <select
-              className="bg-transparent outline-none text-default-400 text-small"
+              className="bg-transparent outline-none text-default-400 text-small ml-2"
               onChange={onRowsPerPageChange}
               defaultValue={rowsPerPage}
             >
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
+              <option value="20">20</option>
             </select>
           </label>
         </div>
@@ -254,12 +280,14 @@ const DashboardLayout: React.FC = () => {
     onSearchChange,
     onRowsPerPageChange,
     cars.length,
-    hasSearchFilter,
+    filteredItems.length,
+    onClear,
+    goTo,
   ]);
 
   const bottomContent = useMemo(() => {
     return (
-      <div className="py-2 px-2 flex justify-between items-center">
+      <div className="py-3 px-4 flex justify-between items-center bg-default-50 border-t border-default-200 sticky bottom-0 z-10">
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys === "all"
             ? "Todos selecionados"
@@ -294,7 +322,7 @@ const DashboardLayout: React.FC = () => {
         </div>
       </div>
     );
-  }, [selectedKeys, filteredItems.length, page, pages, hasSearchFilter]);
+  }, [selectedKeys, filteredItems.length, page, pages, onPreviousPage, onNextPage]);
 
   const handleDelete = async (id: number) => {
     if (selectedCar?.fotos) {
@@ -386,32 +414,65 @@ const DashboardLayout: React.FC = () => {
     const cellValue = car[columnKey as keyof Car];
 
     switch (columnKey) {
+      case "foto":
+        return (
+          <Avatar
+            src={car.fotos && car.fotos.length > 0 ? car.fotos[0] : undefined}
+            fallback={<CarIcon className="w-7 h-7" />}
+            radius="sm"
+            size="sm"
+            className="cursor-pointer"
+            onClick={() => {
+              setSelectedCar(car);
+              setIsViewModalOpen(true);
+            }}
+          />
+        );
       case "preco":
-        return formatCarPrice(cellValue as number);
+        return (
+          <p>
+            {formatCarPrice(cellValue as number)}
+          </p>
+        );
       case "actions":
         return (
           <div className="relative flex justify-end items-center gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <EllipsisVertical className="text-default-300" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem color="primary" onPress={() => handleEdit(car)}>
-                  Editar
-                </DropdownItem>
-                <DropdownItem
-                  onPress={() => {
-                    setSelectedCar(car);
-                    setIsDeleteModalOpen(true);
-                  }}
-                  color="danger"
-                >
-                  Deletar
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+            <Tooltip content="Visualizar detalhes">
+              <Button 
+                isIconOnly 
+                size="sm" 
+                variant="light" 
+                onPress={() => {
+                  setSelectedCar(car);
+                  setIsViewModalOpen(true);
+                }}
+              >
+                <EyeIcon className="text-default-400 w-4 h-4" />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Editar carro">
+              <Button 
+                isIconOnly 
+                size="sm" 
+                variant="light" 
+                onPress={() => handleEdit(car)}
+              >
+                <EditIcon className="text-blue-500 w-4 h-4" />
+              </Button>
+            </Tooltip>
+            <Tooltip content="Excluir carro">
+              <Button 
+                isIconOnly 
+                size="sm" 
+                variant="light" 
+                onPress={() => {
+                  setSelectedCar(car);
+                  setIsDeleteModalOpen(true);
+                }}
+              >
+                <TrashIcon className="text-danger w-4 h-4" />
+              </Button>
+            </Tooltip>
           </div>
         );
       default:
@@ -420,48 +481,184 @@ const DashboardLayout: React.FC = () => {
   }, []);
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-      <Table
-        aria-label="Example table with custom cells, pagination and sorting"
-        isHeaderSticky
-        bottomContent={bottomContent}
-        bottomContentPlacement="outside"
-        classNames={{
-          wrapper: "max-h-[600px]",
-        }}
-        selectedKeys={selectedKeys}
- 
-        sortDescriptor={sortDescriptor}
-        topContent={topContent}
-        topContentPlacement="outside"
-        onSelectionChange={setSelectedKeys}
-        onSortChange={setSortDescriptor}
-        onRowAction={handleRowAction} // Adiciona essa linha para pegar a ação da linha
-      >
+    <div className="p-4 md:p-8 flex flex-col h-[calc(100vh)] overflow-hidden">
+      <Card shadow="none" className="mb-4">
+        <CardBody>
+          <h1 className="text-2xl font-bold mb-2">Estoque de Veículos</h1>
+          <p className="text-default-500 text-sm">
+            Gerencie todos os veículos disponíveis no estoque
+          </p>
+        </CardBody>
+      </Card>
 
-        <TableHeader columns={headerColumns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}
+      {isLoading ? (
+        <div className="flex justify-center items-center h-[400px]">
+          <Spinner size="lg" color="primary" label="Carregando veículos..." />
+        </div>
+      ) : (
+        <Card shadow="none" radius="sm" className=" flex-1  flex flex-col overflow-hidden">
+          <CardBody className="p-0 flex flex-col h-full overflow-hidden">
+            <Table
+              aria-label="Tabela de veículos em estoque"
+              radius="none"
+              isHeaderSticky
+              bottomContent={bottomContent}
+              bottomContentPlacement="outside"
+              classNames={{
+                wrapper: "flex-1 overflow-auto shadow-none",
+                th: " text-default-600",
+                tr: "hover:bg-default-50 transition-colors cursor-pointer",
+                base: "h-full flex flex-col",
+                table: "flex-1",
+              }}
+              selectedKeys={selectedKeys}
+              selectionMode="single"
+              sortDescriptor={sortDescriptor}
+              topContent={topContent}
+              topContentPlacement="inside"
+              onSelectionChange={setSelectedKeys}
+              onSortChange={setSortDescriptor}
+              onRowAction={handleRowAction}
             >
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody emptyContent={"No cars found"} items={sortedItems}>
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+              <TableHeader columns={headerColumns}>
+                {(column) => (
+                  <TableColumn
+                    key={column.uid}
+                    align={column.uid === "actions" ? "center" : "start"}
+                    allowsSorting={column.sortable}
+                  >
+                    {column.name}
+                  </TableColumn>
+                )}
+              </TableHeader>
+              <TableBody 
+                emptyContent={"Nenhum veículo encontrado"} 
+                items={sortedItems}
+                loadingContent={<Spinner color="primary" />}
+              >
+                {(item) => (
+                  <TableRow key={item.id}>
+                    {(columnKey) => (
+                      <TableCell>{renderCell(item, columnKey)}</TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardBody>
+        </Card>
+      )}
 
+      {/* Modal de Visualização */}
+      <Modal 
+        isOpen={isViewModalOpen} 
+        onClose={() => setIsViewModalOpen(false)}
+        size="2xl"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                {selectedCar && (
+                  <div className="flex flex-col">
+                    <h3 className="text-xl font-bold">
+                      {selectedCar.marca} {selectedCar.modelo}
+                    </h3>
+                    <p className="text-default-500 text-sm">{selectedCar.versao}</p>
+                  </div>
+                )}
+              </ModalHeader>
+              <ModalBody>
+                {selectedCar && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-2">
+                      {selectedCar.fotos && selectedCar.fotos.length > 0 ? (
+                        <img 
+                          src={selectedCar.fotos[0]} 
+                          alt={`${selectedCar.marca} ${selectedCar.modelo}`}
+                          className="w-full h-48 object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="w-full h-48 bg-default-100 flex items-center justify-center rounded-lg">
+                          <CarIcon size={64} className="text-default-300" />
+                        </div>
+                      )}
+                      <div className="flex gap-2 overflow-x-auto py-2">
+                        {selectedCar.fotos && selectedCar.fotos.slice(1).map((foto, index) => (
+                          <img 
+                            key={index} 
+                            src={foto} 
+                            alt={`${selectedCar.marca} ${selectedCar.modelo} - ${index + 2}`}
+                            className="w-16 h-16 object-cover rounded-md"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <p className="text-sm text-default-500">Marca</p>
+                          <p className="font-medium">{selectedCar.marca}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-default-500">Modelo</p>
+                          <p className="font-medium">{selectedCar.modelo}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-default-500">Versão</p>
+                          <p className="font-medium">{selectedCar.versao}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-default-500">Ano Modelo</p>
+                          <p className="font-medium">{selectedCar.ano_modelo}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-default-500">Preço</p>
+                          <p className="font-medium text-success-600">{formatCarPrice(selectedCar.preco)}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-default-500">Quilometragem</p>
+                          <p className="font-medium">{selectedCar.km ? `${selectedCar.km} km` : 'N/A'}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-default-500">Cor</p>
+                          <p className="font-medium">{selectedCar.cor}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-default-500">Carroceria</p>
+                          <p className="font-medium">{selectedCar.carroceria}</p>
+                        </div>
+                      </div>
+                      {selectedCar.opcionais && selectedCar.opcionais.length > 0 && (
+                        <div className="mt-2">
+                          <p className="text-sm text-default-500 mb-1">Opcionais</p>
+                          <div className="flex flex-wrap gap-1">
+                            {selectedCar.opcionais.map((opcional, index) => (
+                              <Chip key={index} size="sm" variant="flat" className="capitalize">
+                                {opcional}
+                              </Chip>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </ModalBody>
+              <ModalFooter>
+                <Button color="primary" variant="light" onPress={onClose}>
+                  Fechar
+                </Button>
+                <Button color="primary" onPress={() => selectedCar && handleEdit(selectedCar)}>
+                  Editar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      {/* Modal de Edição - Mantido para compatibilidade, mas agora redirecionamos para a página de edição */}
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <ModalContent>
           <ModalHeader>Editar Carro</ModalHeader>
@@ -525,29 +722,42 @@ const DashboardLayout: React.FC = () => {
         </ModalContent>
       </Modal>
 
+      {/* Modal de Exclusão */}
       <Modal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
       >
         <ModalContent>
-          <ModalHeader>Confirmar Delete</ModalHeader>
+          <ModalHeader className="text-danger">Confirmar Exclusão</ModalHeader>
           <ModalBody>
             {selectedCar && (
-              <p>
-                Você tem certeza que deseja remover: {selectedCar.marca}{" "}
-                {selectedCar.modelo}?
-              </p>
+              <div className="text-center">
+                <TrashIcon className="w-12 h-12 text-danger mx-auto mb-4" />
+                <p className="mb-2">
+                  Você tem certeza que deseja remover este veículo?
+                </p>
+                <p className="font-bold text-lg">
+                  {selectedCar.marca} {selectedCar.modelo} {selectedCar.versao}
+                </p>
+                <p className="text-sm text-default-500 mt-1">
+                  Esta ação não pode ser desfeita.
+                </p>
+              </div>
             )}
           </ModalBody>
           <ModalFooter>
             <Button
               color="danger"
+              variant="flat"
+              onPress={() => setIsDeleteModalOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button
+              color="danger"
               onPress={() => selectedCar && handleDelete(selectedCar.id)}
             >
-              Deletar
-            </Button>
-            <Button color="primary" onPress={() => setIsDeleteModalOpen(false)}>
-              Cancelar
+              Excluir
             </Button>
           </ModalFooter>
         </ModalContent>

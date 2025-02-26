@@ -6,18 +6,12 @@ import React from "react";
 const EstoquePage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  if (id) {
-    return (
-      <div className="">
-        <NewCarForm editCardId={id} />
-        
-      </div>
-    );
-  }
-
+  
   return (
-    <div className="">
-      <NewCarForm />
+    <div className="container mx-auto py-6">
+      <div className="">
+        <NewCarForm editCardId={id || undefined} />
+      </div>
     </div>
   );
 };

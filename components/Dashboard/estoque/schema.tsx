@@ -26,7 +26,7 @@ import OpcionaisTab from "./opcionais";
 
 const currentYear = new Date().getFullYear();
 
-const carSchema = z.object({
+export const carSchema = z.object({
   marca: z.string().min(1, "Marca é obrigatória"),
   modelo: z.string().min(1, "Modelo é obrigatório"),
   versao: z.string().min(1, "Versão é obrigatória"),
@@ -74,7 +74,7 @@ const carSchema = z.object({
   airbag: z.string(),
 });
 
-type CarFormData = z.infer<typeof carSchema>;
+export type CarFormData = z.infer<typeof carSchema>;
 
 type FileWithPreview = File & { preview: string };
 

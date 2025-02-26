@@ -46,7 +46,7 @@ function CarCard({ car, isLoading }: CardProps) {
           <p className="text-xs font-semibold min-h-8 line-clamp-2">
             {car.marca} {car.modelo}
           </p>
-          <h3 className="text-sm font-semibold text-red-500 min-h-8 line-clamp-2">
+          <h3 className="text-sm font-semibold text-red-500 min-h-10 line-clamp-2">
             {car.versao}
           </h3>
           <div className="flex text-sm flex-row gap-4 py-2">

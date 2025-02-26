@@ -58,13 +58,12 @@ const SidebarMenu = ({ user, children }: SidebarMenuProps) => {
   return (
     <div
       className={cn(
-        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700",
-        "min-h-screen"
+        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-full flex-1 mx-auto border border-neutral-200 dark:border-neutral-700"
       )}
     >
       <Sidebar open={open} setOpen={setOpen}>
         <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="flex flex-col flex-1 overflow-x-hidden">
             AKKAR
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
@@ -101,7 +100,7 @@ const SidebarMenu = ({ user, children }: SidebarMenuProps) => {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 overflow-auto">{children}</div>
+      <div className="flex-1 overflow-y-auto">{children}</div>
     </div>
   );
 };

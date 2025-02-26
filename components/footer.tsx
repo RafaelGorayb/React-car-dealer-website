@@ -34,11 +34,6 @@ const Footer = () => {
                   Sobre Nós
                 </NextLink>
               </li>
-              <li>
-                <NextLink href="/financiamento" className="text-gray-400 hover:text-white transition-colors">
-                  Financiamento
-                </NextLink>
-              </li>
             </ul>
           </div>
 

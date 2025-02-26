@@ -10,9 +10,7 @@ import {
   Select1Trigger,
   Select1Value,
 } from "@/components/ui/select"
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
+import { Card, CardBody, Badge, Switch } from "@nextui-org/react";
 import { X } from "lucide-react";
 
 interface FilterFormProps {
@@ -133,7 +131,7 @@ const FilterForm: React.FC<FilterFormProps> = ({
 
       {/* Grupo de Seleção Principal */}
       <Card className="bg-default-50">
-        <CardContent className="p-4 space-y-4">
+        <CardBody className="p-4 space-y-4">
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-2 block">Marca</label>
@@ -205,12 +203,12 @@ const FilterForm: React.FC<FilterFormProps> = ({
               </Select>
             </div>
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
-      {/* Grupo de Preço e Ano */}
+      {/* Grupo de Preço e Ano e Quilometragem */}
       <Card className="bg-default-50">
-        <CardContent className="p-4 space-y-4">
+        <CardBody className="p-4 space-y-4">
           <h4 className="text-sm font-medium">Faixa de Preço</h4>
           <div className="flex space-x-2">
             <Input
@@ -274,12 +272,9 @@ const FilterForm: React.FC<FilterFormProps> = ({
               }}
             />
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Grupo de Quilometragem */}
-      <Card className="bg-default-50">
-        <CardContent className="p-4 space-y-4">
+          <Divider className="my-4" />
+
           <h4 className="text-sm font-medium">Quilometragem</h4>
           <div className="flex space-x-2">
             <Input
@@ -305,12 +300,12 @@ const FilterForm: React.FC<FilterFormProps> = ({
               }}
             />
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* Grupo de Características */}
       <Card className="bg-default-50">
-        <CardContent className="p-4 space-y-4">
+        <CardBody className="p-4 space-y-4">
           <h4 className="text-sm font-medium">Características</h4>
           
           <div>
@@ -388,18 +383,18 @@ const FilterForm: React.FC<FilterFormProps> = ({
             </label>
             <Switch {...register("blindado")} id="blindado" />
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* Active Filters */}
       {hasActiveFilters && (
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div className="flex flex-wrap gap-2 mt-4 mb-20">
           {Object.entries(formValues).map(([key, value]) => {
             if (value && value !== '' && value !== 0 && value !== false) {
               return (
                 <Badge 
                   key={key} 
-                  variant="secondary"
+                  variant="flat"
                   className="cursor-pointer"
                   onClick={() => handleRemoveFilter(key as keyof FiltrosPesquisa)}
                 >
@@ -412,6 +407,9 @@ const FilterForm: React.FC<FilterFormProps> = ({
           })}
         </div>
       )}
+
+      {/* Add padding at the bottom to ensure content isn't hidden behind the fixed button */}
+      <div className="h-24"></div>
     </form>
   );
 };

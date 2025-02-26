@@ -192,7 +192,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
               />
             </FormProvider>
           </div>
-          <div className="fixed bottom-0 left-0 w-full p-4 bg-background/95 backdrop-blur-sm border-t">
+          <div className="fixed bottom-0 left-0 w-full p-4 bg-background/95 backdrop-blur-sm border-t z-50 shadow-lg">
             <Button
               type="submit"
               color="danger"
@@ -208,7 +208,7 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
 
       {!isMobile && (
         <div className="hidden lg:block">
-          <div className="fixed bg-background/95 backdrop-blur-sm rounded-xl shadow-lg border w-80 h-[calc(100vh-2rem)] m-4">
+          <div className="fixed bg-background/95 backdrop-blur-sm rounded-xl shadow-lg border w-80 h-[calc(100vh-4rem)]">
             <div className="flex flex-col h-full">
               <div className="flex items-center gap-2 p-4 border-b">
                 <Filter size={20} />
