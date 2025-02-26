@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useForm, FormProvider, set } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { FiltrosPesquisa } from "../types/index";
 import { Button } from "@nextui-org/react";
 import { Filter, X } from "lucide-react";
@@ -156,12 +156,20 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
   return (
     <>
       {isMobile && isOpen && (
-        <div className="fixed pt-12 inset-y-0 w-full h-full bg-background transform transition-transform duration-200 ease-in-out z-10 lg:hidden">
+        <div className="fixed pt-12 inset-y-0 w-full h-full bg-background/95 backdrop-blur-sm transform transition-transform duration-200 ease-in-out z-50 lg:hidden">
           <div className="p-6 pb-24 overflow-y-auto h-full">
-            <div className="flex justify-between">
-              <h2 className="text-2xl font-bold mb-6">Filtros</h2>
-              <Button color="default" onClick={toggleMenu}>
-                Fechar
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-2">
+                <Filter size={20} />
+                <h2 className="text-xl font-semibold">Filtros</h2>
+              </div>
+              <Button 
+                isIconOnly
+                variant="light" 
+                onClick={toggleMenu}
+                className="rounded-full"
+              >
+                <X size={20} />
               </Button>
             </div>
             <FormProvider {...methods}>
@@ -184,11 +192,12 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
               />
             </FormProvider>
           </div>
-          <div className="fixed bottom-0 z-10 left-0 w-full p-4 bg-background">
+          <div className="fixed bottom-0 left-0 w-full p-4 bg-background/95 backdrop-blur-sm border-t">
             <Button
               type="submit"
               color="danger"
               className="w-full"
+              size="lg"
               onClick={handleSubmit(onSubmit)}
             >
               Aplicar Filtros
@@ -198,43 +207,50 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
       )}
 
       {!isMobile && (
-        <div className="hidden rounded-xl shadow-lg lg:block flex flex-col fixed bg-background h-screen w-80 ">
-          <h2 className="text-2xl font-bold mb-6 ml-4">Filtros</h2>
+        <div className="hidden lg:block">
+          <div className="fixed bg-background/95 backdrop-blur-sm rounded-xl shadow-lg border w-80 h-[calc(100vh-2rem)] m-4">
+            <div className="flex flex-col h-full">
+              <div className="flex items-center gap-2 p-4 border-b">
+                <Filter size={20} />
+                <h2 className="text-xl font-semibold">Filtros</h2>
+              </div>
 
-          <FormProvider {...methods}>
-            <div className="flex-1 overflow-y-auto max-h-full pb-52 px-4"> {/* Adicionando max-h-full e padding-bottom */}
-              <FilterForm
-                marcas={marcas}
-                modelos={modelos}
-                versoes={versoes}
-                cores={cores}
-                motorizacoes={motorizacoes}
-                carrocerias={carrocerias}
-                selectedMarca={selectedMarca}
-                selectedModelo={selectedModelo}
-                selectedVersao={selectedVersao}
-                setSelectedMarca={setSelectedMarca}
-                setSelectedModelo={setSelectedModelo}
-                setSelectedVersao={setSelectedVersao}
-                setSelectedMotorizacao={setSelectedMotorizacao}
-                currentFilters={currentFilters}
-                resetForm={resetForm}
-              />
+              <FormProvider {...methods}>
+                <div className="flex-1 overflow-y-auto px-4 py-6">
+                  <FilterForm
+                    marcas={marcas}
+                    modelos={modelos}
+                    versoes={versoes}
+                    cores={cores}
+                    motorizacoes={motorizacoes}
+                    carrocerias={carrocerias}
+                    selectedMarca={selectedMarca}
+                    selectedModelo={selectedModelo}
+                    selectedVersao={selectedVersao}
+                    setSelectedMarca={setSelectedMarca}
+                    setSelectedModelo={setSelectedModelo}
+                    setSelectedVersao={setSelectedVersao}
+                    setSelectedMotorizacao={setSelectedMotorizacao}
+                    currentFilters={currentFilters}
+                    resetForm={resetForm}
+                  />
+                </div>
+              </FormProvider>
+
+              <div className="p-4 border-t bg-background">
+                <Button
+                  type="submit"
+                  color="danger"
+                  className="w-full"
+                  size="lg"
+                  onClick={handleSubmit(onSubmit)}
+                >
+                  Aplicar Filtros
+                </Button>
+              </div>
             </div>
-          </FormProvider>
-
-          <div className="fixed bottom-0 z-10 left-0 p-4 w-80 bg-background">
-            <Button
-              type="submit"
-              color="danger"
-              className="w-full mt-4"
-              onClick={handleSubmit(onSubmit)}
-            >
-              Aplicar Filtros
-            </Button>
           </div>
         </div>
-
       )}
     </>
   );
