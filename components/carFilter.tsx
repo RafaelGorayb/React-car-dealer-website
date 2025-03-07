@@ -210,10 +210,6 @@ const CarFilterSideMenu: React.FC<CarFilterProps> = ({
         <div className="hidden lg:block">
           <div className="fixed bg-background/95 backdrop-blur-sm rounded-xl shadow-lg border w-80 h-[calc(100vh-4rem)]">
             <div className="flex flex-col h-full">
-              <div className="flex items-center gap-2 p-4 border-b">
-                <Filter size={20} />
-                <h2 className="text-xl font-semibold">Filtros</h2>
-              </div>
 
               <FormProvider {...methods}>
                 <div className="flex-1 overflow-y-auto px-4 py-6">

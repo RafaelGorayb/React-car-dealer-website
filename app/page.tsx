@@ -14,7 +14,7 @@ export default function Home() {
 return (
 <>
   <Navbar />
-  <div className="mx-auto w-full overflow-x-hidden max-w-7xl pt-16">
+  <div className="mx-auto w-full overflow-x-hidden max-w-7xl">
     <section className="flex">
       <LandingPage />
     </section>
@@ -27,7 +27,7 @@ return (
       </div>
       <div className="flex justify-center pb-10">
         <Button color="danger" variant="shadow" as={Link} href="/estoque" className="w-80 mt-8">
-          Ver estoque completo
+          Ver todos os veículos
         </Button>
       </div>
     </section>
